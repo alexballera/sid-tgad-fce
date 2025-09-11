@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Exámenes de práctica sobre Fundamentos de Software y Sistemas Operativos - Sesión 6 FCE">
+    <meta name="keywords" content="software, sistema operativo, hardware, multiproceso, multitarea, FCE, Laudon, Joyanes">
+    <meta name="author" content="Fundamentos de Datos FCE - UBA">
+    <title>Exámenes de Práctica - Fundamentos de Software y SO - Sesión 6 FCE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #a78bfa 100%);
+        }
+        .quiz-button {
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .quiz-button:hover {
+            background-color: #4338ca;
+            transform: translateY(-2px);
+        }
+        .quiz-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .answer-button {
+            width: 100%;
+            background-color: #e5e7eb;
+            color: #1f2937;
+            text-align: left;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .answer-button:hover:not(:disabled) {
+            background-color: #d1d5db;
+        }
+        .answer-button.correct {
+            background-color: #10b981;
+            color: white;
+            animation: pulse-correct 0.8s;
+        }
+        .answer-button.incorrect {
+            background-color: #ef4444;
+            color: white;
+            animation: shake 0.5s;
+        }
+        .explanation {
+            background-color: #f0f4f8;
+            border-left: 4px solid #4f46e5;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+        }
+        @keyframes pulse-correct {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div id="app" class="container bg-white p-8 rounded-2xl shadow-xl w-full">
+        <!-- Pantalla de selección de cuestionarios -->
+        <div id="quiz-selection-screen">
+            <h1 class="text-3xl font-bold text-center mb-4 text-indigo-700">Selecciona un Examen de Práctica</h1>
+            <p class="text-center text-gray-600 mb-8">Cada examen contiene 20 preguntas aleatorias que abarcan los fundamentos de software y sistemas operativos. ¡Mucha suerte!</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                <button onclick="startQuiz(0)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 1</button>
+                <button onclick="startQuiz(1)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 2</button>
+                <button onclick="startQuiz(2)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 3</button>
+                <button onclick="startQuiz(3)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 4</button>
+                <button onclick="startQuiz(4)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 5</button>
+                <button onclick="startQuiz(5)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 6</button>
+                <button onclick="startQuiz(6)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 7</button>
+                <button onclick="startQuiz(7)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 8</button>
+                <button onclick="startQuiz(8)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 9</button>
+                <button onclick="startQuiz(9)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 10</button>
+            </div>
+        </div>
+
+        <!-- Pantalla del cuestionario -->
+        <div id="quiz-screen" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <div class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number"></span> de 20</div>
+                <div class="text-lg font-semibold text-gray-700">Puntaje: <span id="score">0</span></div>
+            </div>
+            <div class="card p-6 mb-6">
+                <h2 id="question" class="text-xl font-semibold text-gray-900 mb-6"></h2>
+                <div id="options-container" class="space-y-4"></div>
+            </div>
+            <div id="feedback-message" class="text-center p-4 my-4 rounded-lg font-semibold hidden"></div>
+            <button id="next-button" class="quiz-button w-full py-4 mt-6 gradient-bg text-white font-bold text-lg rounded-lg shadow-md focus:outline-none" onclick="nextQuestion()" disabled>Siguiente</button>
+        </div>
+
+        <!-- Pantalla de resultados -->
+        <div id="results-screen" class="hidden text-center">
+            <h1 class="text-3xl font-bold text-indigo-700 mb-4">¡Examen Completo!</h1>
+            <p class="text-xl text-gray-700 mb-6">Tu puntaje final es:</p>
+            <div class="text-5xl font-extrabold text-white gradient-bg p-8 rounded-full inline-block shadow-lg mb-8">
+                <span id="final-score"></span>
+                <span class="block text-2xl font-normal mt-2">de 20</span>
+            </div>
+            <p class="text-lg text-gray-600 mb-4">¡Sigue practicando para dominar los fundamentos del software!</p>
+            <button class="quiz-button py-4 px-8 mt-4 bg-indigo-600 text-white font-bold text-lg rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none" onclick="restartQuiz()">Volver a la selección</button>
+        </div>
+    </div>
+
+    <script>
+        const allQuestions = [
+            // Conceptos Fundamentales del Software
+            {
+                question: "¿Qué es el software de una computadora?",
+                options: ["Solo los programas que instala el usuario", "Un conjunto de instrucciones detalladas que controlan y coordinan los componentes hardware", "Únicamente el sistema operativo", "Los dispositivos físicos de la computadora"],
+                answer: 1,
+                explanation: "El software es un conjunto de instrucciones de programa detalladas que controlan y coordinan los componentes hardware de una computadora y controlan las operaciones de un sistema informático."
+            },
+            {
+                question: "¿Cuál es la relación fundamental entre software y hardware?",
+                options: ["Son completamente independientes", "El hardware es más importante que el software", "El software le dice al hardware qué operaciones debe realizar", "Solo el hardware puede funcionar sin software"],
+                answer: 2,
+                explanation: "El software es esencial porque le dice al hardware qué operaciones debe realizar. Sin software, una computadora sería una máquina inerte sin capacidad de ejecutar tareas."
+            },
+            {
+                question: "¿Qué es un programa en el contexto informático?",
+                options: ["Solo los documentos de texto", "Una lista de instrucciones específicas que debe realizar el hardware", "Los archivos multimedia", "Las aplicaciones gráficas únicamente"],
+                answer: 1,
+                explanation: "Un programa es una lista de instrucciones específicas que debe realizar el hardware; un conjunto de sentencias o instrucciones a la computadora."
+            },
+            {
+                question: "¿Qué es la programación?",
+                options: ["El uso de aplicaciones de oficina", "La instalación de programas", "El proceso de escritura o codificación de un programa", "La reparación de computadoras"],
+                answer: 2,
+                explanation: "La programación es el proceso de escritura o codificación de un programa, donde se crean las instrucciones que la computadora debe seguir."
+            },
+            {
+                question: "¿Cuál es la diferencia principal entre un programador de sistemas y uno de aplicaciones?",
+                options: ["No hay diferencia, ambos hacen lo mismo", "El programador de sistemas escribe software que gestiona recursos, el de aplicaciones escribe programas para tareas específicas del usuario", "Solo se diferencian en el salario", "El programador de aplicaciones no puede escribir sistemas"],
+                answer: 1,
+                explanation: "El programador de sistemas escribe software del sistema que gestiona los recursos de la computadora, mientras que el programador de aplicaciones escribe software para que el usuario ejecute tareas específicas."
+            },
+
+            // Software del Sistema
+            {
+                question: "¿Cuál es la función principal del software del sistema?",
+                options: ["Crear documentos de texto", "Gestionar los recursos de la computadora y ser indispensable para su funcionamiento", "Reproducir multimedia", "Navegar por internet"],
+                answer: 1,
+                explanation: "El software del sistema es un conjunto generalizado de programas que gestiona los recursos de la computadora (procesador, comunicaciones, periféricos) y es indispensable para su funcionamiento."
+            },
+            {
+                question: "¿Cuáles son los componentes esenciales del software del sistema?",
+                options: ["Solo el sistema operativo", "Sistema operativo, utilidades, programas traductores y editores de texto", "Solo los antivirus", "Únicamente los drivers"],
+                answer: 1,
+                explanation: "Los elementos esenciales del software del sistema incluyen: sistema operativo, utilidades, programas traductores y editores de texto."
+            },
+            {
+                question: "¿Qué función cumplen los programas traductores?",
+                options: ["Traducir idiomas humanos", "Convertir lenguajes de programación a lenguaje máquina", "Crear copias de seguridad", "Gestionar archivos"],
+                answer: 1,
+                explanation: "Los programas traductores (compiladores e intérpretes) convierten los lenguajes de programación, entendibles por los programadores, en lenguaje máquina que la computadora puede ejecutar."
+            },
+            {
+                question: "¿Qué es el lenguaje máquina?",
+                options: ["Un lenguaje de programación de alto nivel", "El lenguaje binario (0 y 1) que entienden directamente las computadoras", "Un sistema de comunicación humana", "Un programa de traducción"],
+                answer: 1,
+                explanation: "El lenguaje máquina es el lenguaje binario compuesto por 0s y 1s (bits) que las computadoras entienden directamente y pueden ejecutar sin traducción."
+            },
+            {
+                question: "¿Cuál es la función de las utilidades (utilerías) del sistema?",
+                options: ["Solo gestionar archivos", "Facilitar el uso de la computadora realizando tareas de proceso comunes", "Crear documentos", "Solo hacer copias de seguridad"],
+                answer: 1,
+                explanation: "Las utilidades son programas del sistema que gestionan, controlan las actividades de la computadora y realizan tareas de proceso comunes para facilitar su uso, como editores de texto."
+            },
+
+            // Software de Aplicación
+            {
+                question: "¿Qué es el software de aplicación?",
+                options: ["Solo el sistema operativo", "Programas que instruyen a la computadora para ejecutar tareas específicas del usuario", "Los drivers del hardware", "Solo los antivirus"],
+                answer: 1,
+                explanation: "El software de aplicaciones es un conjunto de programas que instruyen a la computadora para que ejecute una tarea específica para el usuario."
+            },
+            {
+                question: "¿Cuáles son ejemplos comunes de software de aplicación?",
+                options: ["Solo sistemas operativos", "Procesadores de texto, hojas de cálculo, presentaciones, bases de datos", "Solo compiladores", "Únicamente antivirus"],
+                answer: 1,
+                explanation: "Ejemplos comunes incluyen procesadores de texto, hojas de cálculo, software de presentaciones y bases de datos, entre otros."
+            },
+            {
+                question: "¿Quién desarrolla principalmente el software de aplicación?",
+                options: ["Solo el fabricante de la computadora", "Empresas especializadas y usuarios individuales (programadores de aplicaciones)", "Solo el gobierno", "Únicamente universidades"],
+                answer: 1,
+                explanation: "El software de aplicaciones es escrito por empresas especializadas o usuarios individuales conocidos como programadores de aplicaciones."
+            },
+            {
+                question: "¿Cómo adquieren los usuarios el software de aplicación?",
+                options: ["Solo viene preinstalado", "Los usuarios lo adquieren e instalan según sus necesidades específicas", "Solo se puede obtener gratis", "No se puede instalar por usuarios"],
+                answer: 1,
+                explanation: "Los usuarios adquieren e instalan software de aplicación según sus necesidades específicas, ya sea comprándolo, descargándolo o desarrollándolo."
+            },
+
+            // Sistema Operativo
+            {
+                question: "¿Qué es un sistema operativo?",
+                options: ["Un programa de aplicación", "La parte más importante del software del sistema que controla y gestiona los recursos de la computadora", "Solo una interfaz gráfica", "Un programa de seguridad"],
+                answer: 1,
+                explanation: "El sistema operativo es la parte más importante del software del sistema; controla y gestiona los recursos de la computadora y la interacción del usuario con el hardware."
+            },
+            {
+                question: "¿Por qué se compara al sistema operativo con el 'director de una orquesta'?",
+                options: ["Porque hace música", "Porque es responsable de dirigir todas las operaciones y gestionar todos los recursos de la computadora", "Porque es muy costoso", "Porque solo funciona con instrumentos"],
+                answer: 1,
+                explanation: "Se le compara con el director de una orquesta porque es el responsable de dirigir todas las operaciones y gestionar todos los recursos de la computadora de manera coordinada."
+            },
+            {
+                question: "¿Cuáles son las funciones principales del sistema operativo?",
+                options: ["Solo gestionar archivos", "Asignación de recursos, planificación de tareas, monitoreo de actividades, gestión de E/S, control de interacción usuario/hardware", "Solo mostrar imágenes", "Únicamente conectar a internet"],
+                answer: 1,
+                explanation: "Las funciones principales incluyen: asignación de recursos, planificación de tareas, monitoreo de actividades, gestión de entrada/salida (E/S), y control de la interacción entre usuario y hardware."
+            },
+            {
+                question: "¿Qué es una GUI (Interfaz Gráfica de Usuario)?",
+                options: ["Un tipo de virus", "Una interfaz que utiliza iconos, botones, barras y cuadros de diálogo para realizar tareas", "Solo texto en pantalla", "Un programa de música"],
+                answer: 1,
+                explanation: "Una GUI es un tipo de interfaz de usuario que utiliza elementos visuales como iconos, botones, barras y cuadros de diálogo para realizar tareas, controlados por teclado o ratón."
+            },
+            {
+                question: "¿Cómo facilita la GUI la interacción del usuario?",
+                options: ["Solo muestra texto", "Permite al usuario controlar tareas de forma intuitiva mediante elementos visuales sin comandos complejos", "Solo funciona con voz", "No facilita nada"],
+                answer: 1,
+                explanation: "La GUI facilita la interacción al permitir al usuario controlar tareas mediante el teclado o ratón de forma intuitiva, sin necesidad de comandos de texto complejos."
+            },
+            {
+                question: "¿Dónde se almacena el sistema operativo?",
+                options: ["Solo en la nube", "En ROM y disco duro, y se carga parcialmente en memoria RAM durante el booting", "Solo en USB", "Solo en CD"],
+                answer: 1,
+                explanation: "El sistema operativo se almacena en ROM y disco duro, y se carga parcialmente en la memoria RAM durante el proceso inicial llamado booting al encender la computadora."
+            },
+            {
+                question: "¿Qué es el proceso de 'booting'?",
+                options: ["Apagar la computadora", "La operación inicial de cargar parte del sistema operativo desde el disco a la memoria RAM", "Instalar programas", "Crear archivos"],
+                answer: 1,
+                explanation: "Booting es la operación inicial de cargar parte del sistema operativo desde el disco a la memoria RAM al encender la computadora."
+            },
+
+            // Clasificación de Sistemas Operativos
+            {
+                question: "¿Cuál es la diferencia entre un sistema operativo monousuario y multiusuario?",
+                options: ["No hay diferencia", "Monousuario está diseñado para un solo usuario, multiusuario permite que muchos usuarios compartan recursos simultáneamente", "Solo el precio", "La velocidad únicamente"],
+                answer: 1,
+                explanation: "Un sistema monousuario está diseñado para un solo usuario a la vez, mientras que un sistema multiusuario permite que muchos usuarios compartan simultáneamente los recursos de proceso de la computadora."
+            },
+            {
+                question: "¿Qué diferencia hay entre monocarga (monotarea) y multitarea?",
+                options: ["Son lo mismo", "Monocarga puede realizar una sola tarea, multitarea puede realizar múltiples tareas simultáneamente", "Solo el costo", "La marca del fabricante"],
+                answer: 1,
+                explanation: "Un sistema monocarga (monotarea) puede realizar una sola tarea o proceso a la vez, mientras que multitarea puede realizar múltiples tareas o procesos simultáneamente."
+            },
+            {
+                question: "¿Cuáles son ejemplos de sistemas operativos populares?",
+                options: ["Solo Windows", "Windows, UNIX, Linux, Mac OS, DOS, CP/M, Symbian, PalmOS, Windows Mobile", "Solo Linux", "Solo sistemas móviles"],
+                answer: 1,
+                explanation: "Algunos sistemas operativos populares incluyen Windows, UNIX, Linux, Mac OS, DOS, CP/M, Symbian, PalmOS y Windows Mobile/CE."
+            },
+
+            // Tipos de Sistemas Operativos Avanzados
+            {
+                question: "¿Qué es la multiprogramación?",
+                options: ["Usar múltiples lenguajes de programación", "Método que permite a múltiples programas compartir recursos de un sistema, usando la UCP alternativamente", "Solo programar en equipo", "Escribir programas muy largos"],
+                answer: 1,
+                explanation: "La multiprogramación es un método que permite a múltiples programas compartir los recursos de un sistema de computadora, aunque solo uno utilice la UCP en un momento dado, ejecutándose alternativamente."
+            },
+            {
+                question: "En multiprogramación, ¿cuántos programas pueden usar la UCP simultáneamente?",
+                options: ["Todos al mismo tiempo", "Solo uno a la vez, pero las E/S pueden ser atendidas concurrentemente", "Ninguno", "Depende del día"],
+                answer: 1,
+                explanation: "Aunque varios programas estén activos en multiprogramación, solo uno usa la UCP en un momento dado, pero las operaciones de entrada/salida pueden ser atendidas concurrentemente."
+            },
+            {
+                question: "¿Qué relación hay entre multitarea y multiprogramación?",
+                options: ["Son completamente diferentes", "La multitarea se relaciona con la multiprogramación en sistemas de un solo usuario", "No tienen relación", "Solo funcionan en servidores"],
+                answer: 1,
+                explanation: "La multitarea se relaciona con la multiprogramación en sistemas de un solo usuario, permitiendo que múltiples tareas compartan los recursos del sistema."
+            },
+            {
+                question: "¿Qué es un sistema de tiempo compartido?",
+                options: ["Un reloj de computadora", "Sistema que permite a muchos usuarios compartir los recursos de procesamiento simultáneamente", "Solo para hacer cronometrajes", "Un programa de horarios"],
+                answer: 1,
+                explanation: "Un sistema de tiempo compartido permite a muchos usuarios compartir los recursos de procesamiento simultáneamente mediante la asignación de tiempo de UCP a cada usuario."
+            },
+            {
+                question: "¿Cómo funciona la asignación de tiempo en sistemas de tiempo compartido?",
+                options: ["Cada usuario tiene su propia computadora", "La computadora asigna un pequeño lapso de tiempo de UCP a cada usuario, creando sensación de conexión simultánea", "No hay asignación de tiempo", "Solo funciona de noche"],
+                answer: 1,
+                explanation: "En tiempo compartido, la computadora asigna un pequeño lapso de tiempo de la UCP a cada usuario. Dada la alta velocidad, los usuarios tienen la sensación de estar conectados simultáneamente."
+            },
+            {
+                question: "¿Qué es el multiproceso?",
+                options: ["Usar múltiples programas", "Capacidad de un SO para enlazar dos o más UCP para trabajar en paralelo", "Solo procesar datos", "Un tipo de software"],
+                answer: 1,
+                explanation: "El multiproceso es la capacidad de un sistema operativo para enlazar dos o más Unidades Centrales de Proceso (UCP) para trabajar en paralelo en un único sistema de computadora."
+            },
+            {
+                question: "¿Cómo se distribuye el trabajo en sistemas multiproceso?",
+                options: ["No se distribuye", "Se asignan múltiples UCP para ejecutar diferentes instrucciones del mismo programa o programas distintos simultáneamente", "Solo una UCP trabaja", "Todas hacen lo mismo"],
+                answer: 1,
+                explanation: "En multiproceso, se asignan múltiples UCP para ejecutar diferentes instrucciones del mismo programa o de programas distintos simultáneamente, dividiendo el trabajo entre ellas."
+            },
+
+            // Conceptos Específicos y Técnicos
+            {
+                question: "¿Qué componentes incluye una GUI típica?",
+                options: ["Solo texto", "Iconos, botones, barras y cuadros de diálogo", "Solo sonidos", "Solo colores"],
+                answer: 1,
+                explanation: "Una GUI típica incluye componentes visuales como iconos, botones, barras y cuadros de diálogo que facilitan la interacción del usuario."
+            },
+            {
+                question: "¿Cuál es la importancia histórica del desarrollo del software?",
+                options: ["No tiene importancia", "Es fundamental para el auge de las computadoras desde el siglo pasado hasta el actual", "Solo afecta a los programadores", "Solo es importante para las empresas"],
+                answer: 1,
+                explanation: "El desarrollo del software es fundamental para el auge de las computadoras, tanto en el siglo pasado como en el actual, debido al desarrollo continuo de generaciones de software cada vez más potentes y fáciles de usar."
+            },
+            {
+                question: "¿Qué significa que el software del sistema sea 'indispensable'?",
+                options: ["Que es caro", "Que sin él la computadora no puede funcionar", "Que es difícil de usar", "Que solo lo usan expertos"],
+                answer: 1,
+                explanation: "Que el software del sistema sea indispensable significa que sin él la computadora no puede funcionar, ya que gestiona los recursos básicos necesarios para el funcionamiento del sistema."
+            },
+            {
+                question: "¿Qué diferencia hay entre compiladores e intérpretes?",
+                options: ["No hay diferencia", "Ambos son programas traductores que convierten lenguajes de programación a lenguaje máquina", "Solo funcionan con hardware específico", "Solo uno de ellos funciona"],
+                answer: 1,
+                explanation: "Tanto compiladores como intérpretes son tipos de programas traductores que convierten lenguajes de programación comprensibles para humanos en lenguaje máquina ejecutable por la computadora."
+            },
+            {
+                question: "¿Por qué es importante la velocidad en sistemas de tiempo compartido?",
+                options: ["No es importante", "Permite que múltiples usuarios tengan la sensación de usar la computadora simultáneamente", "Solo para impresionar", "Para gastar más electricidad"],
+                answer: 1,
+                explanation: "La alta velocidad de la máquina en sistemas de tiempo compartido es crucial porque permite que los usuarios tengan la sensación de estar conectados simultáneamente, aunque la UCP se alterne entre ellos."
+            },
+
+            // Preguntas de Aplicación y Análisis
+            {
+                question: "Si una computadora no tuviera sistema operativo, ¿qué pasaría?",
+                options: ["Funcionaría normalmente", "No podría gestionar recursos ni ejecutar aplicaciones de manera efectiva", "Solo perdería velocidad", "Solo afectaría a los juegos"],
+                answer: 1,
+                explanation: "Sin sistema operativo, una computadora no podría gestionar recursos, planificar tareas, ni proporcionar una interfaz para ejecutar aplicaciones, esencialmente sería inútil para el usuario."
+            },
+            {
+                question: "¿En qué escenario sería más útil un sistema multiproceso?",
+                options: ["Para tareas simples de un solo usuario", "Para aplicaciones que requieren procesamiento intensivo y pueden dividirse en tareas paralelas", "Solo para navegar internet", "Para escribir documentos simples"],
+                answer: 1,
+                explanation: "Los sistemas multiproceso son especialmente útiles para aplicaciones que requieren procesamiento intensivo y pueden dividirse en tareas paralelas, como cálculos científicos, renderizado o procesamiento de grandes bases de datos."
+            },
+            {
+                question: "¿Por qué los lenguajes de alto nivel requieren traductores?",
+                options: ["Para ser más caros", "Porque están diseñados para ser entendibles por humanos, no por máquinas directamente", "Para ocupar más espacio", "No los requieren"],
+                answer: 1,
+                explanation: "Los lenguajes de alto nivel están diseñados para ser más cercanos al lenguaje humano y facilitar la programación, por lo que requieren traductores para convertirlos al lenguaje máquina que entiende la computadora."
+            },
+            {
+                question: "¿Cuál es la ventaja principal de la multiprogramación para los usuarios?",
+                options: ["Hace más ruido", "Permite mejor aprovechamiento de recursos y mayor eficiencia del sistema", "Es más costosa", "Solo funciona en computadoras grandes"],
+                answer: 1,
+                explanation: "La multiprogramación permite un mejor aprovechamiento de los recursos del sistema y mayor eficiencia, ya que mientras un programa espera por E/S, otros pueden usar la UCP."
+            },
+            {
+                question: "¿Qué característica distingue principalmente al software de aplicación del software del sistema?",
+                options: ["El precio", "El software de aplicación está dirigido a tareas específicas del usuario, mientras el del sistema gestiona recursos básicos", "El tamaño", "La marca"],
+                answer: 1,
+                explanation: "La principal distinción es que el software de aplicación está dirigido a realizar tareas específicas para el usuario final, mientras que el software del sistema gestiona los recursos básicos de la computadora."
+            },
+
+            // Preguntas sobre Ejemplos y Casos Prácticos
+            {
+                question: "¿Cuál de estos es un ejemplo de software del sistema?",
+                options: ["Microsoft Word", "Sistema operativo Windows", "Photoshop", "Chrome browser"],
+                answer: 1,
+                explanation: "El sistema operativo Windows es un ejemplo de software del sistema, ya que gestiona los recursos de la computadora y es indispensable para su funcionamiento."
+            },
+            {
+                question: "¿Cuál de estos es un ejemplo de software de aplicación?",
+                options: ["Driver de impresora", "Microsoft Excel", "BIOS", "Compilador de C++"],
+                answer: 1,
+                explanation: "Microsoft Excel es software de aplicación porque está diseñado para que el usuario ejecute una tarea específica (crear hojas de cálculo)."
+            },
+            {
+                question: "¿Cuál de estos es un ejemplo de programa traductor?",
+                options: ["Calculadora", "Compilador de Java", "Paint", "Media Player"],
+                answer: 1,
+                explanation: "Un compilador de Java es un programa traductor porque convierte código escrito en lenguaje Java (entendible por programadores) a lenguaje máquina."
+            },
+            {
+                question: "¿Cuál de estos es un ejemplo de utilidad del sistema?",
+                options: ["Un videojuego", "Editor de texto del sistema", "Un navegador web", "Una presentación"],
+                answer: 1,
+                explanation: "Un editor de texto del sistema es una utilidad porque facilita el uso de la computadora realizando tareas de proceso comunes para el sistema."
+            },
+
+            // Preguntas sobre UCP y Procesamiento
+            {
+                question: "¿Qué es la UCP en el contexto de sistemas operativos?",
+                options: ["Una aplicación de usuario", "La Unidad Central de Proceso, componente principal del hardware que ejecuta instrucciones", "Un tipo de memoria", "Un programa del sistema"],
+                answer: 1,
+                explanation: "La UCP (Unidad Central de Proceso) es el componente principal del hardware encargado de ejecutar las instrucciones de los programas."
+            },
+            {
+                question: "En un sistema multiprogramación, ¿qué sucede cuando un programa necesita realizar operaciones de E/S?",
+                options: ["La computadora se detiene", "Otros programas pueden usar la UCP mientras se atiende la E/S", "Se cancela el programa", "Nada especial"],
+                answer: 1,
+                explanation: "En multiprogramación, cuando un programa necesita E/S, otros programas pueden usar la UCP, permitiendo un mejor aprovechamiento de los recursos mientras se atienden las operaciones de entrada/salida concurrentemente."
+            },
+
+            // Preguntas sobre Interfaces y Usabilidad
+            {
+                question: "¿Cómo ha impactado la GUI en la usabilidad de las computadoras?",
+                options: ["La ha empeorado", "Ha hecho las computadoras más accesibles y fáciles de usar para el usuario promedio", "No ha tenido impacto", "Solo afecta a expertos"],
+                answer: 1,
+                explanation: "La GUI ha revolucionado la usabilidad al hacer las computadoras más accesibles y fáciles de usar para el usuario promedio, eliminando la necesidad de memorizar comandos complejos."
+            },
+            {
+                question: "¿Qué ventaja ofrece usar ratón y teclado con una GUI?",
+                options: ["Son más caros", "Permiten control intuitivo de tareas mediante elementos visuales", "Solo funcionan con algunos programas", "No ofrecen ventajas"],
+                answer: 1,
+                explanation: "El ratón y teclado con GUI permiten un control intuitivo de tareas mediante elementos visuales, facilitando la interacción sin necesidad de comandos de texto complejos."
+            },
+
+            // Preguntas sobre Memoria y Almacenamiento
+            {
+                question: "¿Dónde se carga el sistema operativo durante el booting?",
+                options: ["En el disco duro permanentemente", "Desde el disco a la memoria RAM", "Solo en ROM", "En dispositivos USB"],
+                answer: 1,
+                explanation: "Durante el booting, parte del sistema operativo se carga desde el disco duro hacia la memoria RAM para que pueda ejecutarse y gestionar el sistema."
+            },
+            {
+                question: "¿Por qué es necesario el proceso de booting?",
+                options: ["Para hacer ruido", "Para cargar el sistema operativo en memoria y inicializar el sistema", "Para calentar la computadora", "No es necesario"],
+                answer: 1,
+                explanation: "El booting es necesario para cargar el sistema operativo desde el almacenamiento permanente hacia la memoria activa (RAM) y inicializar todos los componentes del sistema."
+            },
+
+            // Preguntas Integradoras y de Síntesis
+            {
+                question: "¿Por qué se dice que el auge de las computadoras se debe al desarrollo del software?",
+                options: ["Porque el hardware no es importante", "Porque generaciones de software cada vez más potentes y fáciles de usar han hecho las computadoras útiles", "Solo por marketing", "No es verdad esa afirmación"],
+                answer: 1,
+                explanation: "El auge de las computadoras se debe al desarrollo continuo de generaciones de software cada vez más potentes y fáciles de usar, que han hecho que las computadoras sean verdaderamente útiles para las personas."
+            },
+            {
+                question: "¿Cómo interactúan el software del sistema y el software de aplicación?",
+                options: ["No interactúan", "El software de aplicación depende del software del sistema para acceder a los recursos de hardware", "Solo uno puede funcionar a la vez", "Compiten entre ellos"],
+                answer: 1,
+                explanation: "El software de aplicación depende del software del sistema (especialmente el SO) para acceder y gestionar los recursos de hardware, crear una relación cooperativa esencial."
+            },
+            {
+                question: "¿Cuál es la importancia de tener diferentes tipos de sistemas operativos?",
+                options: ["No hay importancia", "Permite adaptarse a diferentes necesidades: un usuario, múltiples usuarios, una tarea, múltiples tareas", "Solo para confundir usuarios", "Para vender más computadoras"],
+                answer: 1,
+                explanation: "Los diferentes tipos de sistemas operativos permiten adaptarse a diversas necesidades: sistemas para un solo usuario o múltiples usuarios, para una tarea o múltiples tareas, optimizando el rendimiento según el uso previsto."
+            },
+
+            // Preguntas adicionales para completar el banco
+            {
+                question: "¿Cuál es la función principal de un editor de texto en el software del sistema?",
+                options: ["Solo crear documentos complejos", "Facilitar la edición de archivos de texto y código para el sistema", "Solo funcionar con imágenes", "Reproducir sonidos"],
+                answer: 1,
+                explanation: "Los editores de texto en el software del sistema facilitan la edición de archivos de configuración, código fuente y otros archivos de texto necesarios para el funcionamiento del sistema."
+            },
+            {
+                question: "¿Qué ventaja principal ofrece Windows Vista según los materiales de estudio?",
+                options: ["Solo mejores gráficos", "Interfaz mejorada, herramientas multimedia, comunicación y seguridad mejorada", "Solo velocidad", "Únicamente compatibilidad"],
+                answer: 1,
+                explanation: "Windows Vista introdujo mejoras significativas en la interfaz de usuario, herramientas multimedia, capacidades de comunicación y características de seguridad avanzadas."
+            },
+            {
+                question: "¿Por qué es importante que un sistema operativo tenga capacidades de monitoreo?",
+                options: ["Solo para gastar recursos", "Para supervisar el rendimiento del sistema y detectar problemas", "No es importante", "Solo para llevar estadísticas"],
+                answer: 1,
+                explanation: "Las capacidades de monitoreo son esenciales para que el sistema operativo pueda supervisar el rendimiento, detectar problemas, optimizar recursos y garantizar el funcionamiento estable del sistema."
+            },
+            {
+                question: "¿Qué significa que un sistema operativo gestione la 'planificación de tareas'?",
+                options: ["Solo organizar el calendario", "Determinar el orden y prioridad de ejecución de los procesos", "Solo programar reuniones", "Gestionar archivos únicamente"],
+                answer: 1,
+                explanation: "La planificación de tareas se refiere a la capacidad del sistema operativo de determinar qué procesos se ejecutan, en qué orden, con qué prioridad y durante cuánto tiempo, optimizando el uso de recursos."
+            },
+            {
+                question: "¿Cuál es la diferencia clave entre ROM y RAM en relación al sistema operativo?",
+                options: ["No hay diferencia", "ROM almacena código básico permanente, RAM carga el SO para ejecución activa", "Solo el tamaño", "Solo la velocidad"],
+                answer: 1,
+                explanation: "ROM (Read-Only Memory) almacena código básico y permanente del sistema, mientras que RAM (Random Access Memory) es donde se carga el sistema operativo para su ejecución activa y gestión de procesos."
+            },
+
+            // Preguntas finales para asegurar cobertura completa
+            {
+                question: "¿Qué característica es fundamental en todos los tipos de software del sistema?",
+                options: ["Ser costosos", "Gestionar recursos básicos de la computadora", "Solo funcionar en servidores", "Ser difíciles de usar"],
+                answer: 1,
+                explanation: "Todos los tipos de software del sistema comparten la característica fundamental de gestionar los recursos básicos de la computadora, siendo indispensables para su funcionamiento."
+            },
+            {
+                question: "¿Por qué se considera al software de aplicación como 'específico para el usuario'?",
+                options: ["Porque es personalizado", "Porque está diseñado para realizar tareas particulares que necesita el usuario final", "Porque es caro", "Porque solo una persona lo puede usar"],
+                answer: 1,
+                explanation: "El software de aplicación se considera específico para el usuario porque está diseñado para realizar tareas particulares y específicas que el usuario final necesita, como procesamiento de texto, cálculos o diseño."
+            },
+            {
+                question: "¿Cuál es el papel de la UCP en un entorno multitarea?",
+                options: ["No participa", "Alterna rápidamente entre diferentes tareas dando la ilusión de ejecución simultánea", "Solo ejecuta una tarea", "Se duplica automáticamente"],
+                answer: 1,
+                explanation: "En un entorno multitarea, la UCP alterna rápidamente entre diferentes tareas, ejecutando pequeñas porciones de cada una tan rápido que da la ilusión de que todas se ejecutan simultáneamente."
+            },
+            {
+                question: "¿Qué aspecto del sistema operativo es más crucial para la experiencia del usuario promedio?",
+                options: ["La velocidad del procesador", "La interfaz de usuario (GUI) que permite interactuar fácilmente con el sistema", "El tamaño del disco duro", "La marca de la computadora"],
+                answer: 1,
+                explanation: "Para el usuario promedio, la interfaz de usuario (GUI) es el aspecto más crucial porque determina qué tan fácil y intuitivo es interactuar con la computadora y realizar las tareas deseadas."
+            },
+            {
+                question: "¿Cuál es la principal evolución que ha permitido que las computadoras sean más accesibles para usuarios no técnicos?",
+                options: ["Procesadores más rápidos", "El desarrollo de interfaces gráficas de usuario (GUI) intuitivas", "Discos duros más grandes", "Computadoras más pequeñas"],
+                answer: 1,
+                explanation: "El desarrollo de interfaces gráficas de usuario (GUI) intuitivas ha sido la principal evolución que permitió que las computadoras sean accesibles para usuarios no técnicos, eliminando la necesidad de memorizar comandos complejos."
+            }
+        ];
+
+        let currentQuiz = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let questionsAnswered = 0;
+
+        function startQuiz(quizIndex) {
+            // Selecciona 20 preguntas aleatorias del banco
+            currentQuiz = allQuestions.sort(() => 0.5 - Math.random()).slice(0, 20);
+            currentQuestionIndex = 0;
+            score = 0;
+            questionsAnswered = 0;
+
+            document.getElementById('quiz-selection-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = currentQuiz[currentQuestionIndex];
+            
+            document.getElementById('current-question-number').textContent = currentQuestionIndex + 1;
+            document.getElementById('question').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'answer-button';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+
+            document.getElementById('feedback-message').classList.add('hidden');
+            document.getElementById('next-button').disabled = true;
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = currentQuiz[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.answer-button');
+            const feedbackMessage = document.getElementById('feedback-message');
+            
+            // Deshabilitar todos los botones
+            buttons.forEach(button => button.disabled = true);
+            
+            // Mostrar respuesta correcta e incorrecta
+            buttons.forEach((button, index) => {
+                if (index === question.answer) {
+                    button.classList.add('correct');
+                } else if (index === selectedIndex && selectedIndex !== question.answer) {
+                    button.classList.add('incorrect');
+                }
+            });
+            
+            // Mostrar feedback
+            if (selectedIndex === question.answer) {
+                score++;
+                feedbackMessage.textContent = '¡Correcto! ' + question.explanation;
+                feedbackMessage.className = 'text-center p-4 my-4 rounded-lg font-semibold bg-green-100 text-green-800';
+            } else {
+                feedbackMessage.textContent = 'Incorrecto. ' + question.explanation;
+                feedbackMessage.className = 'text-center p-4 my-4 rounded-lg font-semibold bg-red-100 text-red-800';
+            }
+            
+            feedbackMessage.classList.remove('hidden');
+            document.getElementById('score').textContent = score;
+            questionsAnswered++;
+            
+            // Habilitar botón siguiente después de 2 segundos
+            setTimeout(() => {
+                document.getElementById('next-button').disabled = false;
+            }, 2000);
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuiz.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            document.getElementById('final-score').textContent = score;
+        }
+
+        function restartQuiz() {
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-selection-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
