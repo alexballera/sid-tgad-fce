@@ -99,6 +99,29 @@ body {
 5. **Puntuación:** Sistema de scoring en tiempo real
 6. **Responsive:** Compatible con móviles
 
+### 📋 INTEGRACIÓN JAVASCRIPT OBLIGATORIA
+```html
+<script>
+    const allQuestions = [
+        // TODAS LAS PREGUNTAS AQUÍ - NO EN ARCHIVO SEPARADO
+        {
+            question: "...",
+            options: ["...", "...", "...", "..."],
+            answer: 0,
+            explanation: "..."
+        },
+        // ... más preguntas
+    ];
+    
+    // RESTO DEL CÓDIGO JAVASCRIPT AQUÍ
+    let currentQuiz = [];
+    let currentQuestionIndex = 0;
+    // etc...
+</script>
+```
+
+⚠️ **ADVERTENCIA CRÍTICA**: NO crear `questions.js` ni usar `<script src="./questions.js">`. TODO debe estar en el HTML.
+
 ### 🧩 Estructura del Objeto Pregunta
 ```javascript
 {
@@ -195,8 +218,15 @@ sesiones/sesionX/resumen/*.mp3
 - Modificar el sistema de estilos CSS establecido
 - Usar otros frameworks que no sean Tailwind
 - Incluir librerías externas adicionales
+- **CREAR ARCHIVOS JAVASCRIPT SEPARADOS (questions.js, etc.)**
+- **USAR `<script src="./questions.js">` O REFERENCIAS EXTERNAS**
 - Crear preguntas sin explicaciones detalladas
 - Usar menos de 80 preguntas por sesión
+
+### ✅ OBLIGATORIO:
+- **TODO EL CÓDIGO DEBE ESTAR CONTENIDO EN UN SOLO ARCHIVO HTML**
+- **TODAS LAS PREGUNTAS DEBEN ESTAR EMBEBIDAS EN EL `<script>` DEL HTML**
+- **NO SE PERMITE NINGÚN ARCHIVO .js SEPARADO**
 
 ### ⚠️ VALIDACIONES OBLIGATORIAS:
 - Verificar que todas las respuestas sean correctas
@@ -209,11 +239,18 @@ sesiones/sesionX/resumen/*.mp3
 
 Un archivo `index.html` completamente funcional que:
 1. ✅ Sigue exactamente la estructura técnica establecida
-2. ✅ Contiene 80+ preguntas de calidad académica
+2. ✅ Contiene 80+ preguntas de calidad académica **EMBEBIDAS EN EL HTML**
 3. ✅ Implementa 8-10 cuestionarios aleatorios
 4. ✅ Incluye explicaciones didácticas detalladas
 5. ✅ Mantiene consistencia visual con el proyecto
 6. ✅ Funciona perfectamente en todos los dispositivos
+7. ✅ **ES UN SOLO ARCHIVO SIN DEPENDENCIAS EXTERNAS**
+
+### 🔍 VERIFICACIÓN OBLIGATORIA:
+- [ ] No existe ningún archivo `questions.js` en el directorio
+- [ ] No hay referencias `<script src="...">` a archivos externos
+- [ ] Todas las preguntas están en `const allQuestions = [...]` dentro del HTML
+- [ ] El archivo funciona independientemente sin archivos adicionales
 
 ## 📞 FORMATO DE SOLICITUD
 
