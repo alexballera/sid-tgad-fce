@@ -1,4 +1,4 @@
-# SID - FCE - Instrucciones para Github Copilot
+# Fundamentos de Datos (FCE-UBA) - Instrucciones para Github Copilot
 
 > **📋 INSTRUCCIONES COMPLETAS**: Lee todas las instrucciones detalladas y unificadas en [`AGENTS.md`](../AGENTS.md)
 
