@@ -14,22 +14,23 @@
 
 Repositorio académico para la materia "Fundamentos de Datos" de FCE-UBA. Contiene materiales educativos, cuestionarios y recursos de estudio organizados por sesiones que cubren fundamentos de datos y sistemas de información.
 
-## Arquitectura y Estructura
+## 🏗️ **Arquitectura Principal**
 
-### Patrón de Directorios Principal
+### Patrón de Sesiones
 ```
 sesiones/sesionX/
-├── cuestionarios/index.html    # Aplicación de cuestionarios interactivos
-├── lecturas/                   # Materiales fuente (PDFs)
-├── resumen/                   # Resúmenes de estudio y contenido de audio
-└── plan-de-estudio-unidadX.md # Plan de estudio de la sesión
+├── cuestionarios/index.html    # App HTML monolítica con 80+ preguntas embebidas
+├── lecturas/*.pdf              # Material fuente académico
+├── resumen/*.{md,mp3,mp4}     # Contenido procesado y multimedia  
+└── plan-de-estudio-unidadX.md # Guía de sesión
 ```
 
-### Arquitectura de Aplicaciones de Cuestionarios
-- **Aplicaciones HTML de una sola página** con CSS/JS embebido
-- **Banco de preguntas**: 80+ preguntas por sesión, selecciona aleatoriamente 20 para cada cuestionario
-- **Tres pantallas de UI**: selección de cuestionario → interfaz del cuestionario → resultados
-- **Formato de preguntas**: Opción múltiple con explicaciones y validación de respuestas
+### Apps de Cuestionarios - Características Críticas
+- **Una sola página HTML** con CSS/JS embebido (NO archivos .js externos)
+- **80+ preguntas** en `const allQuestions = [...]` dentro del `<script>`
+- **3 pantallas**: `quiz-selection-screen` → `quiz-screen` → `results-screen`
+- **20 preguntas aleatorias** por examen de 8-10 opciones disponibles
+- **Estructura obligatoria**: `question, options[], answer, explanation`
 
 ## Patrones de Desarrollo Clave
 
@@ -43,18 +44,42 @@ sesiones/sesionX/
 ### Estructura del Objeto Pregunta
 ```javascript
 {
-    question: "Texto de la pregunta en español",
+    question: "Pregunta en español latinoamericano",
     options: ["Opción A", "Opción B", "Opción C", "Opción D"],
-    answer: 1, // Respuesta correcta indexada desde cero
-    explanation: "Explicación detallada en español"
+    answer: 1, // índice 0-3
+    explanation: "Explicación didáctica detallada"
 }
 ```
 
-### Convenciones de Estilo
-- **Fondos degradados**: `linear-gradient(135deg, #4f46e5 0%, #a78bfa 100%)`
-- **Familia de fuente Inter** vía Google Fonts
-- **Animaciones hover**: transformaciones `translateY(-2px)`
-- **Esquema de colores**: Índigo primario (#4f46e5), fondos grises (#f3f4f6)
+### Navegación de Pantallas
+```javascript
+// Patrón estándar en todos los cuestionarios
+function startQuiz(index) { /* mostrar quiz-screen */ }
+function nextQuestion() { /* lógica de progresión */ }
+function showResults() { /* mostrar results-screen */ }
+function restartQuiz() { /* volver a selection */ }
+```
+
+### Meta Tags Consistentes
+```html
+<meta name="description" content="Exámenes de práctica sobre [TEMA] - Sesión X FCE">
+<meta name="keywords" content="[TÉRMINOS ACADÉMICOS], FCE, UBA">
+<meta name="author" content="Fundamentos de Datos FCE - UBA">
+```
+
+## 🎨 **Convenciones de Estilo**
+
+### CSS/Tailwind Patterns
+```css
+.gradient-bg { background: linear-gradient(135deg, #4f46e5 0%, #a78bfa 100%); }
+.card { border-radius: 1rem; box-shadow: ... ; }
+.quiz-button:hover { transform: translateY(-2px); }
+```
+
+### Colores Consistentes
+- Primario: `#4f46e5` (indigo-600), `#a78bfa` (purple-300)
+- Backgrounds: `#f3f4f6` (gray-100), cards blancos
+- Fuente: Inter via Google Fonts
 
 ## Requisitos de Contenido
 
@@ -80,7 +105,18 @@ sesiones/sesionX/
 - **Sesión 2**: Laudon Cap. 2,3,9,12 + Gilli Cap. 5,6 (sistemas organizacionales, estrategia)
 - **Sesión 4**: Sistemas de información integrados (ERP, SCM, CRM, KMS)
 
-## Guías de Desarrollo
+## 🔧 **Flujos de Desarrollo**
+
+### Crear Nuevo Cuestionario
+1. **Analizar materiales**: Revisar `lecturas/` y `resumen/` de la sesión
+2. **Usar referencia**: Copiar estructura de `sesiones/sesion2/cuestionarios/index.html`
+3. **Generar contenido**: 80+ preguntas basadas en material académico
+4. **Validar**: Sin archivos externos, todo embebido en HTML
+
+### Modificar Cuestionario Existente
+- Preservar estructura HTML exacta (`quiz-selection-screen`, `quiz-screen`, `results-screen`)
+- Mantener sistema de puntuación y navegación existente
+- No crear `questions.js` - todo en el `<script>` del HTML
 
 ### Mejores Prácticas
 - **Preservar estructura existente** al crear nuevas sesiones de cuestionarios
@@ -96,11 +132,30 @@ sesiones/sesionX/
 4. **Implementación técnica**: Seguir la estructura HTML y JavaScript existente
 5. **Validación**: Verificar que las preguntas sean precisas y las explicaciones sean completas
 
-## Archivos Críticos de Referencia
-- `sesiones/sesion2/cuestionarios/index.html` - Implementación de referencia
+## 📋 **Reglas de Contenido**
+- **Todo en español latinoamericano** - explicaciones, código, comentarios
+- **Enfoque académico** - nivel universitario FCE
+- **Explicaciones didácticas** - detalladas y pedagógicas
+- **Basado en fuentes** - derivado de materiales en `lecturas/` y `resumen/`
+
+## 🛠️ **Comandos Frecuentes**
+```bash
+# Analizar estructura de sesión existente
+find sesiones/sesion2 -type f -name "*.html" | head -1
+
+# Verificar no hay archivos JS externos  
+find sesiones/sesionX/cuestionarios -name "*.js" # debe estar vacío
+
+# Validar estructura completa de sesión
+ls -la sesiones/sesionX/{cuestionarios,lecturas,resumen}/
+```
+
+## 📁 **Archivos de Referencia Críticos**
+- `sesiones/sesion2/cuestionarios/index.html` - Template base
 - `sesiones/sesion4/cuestionarios/index.html` - Estructura de cuestionario más reciente
+- `.github/prompts/cuestionarios-prompt.md` - Especificaciones técnicas
+- `fuentes/` - Material académico fuente (Laudon, Gilli, O'Brien)
 - `README.md` - Descripción general de la estructura del proyecto
-- `fuentes/` - Directorio con materiales fuente principales
 
 ## Comandos y Flujos de Trabajo
 
