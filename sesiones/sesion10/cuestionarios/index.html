@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Sesión 10 - SID</title>
+    <meta name="description" content="Cuestionario de práctica para la Sesión 10 de Fundamentos de Sistemas de Información Digitales, sobre Business Intelligence, Big Data y Data Warehousing.">
+    <meta name="keywords" content="SID, FCE, UBA, Cuestionario, Business Intelligence, Big Data, Data Warehouse, OLAP, Minería de Datos">
+    <meta name="author" content="Alexis Ballera - alexisballera@gmail.com">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .quiz-button {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .answer-button {
+            width: 100%;
+            padding: 16px;
+            text-align: left;
+            background-color: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .answer-button:hover:not(:disabled) {
+            background-color: #f3f4f6;
+            border-color: #6366f1;
+            transform: translateX(4px);
+        }
+
+        .answer-button.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            animation: pulse-correct 0.8s ease-in-out;
+        }
+
+        .answer-button.incorrect {
+            background-color: #fecaca;
+            border-color: #ef4444;
+            color: #991b1b;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        @keyframes pulse-correct {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .progress-bar {
+            background: linear-gradient(to right, #10b981, #059669);
+            border-radius: 9999px;
+            height: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .medal {
+            font-size: 4rem;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-10px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Quiz Selection Screen -->
+        <div id="quiz-selection-screen" class="hidden fade-in">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">Cuestionario Sesión 10</h1>
+                <p class="text-xl text-gray-600 mb-2">Business Intelligence, Big Data y Data Warehousing</p>
+                <p class="text-lg text-gray-500">Fundamentos de Sistemas de Información Digitales</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Los botones se generan dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number">1</span> de 20</span>
+                    <div class="timer text-blue-600" id="timer">20:00</div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Puntuación: <span id="score">0</span></span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="progress-bar h-2 rounded-full" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 id="question" class="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">Pregunta...</h2>
+                <div id="options-container" class="space-y-3">
+                    <!-- Las opciones se generan dinámicamente -->
+                </div>
+            </div>
+
+            <div id="feedback-message" class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-6 rounded-r-lg hidden">
+                <!-- El feedback se muestra aquí -->
+            </div>
+
+            <div class="text-center">
+                <button id="next-button" onclick="nextQuestion()" class="quiz-button bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none disabled:opacity-50" disabled>
+                    Siguiente Pregunta
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden fade-in">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="medal mb-4">🏆</div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Examen Completado!</h2>
+                    <div class="score-display text-indigo-600 mb-4"><span id="final-score">0</span>/20</div>
+                    <p class="text-lg text-gray-600 mb-6">Has completado el examen de práctica</p>
+                    
+                    <div class="space-y-4">
+                        <button onclick="restartQuiz()" class="quiz-button w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">
+                            Realizar Otro Examen
+                        </button>
+                        <button onclick="window.location.reload()" class="quiz-button w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none">
+                            Volver al Inicio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allQuestions = [
+    {
+        "question": "¿Cuál es el propósito principal de la Inteligencia de Negocios (Business Intelligence)?",
+        "options": [
+            "Procesar transacciones diarias de ventas.",
+            "Mejorar la toma de decisiones proveyendo información y análisis de datos.",
+            "Reemplazar completamente las bases de datos relacionales.",
+            "Diseñar la infraestructura de hardware de una empresa."
+        ],
+        "answer": 1,
+        "explanation": "La Inteligencia de Negocios (BI) se enfoca en utilizar datos para generar conocimiento que apoye y mejore la toma de decisiones gerenciales y estratégicas."
+    },
+    {
+        "question": "¿Qué es un almacén de datos (data warehouse)?",
+        "options": [
+            "Una base de datos optimizada para transacciones rápidas y frecuentes (OLTP).",
+            "Un repositorio central de datos actuales e históricos, organizados para el análisis y la toma de decisiones.",
+            "Un sistema de archivos distribuido para almacenar videos y audios.",
+            "Una copia de seguridad de la base de datos operacional."
+        ],
+        "answer": 1,
+        "explanation": "Un almacén de datos consolida y estandariza información de distintas fuentes para que pueda ser utilizada en análisis gerencial y toma de decisiones en toda la empresa."
+    },
+    {
+        "question": "Las tres 'V's' originales que caracterizan al Big Data son:",
+        "options": [
+            "Valor, Veracidad, Visualización.",
+            "Volumen, Velocidad, Variedad.",
+            "Virtualización, Volumen, Valor.",
+            "Velocidad, Veracidad, Vínculos."
+        ],
+        "answer": 1,
+        "explanation": "El modelo original de Gartner define al Big Data por su gran Volumen (cantidad de datos), alta Velocidad (rapidez con que se generan y procesan) y amplia Variedad (diferentes tipos de datos)."
+    },
+    {
+        "question": "¿Qué herramienta de BI permite a los usuarios analizar datos desde múltiples perspectivas o dimensiones?",
+        "options": [
+            "Minería de Texto (Text Mining)",
+            "Procesamiento Analítico en Línea (OLAP)",
+            "Informes Estáticos (Static Reports)",
+            "Sistemas de Gestión de Contenido (CMS)"
+        ],
+        "answer": 1,
+        "explanation": "OLAP (Procesamiento Analítico en Línea) soporta el análisis multidimensional, permitiendo a los usuarios 'rebanar y picar' los datos para verlos desde diferentes ángulos (ej. ventas por región, por producto, por tiempo)."
+    },
+    {
+        "question": "La minería de datos (data mining) se diferencia de OLAP en que su objetivo principal es:",
+        "options": [
+            "Presentar datos históricos de forma agregada.",
+            "Permitir consultas complejas escritas en SQL.",
+            "Descubrir patrones, relaciones y reglas ocultas en grandes volúmenes de datos.",
+            "Verificar la precisión de los datos transaccionales."
+        ],
+        "answer": 2,
+        "explanation": "Mientras OLAP es para verificar hipótesis, la minería de datos está más orientada al descubrimiento de patrones y relaciones no evidentes para predecir comportamientos futuros."
+    },
+    {
+        "question": "¿Qué es un 'mercado de datos' (data mart)?",
+        "options": [
+            "Un almacén de datos que contiene información de toda la empresa.",
+            "Un subconjunto de un almacén de datos, enfocado en una línea de negocio o departamento específico.",
+            "Una plataforma en línea para comprar y vender datos.",
+            "Un tipo de base de datos NoSQL."
+        ],
+        "answer": 1,
+        "explanation": "Un mercado de datos es una versión más pequeña y enfocada de un almacén de datos, diseñada para las necesidades de un grupo específico de usuarios, lo que permite una implementación más rápida y económica."
+    },
+    {
+        "question": "En el contexto de Big Data, la 'Veracidad' (Veracity) se refiere a:",
+        "options": [
+            "La velocidad con la que se mueven los datos.",
+            "La cantidad de datos almacenados.",
+            "La confiabilidad, calidad y precisión de los datos.",
+            "Los distintos formatos de los datos."
+        ],
+        "answer": 2,
+        "explanation": "La Veracidad es una característica añadida al modelo de las 3V's y se refiere a la incertidumbre y la necesidad de fiabilidad en los datos, ya que no todos los datos son precisos o confiables."
+    },
+    {
+        "question": "El análisis predictivo es una técnica de minería de datos que utiliza patrones para:",
+        "options": [
+            "Describir lo que sucedió en el pasado.",
+            "Predecir resultados y comportamientos futuros.",
+            "Clasificar datos en categorías predefinidas.",
+            "Visualizar datos en un tablero de control."
+        ],
+        "answer": 1,
+        "explanation": "El análisis predictivo usa datos históricos y técnicas de minería de datos para inferir reglas y patrones que permitan predecir eventos futuros, como la probabilidad de que un cliente compre un producto."
+    },
+    {
+        "question": "Un ejemplo de datos 'no estructurados' es:",
+        "options": [
+            "Una tabla en una base de datos relacional con campos definidos.",
+            "Una hoja de cálculo de Excel con filas y columnas.",
+            "El contenido de un correo electrónico o un video.",
+            "Un archivo XML con etiquetas definidas."
+        ],
+        "answer": 2,
+        "explanation": "Los datos no estructurados carecen de un modelo de datos predefinido. Ejemplos incluyen texto libre, imágenes, audio y video, que constituyen la mayor parte de los datos en el mundo."
+    },
+    {
+        "question": "¿Cuál de las siguientes es una aplicación de la minería de texto (text mining)?",
+        "options": [
+            "Procesar una transacción con tarjeta de crédito.",
+            "Analizar los comentarios de clientes en redes sociales para medir el sentimiento hacia una marca.",
+            "Calcular el total de ventas de una tienda.",
+            "Crear un diagrama entidad-relación para una base de datos."
+        ],
+        "answer": 1,
+        "explanation": "La minería de texto extrae información y patrones de grandes conjuntos de datos de texto no estructurado, como analizar opiniones y sentimientos de clientes en redes sociales o encuestas."
+    },
+    {
+        "question": "En un diagrama entidad-relación, ¿qué representa una 'relación de uno a varios'?",
+        "options": [
+            "Cada registro de una tabla se relaciona con exactamente un registro de otra tabla.",
+            "Un registro de una tabla puede estar relacionado con muchos registros de otra, pero no al revés.",
+            "Muchos registros de una tabla pueden relacionarse con muchos registros de otra.",
+            "No existe ninguna relación entre las tablas."
+        ],
+        "answer": 1,
+        "explanation": "Una relación de uno a varios (1:N) significa que una entidad (ej. un Proveedor) puede estar asociada con múltiples instancias de otra entidad (ej. muchos Productos)."
+    },
+    {
+        "question": "El término 'inteligencia de negocios' (BI) abarca un conjunto de tecnologías que incluye:",
+        "options": [
+            "Solo software de hojas de cálculo.",
+            "Procesadores de texto y software de correo electrónico.",
+            "Almacenes de datos, minería de datos, OLAP y herramientas de informes.",
+            "Hardware de red como routers y switches."
+        ],
+        "answer": 2,
+        "explanation": "La inteligencia de negocios es un término paraguas que incluye la infraestructura para almacenar, analizar y visualizar datos, como data warehouses, OLAP y data mining."
+    },
+    {
+        "question": "¿Cuál es la principal diferencia entre un almacén de datos y una base de datos operacional (OLTP)?",
+        "options": [
+            "El almacén de datos es más pequeño.",
+            "El almacén de datos está optimizado para análisis y consultas complejas, mientras que OLTP está para transacciones rápidas.",
+            "El almacén de datos solo contiene información actual, no histórica.",
+            "No hay diferencias significativas; son términos intercambiables."
+        ],
+        "answer": 1,
+        "explanation": "Las bases de datos operacionales (OLTP) están diseñadas para registrar transacciones diarias de manera eficiente. Los almacenes de datos (OLAP) están diseñados para el análisis de grandes volúmenes de datos históricos."
+    },
+    {
+        "question": "La técnica de minería de datos llamada 'asociaciones' busca:",
+        "options": [
+            "Agrupar elementos similares en clústeres.",
+            "Predecir un valor numérico continuo.",
+            "Encontrar ocurrencias que están vinculadas a un solo evento, como compras conjuntas.",
+            "Clasificar elementos en categorías predefinidas."
+        ],
+        "answer": 2,
+        "explanation": "Las reglas de asociación identifican relaciones entre variables en grandes bases de datos. Un ejemplo clásico es el 'análisis de la cesta de mercado' para ver qué productos se compran juntos."
+    },
+    {
+        "question": "¿Qué es la minería Web (Web mining)?",
+        "options": [
+            "El proceso de crear un sitio web desde cero.",
+            "El descubrimiento y análisis de patrones útiles de información provenientes de la World Wide Web.",
+            "La venta de productos a través de una tienda en línea.",
+            "La optimización de un sitio web para motores de búsqueda (SEO)."
+        ],
+        "answer": 1,
+        "explanation": "La minería Web utiliza técnicas de minería de datos para descubrir patrones en el contenido Web (minería de contenido), la estructura de los sitios (minería de estructura) y el comportamiento del usuario (minería de uso)."
+    },
+    {
+        "question": "En el modelo de datos multidimensional de OLAP, cada aspecto de la información (producto, precio, región) representa una:",
+        "options": [
+            "Tabla",
+            "Dimensión",
+            "Clave foránea",
+            "Celda"
+        ],
+        "answer": 1,
+        "explanation": "OLAP modela los datos como un 'cubo' donde cada eje o lado representa una dimensión de negocio, permitiendo un análisis flexible a través de estas dimensiones."
+    },
+    {
+        "question": "El 'Valor' (Value), como quinta 'V' de Big Data, se refiere a:",
+        "options": [
+            "El costo de almacenar los datos.",
+            "La capacidad de transformar los datos en un beneficio tangible para el negocio.",
+            "El precio de venta de los datos a terceros.",
+            "La cantidad de datos que se pueden procesar por segundo."
+        ],
+        "answer": 1,
+        "explanation": "El Valor se refiere a la importancia de extraer información útil y accionable de los grandes volúmenes de datos para generar una ventaja competitiva o un beneficio económico."
+    },
+    {
+        "question": "Una de las principales ventajas de las bases de datos sobre los sistemas de archivos tradicionales es:",
+        "options": [
+            "Ocupan menos espacio en disco.",
+            "Son más fáciles de programar desde cero.",
+            "Reducen la redundancia e inconsistencia de los datos.",
+            "No requieren hardware especializado."
+        ],
+        "answer": 2,
+        "explanation": "Las bases de datos centralizan la gestión de datos, lo que permite controlar la redundancia (duplicación de datos) y mejorar la consistencia (asegurando que los datos sean los mismos en toda la organización)."
+    },
+    {
+        "question": "La técnica de minería de datos 'agrupamiento' (clustering) se utiliza para:",
+        "options": [
+            "Predecir si un cliente abandonará la empresa.",
+            "Identificar grupos de afinidad o segmentos de clientes con características similares, sin tener categorías predefinidas.",
+            "Estimar el valor de ventas futuro de un producto.",
+            "Descubrir qué productos se compran secuencialmente en el tiempo."
+        ],
+        "answer": 1,
+        "explanation": "El agrupamiento es una técnica no supervisada que particiona una base de datos en grupos (clústeres) donde los miembros de cada grupo son similares entre sí, pero diferentes a los de otros grupos."
+    },
+    {
+        "question": "¿Qué es el análisis de 'secuencias' en la minería de datos?",
+        "options": [
+            "Agrupar clientes por su ubicación geográfica.",
+            "Descubrir eventos que están vinculados a lo largo del tiempo.",
+            "Clasificar transacciones como fraudulentas o no fraudulentas.",
+            "Encontrar productos que se compran juntos en la misma transacción."
+        ],
+        "answer": 1,
+        "explanation": "El análisis de secuencias busca patrones en los que un evento conduce a otro evento posterior en el tiempo. Por ejemplo, 'el 45% de los clientes que compran una casa, compran un horno en el mes siguiente'."
+    },
+    {
+        "question": "¿Cuál es el rol de un Sistema de Gestión de Bases de Datos (SGBD o DBMS)?",
+        "options": [
+            "Es el hardware donde se almacenan físicamente los datos.",
+            "Es el software que actúa como interfaz entre las aplicaciones y las bases de datos físicas.",
+            "Es el conjunto de datos en sí mismo.",
+            "Es el lenguaje de programación para escribir aplicaciones."
+        ],
+        "answer": 1,
+        "explanation": "El SGBD es el software que permite a las organizaciones centralizar datos, gestionarlos eficientemente y proporcionar acceso a los datos mediante programas de aplicación."
+    },
+    {
+        "question": "La 'normalización' en bases de datos relacionales es el proceso de:",
+        "options": [
+            "Crear copias de seguridad de la base de datos.",
+            "Encriptar los datos para mayor seguridad.",
+            "Organizar los atributos y las tablas para minimizar la redundancia de datos.",
+            "Aumentar la velocidad de las consultas agregando datos duplicados."
+        ],
+        "answer": 2,
+        "explanation": "La normalización es un proceso de diseño que estructura una base de datos relacional para reducir la duplicación de datos y mejorar su integridad."
+    },
+    {
+        "question": "Una 'clave foránea' (foreign key) en una tabla de una base de datos relacional es:",
+        "options": [
+            "El campo principal que identifica unívocamente cada registro en esa tabla.",
+            "Un campo en una tabla que es la clave primaria de otra tabla, usado para vincularlas.",
+            "Un índice para acelerar las búsquedas.",
+            "Un tipo de dato para almacenar texto largo."
+        ],
+        "answer": 1,
+        "explanation": "La clave foránea es esencial para establecer y hacer cumplir un vínculo entre los datos de dos tablas, manteniendo la integridad referencial."
+    },
+    {
+        "question": "El 'análisis de la cesta de mercado' (market basket analysis) es un ejemplo clásico de la técnica de minería de datos llamada:",
+        "options": [
+            "Clasificación",
+            "Agrupamiento",
+            "Pronóstico",
+            "Asociaciones"
+        ],
+        "answer": 3,
+        "explanation": "Este análisis busca descubrir asociaciones entre productos al examinar qué artículos se compran juntos con frecuencia en las transacciones de los clientes."
+    },
+    {
+        "question": "¿Cuál de las siguientes afirmaciones describe mejor la relación entre un almacén de datos y un mercado de datos?",
+        "options": [
+            "Son dos términos para el mismo concepto.",
+            "Un almacén de datos es un subconjunto de un mercado de datos.",
+            "Un mercado de datos es un subconjunto de un almacén de datos.",
+            "No tienen ninguna relación entre sí."
+        ],
+        "answer": 2,
+        "explanation": "Generalmente, un mercado de datos (data mart) se crea a partir de los datos de un almacén de datos central, enfocándose en las necesidades de un departamento o área de negocio específica."
+    },
+    {
+        "question": "La capacidad de 'profundizar' (drill down) en un informe de BI se refiere a:",
+        "options": [
+            "Pasar de datos resumidos a niveles de datos cada vez más detallados.",
+            "Ver los datos desde una perspectiva diferente o dimensión.",
+            "Exportar el informe a un archivo de Excel.",
+            "Combinar datos de diferentes informes."
+        ],
+        "answer": 0,
+        "explanation": "El 'drill down' es una capacidad de los sistemas de BI que permite a un usuario navegar desde una vista de alto nivel y resumida de los datos hacia información más específica y detallada."
+    },
+    {
+        "question": "El proceso ETL en el contexto de un almacén de datos significa:",
+        "options": [
+            "Execute, Test, Launch (Ejecutar, Probar, Lanzar)",
+            "Extract, Transform, Load (Extraer, Transformar, Cargar)",
+            "Enter, Transmit, Leave (Entrar, Transmitir, Salir)",
+            "Encode, Transmit, Log (Codificar, Transmitir, Registrar)"
+        ],
+        "answer": 1,
+        "explanation": "ETL es el proceso mediante el cual los datos se extraen de los sistemas de origen, se transforman (limpian, estandarizan) y luego se cargan en el almacén de datos."
+    },
+    {
+        "question": "¿Cuál de estas opciones es una de las principales barreras para la adopción de Big Data según el texto?",
+        "options": [
+            "Falta de datos para analizar.",
+            "Exceso de regulaciones gubernamentales.",
+            "Escasez de profesionales especializados y científicos de datos.",
+            "Costo decreciente del hardware de almacenamiento."
+        ],
+        "answer": 2,
+        "explanation": "Una de las barreras más significativas para que las empresas adopten estrategias de Big Data es la falta de talento y expertos con las habilidades necesarias para gestionar y analizar estos grandes volúmenes de datos."
+    },
+    {
+        "question": "La 'minería de uso de la Web' (Web usage mining) analiza:",
+        "options": [
+            "El contenido de texto y las imágenes de las páginas web.",
+            "La estructura de enlaces entre las páginas de un sitio web.",
+            "El comportamiento de los usuarios a partir de los registros del servidor (logs).",
+            "La popularidad de un sitio web en las redes sociales."
+        ],
+        "answer": 2,
+        "explanation": "La minería de uso de la Web se enfoca en analizar los datos de interacción del usuario (clics, rutas de navegación, tiempo en página) para comprender cómo los visitantes usan un sitio web."
+    },
+    {
+        "question": "En un entorno de BI, los 'tableros de control' (dashboards) y 'cuadros de mando' (scorecards) son herramientas para:",
+        "options": [
+            "Introducir datos transaccionales en el sistema.",
+            "Escribir consultas complejas en SQL.",
+            "Presentar visualmente los indicadores clave de rendimiento (KPIs) y métricas de negocio.",
+            "Administrar la seguridad y los permisos de los usuarios."
+        ],
+        "answer": 2,
+        "explanation": "Los tableros y cuadros de mando son herramientas de visualización que muestran de un vistazo el estado de las métricas y KPIs más importantes para la gerencia, facilitando el seguimiento del desempeño del negocio."
+    },
+    {
+        "question": "¿Qué es el 'Open Data' (Datos Abiertos)?",
+        "options": [
+            "Una estrategia para mantener los datos de una empresa estrictamente confidenciales.",
+            "La práctica de hacer que los datos, especialmente los gubernamentales, sean accesibles al público.",
+            "Un tipo de software de base de datos de código abierto.",
+            "Un método para encriptar datos en la nube."
+        ],
+        "answer": 1,
+        "explanation": "Open Data se refiere a la idea de que ciertos datos deben estar disponibles gratuitamente para que todos los usen y los redistribuyan como deseen, sin restricciones de derechos de autor, patentes u otros mecanismos de control."
+    },
+    {
+        "question": "La técnica de minería de datos 'clasificación' se utiliza para:",
+        "options": [
+            "Agrupar elementos similares en clústeres sin categorías previas.",
+            "Asignar elementos a categorías predefinidas basadas en sus características.",
+            "Descubrir qué elementos se compran juntos con frecuencia.",
+            "Predecir un valor numérico, como las ventas del próximo mes."
+        ],
+        "answer": 1,
+        "explanation": "La clasificación construye un modelo a partir de datos previamente clasificados para predecir la categoría de nuevos datos. Por ejemplo, clasificar un correo electrónico como 'spam' o 'no spam'."
+    },
+    {
+        "question": "¿Cuál es la principal ventaja de usar la Web para acceder a las bases de datos internas de una empresa?",
+        "options": [
+            "Es más seguro que el acceso directo.",
+            "La interfaz de navegador es familiar y fácil de usar para muchos usuarios.",
+            "Requiere una reestructuración completa de la base de datos interna.",
+            "Funciona más rápido que las herramientas de consulta propietarias."
+        ],
+        "answer": 1,
+        "explanation": "El uso de una interfaz web simplifica el acceso a los datos corporativos, ya que los usuarios ya están familiarizados con el uso de navegadores web, reduciendo la necesidad de capacitación en software propietario complejo."
+    },
+    {
+        "question": "El 'Procesamiento Masivamente Paralelo' (MPP) es una tecnología clave para Big Data porque:",
+        "options": [
+            "Permite ejecutar una base de datos en una sola computadora muy potente.",
+            "Divide una tarea de procesamiento de datos entre muchas computadoras (nodos) para trabajar en paralelo.",
+            "Se enfoca en la visualización de datos en 3D.",
+            "Garantiza que todos los datos sean 100% precisos."
+        ],
+        "answer": 1,
+        "explanation": "Las arquitecturas MPP son fundamentales para Big Data, ya que permiten escalar el procesamiento de enormes volúmenes de datos distribuyendo la carga de trabajo a través de un clúster de servidores."
+    },
+    {
+        "question": "Un 'diagrama entidad-relación' (ERD) se utiliza para:",
+        "options": [
+            "Escribir el código de una aplicación.",
+            "Documentar el modelo de datos de una base de datos de forma gráfica.",
+            "Monitorear el rendimiento de la red.",
+            "Crear un plan de proyecto."
+        ],
+        "answer": 1,
+        "explanation": "Los ERD son una herramienta de diseño que permite a los diseñadores de bases de datos visualizar las entidades (tablas), sus atributos (campos) y las relaciones entre ellas."
+    },
+    {
+        "question": "La 'integración de datos' es un reto importante en BI porque:",
+        "options": [
+            "Los datos suelen provenir de muchos sistemas diferentes y necesitan ser consolidados y estandarizados.",
+            "Los datos siempre están perfectamente limpios y listos para usar.",
+            "No existen herramientas para mover datos entre sistemas.",
+            "La ley prohíbe combinar datos de diferentes departamentos."
+        ],
+        "answer": 0,
+        "explanation": "Para que el análisis sea efectivo, los datos de diversas fuentes (ventas, marketing, finanzas) deben ser integrados, limpiados y estandarizados en un formato consistente, lo cual es un desafío complejo."
+    },
+    {
+        "question": "¿Qué tecnología, a menudo asociada con Big Data, es un framework de software de código abierto para el procesamiento distribuido de grandes conjuntos de datos?",
+        "options": [
+            "Microsoft Excel",
+            "Oracle Database",
+            "Apache Hadoop",
+            "Adobe Photoshop"
+        ],
+        "answer": 2,
+        "explanation": "Apache Hadoop es un ecosistema de software de código abierto que permite el procesamiento distribuido de grandes conjuntos de datos a través de clústeres de computadoras utilizando modelos de programación simples."
+    },
+    {
+        "question": "En el contexto de BI, ¿qué son los 'indicadores clave de rendimiento' (KPIs)?",
+        "options": [
+            "Opiniones de los clientes sobre un producto.",
+            "Medidas cuantificables que una empresa utiliza para evaluar su éxito en el logro de objetivos clave.",
+            "El número total de empleados en una empresa.",
+            "Los ingresos brutos de la compañía."
+        ],
+        "answer": 1,
+        "explanation": "Los KPIs son métricas específicas y medibles que reflejan qué tan efectivamente una compañía está logrando sus objetivos de negocio más importantes. Son un componente central de los tableros de BI."
+    },
+    {
+        "question": "El 'análisis de sentimiento' es una aplicación de la minería de texto que busca:",
+        "options": [
+            "Determinar la ubicación geográfica del autor de un texto.",
+            "Identificar la actitud u opinión (positiva, negativa, neutra) expresada en un texto.",
+            "Contar el número de palabras en un documento.",
+            "Traducir un texto de un idioma a otro."
+        ],
+        "answer": 1,
+        "explanation": "El análisis de sentimiento se utiliza para determinar el tono emocional detrás de una serie de textos, y es ampliamente utilizado para analizar opiniones de clientes sobre productos o servicios."
+    },
+    {
+        "question": "¿Cuál de las siguientes afirmaciones describe mejor el 'cloud computing' en relación con Big Data?",
+        "options": [
+            "El cloud computing hace que el Big Data sea más lento y costoso.",
+            "El cloud computing proporciona una infraestructura escalable y flexible para almacenar y procesar Big Data.",
+            "El Big Data no se puede implementar en la nube.",
+            "El cloud computing es un tipo de dato, no una tecnología de infraestructura."
+        ],
+        "answer": 1,
+        "explanation": "La computación en la nube ofrece la capacidad de alquilar recursos informáticos (almacenamiento, procesamiento) bajo demanda, lo cual es ideal para manejar las cargas de trabajo masivas y variables del Big Data sin una gran inversión inicial en hardware."
+    },
+    {
+        "question": "¿Qué es una 'clave primaria' (primary key) en una base de datos?",
+        "options": [
+            "Un campo que contiene datos de texto.",
+            "Un identificador único para cada registro en una tabla.",
+            "Una clave utilizada para encriptar la base de datos.",
+            "El primer campo definido en una tabla."
+        ],
+        "answer": 1,
+        "explanation": "La clave primaria es un campo (o conjunto de campos) que identifica de forma única cada fila o registro en una tabla de la base de datos. No puede contener valores nulos."
+    },
+    {
+        "question": "La 'gobernanza de datos' (data governance) se refiere a:",
+        "options": [
+            "La velocidad de acceso a los datos.",
+            "Las políticas y procedimientos para gestionar la disponibilidad, usabilidad, integridad y seguridad de los datos.",
+            "El proceso de visualización de datos.",
+            "La compra y venta de datos."
+        ],
+        "answer": 1,
+        "explanation": "La gobernanza de datos es un principio de gestión que se ocupa de la calidad, consistencia, usabilidad, seguridad y disponibilidad de los datos de una organización."
+    },
+    {
+        "question": "El 'análisis en tiempo real' es crucial para Big Data porque:",
+        "options": [
+            "Permite tomar decisiones sobre eventos que sucedieron hace años.",
+            "Facilita la capacidad de reaccionar y tomar decisiones inmediatas a medida que los datos se generan.",
+            "Solo funciona con datos estructurados.",
+            "Es la forma más barata de análisis de datos."
+        ],
+        "answer": 1,
+        "explanation": "El análisis en tiempo real es vital para aplicaciones sensibles al tiempo, como la detección de fraudes o la personalización de ofertas en comercio electrónico, donde las decisiones deben tomarse en segundos."
+    },
+    {
+        "question": "En el contexto de la minería de datos, ¿qué es un 'modelo'?",
+        "options": [
+            "Una representación física de un producto.",
+            "Un conjunto de reglas, fórmulas o ecuaciones que se deriva del análisis de datos y puede usarse para predecir resultados futuros.",
+            "Una copia de la base de datos.",
+            "El hardware utilizado para el análisis."
+        ],
+        "answer": 1,
+        "explanation": "Un modelo de minería de datos es el resultado del análisis; es una abstracción que captura los patrones encontrados en los datos y se utiliza para hacer predicciones sobre datos nuevos y desconocidos."
+    },
+    {
+        "question": "¿Cuál es uno de los principales beneficios de integrar Big Data con los datos corporativos tradicionales?",
+        "options": [
+            "Aumenta la complejidad de la gestión de datos.",
+            "Enriquece el contexto y permite obtener una visión más completa y precisa del negocio.",
+            "Reduce la cantidad total de datos que se deben almacenar.",
+            "Elimina la necesidad de tener una estrategia de datos."
+        ],
+        "answer": 1,
+        "explanation": "Al combinar Big Data (ej. datos de redes sociales) con datos transaccionales tradicionales (ej. historial de compras), las empresas pueden obtener un conocimiento mucho más profundo de sus clientes y operaciones."
+    },
+    {
+        "question": "Las herramientas de 'consulta e informes' (query and reporting) de BI se utilizan principalmente para:",
+        "options": [
+            "Descubrir patrones complejos y ocultos en los datos.",
+            "Crear informes estáticos y parametrizados, y permitir a los usuarios hacer sus propias consultas.",
+            "Predecir el comportamiento futuro de los clientes.",
+            "Limpiar y transformar los datos antes de cargarlos en un almacén de datos."
+        ],
+        "answer": 1,
+        "explanation": "Estas son las herramientas más fundamentales de BI, que permiten a los usuarios acceder a los datos, crear informes estándar y realizar consultas ad-hoc para responder preguntas de negocio específicas."
+    },
+    {
+        "question": "El concepto de 'datos en movimiento' (data in motion) se asocia más estrechamente con cuál de las 'V' de Big Data:",
+        "options": [
+            "Volumen",
+            "Variedad",
+            "Velocidad",
+            "Veracidad"
+        ],
+        "answer": 2,
+        "explanation": "La Velocidad no solo se refiere al crecimiento de los almacenes de datos, sino también al flujo constante de datos que deben ser procesados en tiempo real o casi real, es decir, 'datos en movimiento'."
+    },
+    {
+        "question": "¿Cuál de las siguientes es una característica de los datos en un almacén de datos?",
+        "options": [
+            "Son volátiles y se actualizan constantemente.",
+            "Son no volátiles; los datos no se alteran ni se eliminan una vez que ingresan.",
+            "Solo contienen datos del día actual.",
+            "Están optimizados para escritura rápida de datos."
+        ],
+        "answer": 1,
+        "explanation": "Los datos en un almacén de datos son no volátiles. Una vez cargados, los datos son históricos y estables, permitiendo análisis consistentes a lo largo del tiempo. Las actualizaciones se hacen de forma programada, no transaccional."
+    },
+    {
+        "question": "El análisis de 'Smart Grids' (redes eléctricas inteligentes) es un ejemplo de aplicación de Big Data en qué industria:",
+        "options": [
+            "Comercio minorista",
+            "Banca y finanzas",
+            "Salud",
+            "Energía y servicios públicos"
+        ],
+        "answer": 3,
+        "explanation": "Las redes eléctricas inteligentes generan enormes volúmenes de datos de sensores y medidores inteligentes, que se analizan para optimizar la distribución de energía, predecir la demanda y mejorar la eficiencia."
+    },
+    {
+        "question": "La 'clasificación' en minería de datos es un ejemplo de aprendizaje:",
+        "options": [
+            "Supervisado",
+            "No supervisado",
+            "Por refuerzo",
+            "Profundo"
+        ],
+        "answer": 0,
+        "explanation": "Es aprendizaje supervisado porque el modelo se entrena con un conjunto de datos donde las categorías ya están etiquetadas. El objetivo es aprender a clasificar nuevos datos no etiquetados."
+    },
+    {
+        "question": "El 'agrupamiento' (clustering) en minería de datos es un ejemplo de aprendizaje:",
+        "options": [
+            "Supervisado",
+            "No supervisado",
+            "Por refuerzo",
+            "Supervisado y no supervisado"
+        ],
+        "answer": 1,
+        "explanation": "Es aprendizaje no supervisado porque el algoritmo intenta encontrar una estructura o patrones (los clústeres) en los datos sin tener etiquetas o categorías predefinidas."
+    },
+    {
+        "question": "¿Qué describe mejor el concepto de 'Empresa Inteligente' (Intelligent Enterprise)?",
+        "options": [
+            "Una empresa que solo contrata empleados con un alto coeficiente intelectual.",
+            "Una organización que utiliza tecnologías como la nube, movilidad, social business y Big Data para transformar sus procesos.",
+            "Una empresa que fabrica productos de inteligencia artificial.",
+            "Una organización sin fines de lucro enfocada en la educación."
+        ],
+        "answer": 1,
+        "explanation": "La 'Empresa Inteligente' es un concepto que describe la evolución de la empresa que integra tecnologías disruptivas para analizar datos de forma más eficaz, anticiparse a las decisiones y mejorar la competitividad."
+    },
+    {
+        "question": "La capacidad de una plataforma de BI para ofrecer 'alertas proactivas' significa que:",
+        "options": [
+            "Puede enviar un resumen diario de las ventas por correo electrónico.",
+            "Puede notificar automáticamente a los usuarios cuando ciertas métricas superan o caen por debajo de umbrales predefinidos.",
+            "Permite a los usuarios hacer preguntas en lenguaje natural.",
+            "Puede predecir el clima de la próxima semana."
+        ],
+        "answer": 1,
+        "explanation": "Las alertas proactivas son una función de BI que monitorea los datos y envía notificaciones cuando ocurren eventos importantes o se alcanzan umbrales críticos, permitiendo una respuesta rápida."
+    },
+    {
+        "question": "¿Cuál es el principal desafío de los datos semi-estructurados, como los archivos XML o JSON?",
+        "options": [
+            "No tienen ninguna estructura interna.",
+            "Son demasiado grandes para ser almacenados.",
+            "Contienen etiquetas que separan los elementos de datos, pero no se ajustan a un modelo de datos relacional estricto.",
+            "Solo pueden ser leídos por humanos, no por máquinas."
+        ],
+        "answer": 2,
+        "explanation": "Los datos semi-estructurados no se conforman a la estructura formal de los modelos de datos asociados con las bases de datos relacionales, pero contienen etiquetas u otros marcadores para separar elementos semánticos y hacer cumplir jerarquías de registros y campos."
+    },
+    {
+        "question": "El 'análisis de la causa raíz' (root cause analysis) en BI se refiere a:",
+        "options": [
+            "Identificar el origen fundamental de un problema o un evento.",
+            "Predecir cuándo ocurrirá un problema en el futuro.",
+            "Agrupar problemas similares en categorías.",
+            "Visualizar la frecuencia de los problemas en un mapa."
+        ],
+        "answer": 0,
+        "explanation": "Es el proceso de explorar los datos en profundidad (a menudo usando técnicas de 'drill-down') para encontrar la razón subyacente de un pico, una caída o una anomalía en un indicador de rendimiento."
+    },
+    {
+        "question": "¿Por qué la 'calidad de los datos' es fundamental para el éxito de cualquier iniciativa de BI o Big Data?",
+        "options": [
+            "Porque los datos de mala calidad no ocupan espacio de almacenamiento.",
+            "Porque las decisiones tomadas a partir de datos incorrectos, incompletos o inconsistentes serán erróneas.",
+            "Porque la ley exige que todos los datos sean perfectos.",
+            "Porque los datos de alta calidad son más fáciles de visualizar."
+        ],
+        "answer": 1,
+        "explanation": "El principio de 'basura entra, basura sale' (Garbage In, Garbage Out) se aplica directamente aquí. Si los datos subyacentes son de mala calidad, los análisis y las decisiones resultantes no serán confiables, sin importar cuán sofisticadas sean las herramientas."
+    },
+    {
+        "question": "En el contexto de BI, ¿qué es un 'informe ad hoc'?",
+        "options": [
+            "Un informe que se genera automáticamente cada día a la misma hora.",
+            "Un informe creado por un usuario para responder a una pregunta de negocio específica y no recurrente.",
+            "Un informe que contiene datos de todas las áreas de la empresa.",
+            "Un informe que solo puede ser visto por los altos directivos."
+        ],
+        "answer": 1,
+        "explanation": "'Ad hoc' significa 'para este propósito'. Un informe ad hoc es una consulta o reporte creado sobre la marcha por un usuario de negocio para explorar una pregunta que no está cubierta por los informes estándar."
+    },
+    {
+        "question": "¿Cuál de las siguientes opciones representa mejor la evolución de las tecnologías de datos?",
+        "options": [
+            "Bases de datos -> Almacenes de datos -> Big Data",
+            "Big Data -> Almacenes de datos -> Bases de datos",
+            "Almacenes de datos -> Big Data -> Bases de datos",
+            "Bases de datos -> Big Data -> Almacenes de datos"
+        ],
+        "answer": 0,
+        "explanation": "La evolución general ha sido desde las bases de datos transaccionales, pasando por los almacenes de datos para análisis centralizado, hasta las plataformas de Big Data para manejar volúmenes, velocidades y variedades de datos aún mayores."
+    },
+    {
+        "question": "El 'procesamiento por lotes' (batch processing) se refiere a:",
+        "options": [
+            "Analizar datos en tiempo real a medida que llegan.",
+            "Procesar un gran volumen de datos en un solo grupo o 'lote', generalmente de forma programada.",
+            "Una técnica de visualización de datos.",
+            "Un método para asegurar la calidad de los datos."
+        ],
+        "answer": 1,
+        "explanation": "El procesamiento por lotes es un método tradicional donde se recopilan y procesan grandes cantidades de datos de una vez, a menudo durante la noche o en períodos de baja actividad del sistema, como en el proceso ETL de un almacén de datos."
+    },
+    {
+        "question": "El 'procesamiento de flujo' (stream processing) es un paradigma asociado con Big Data que implica:",
+        "options": [
+            "Almacenar los datos primero y analizarlos después en lotes.",
+            "Analizar los datos continuamente a medida que se generan o se reciben, sin almacenarlos necesariamente.",
+            "Un método manual de análisis de datos.",
+            "Crear informes mensuales estáticos."
+        ],
+        "answer": 1,
+        "explanation": "El procesamiento de flujo, o 'stream processing', es fundamental para la 'Velocidad' en Big Data, ya que permite el análisis de datos en tiempo real a medida que fluyen a través del sistema, ideal para la detección de fraudes o el monitoreo de sensores."
+    },
+    {
+        "question": "La 'democratización de los datos' es un objetivo de BI que busca:",
+        "options": [
+            "Restringir el acceso a los datos solo a los analistas y científicos de datos.",
+            "Hacer que los datos y las herramientas de análisis sean accesibles para una gama más amplia de usuarios de negocio, no solo para especialistas.",
+            "Vender los datos de la empresa al público en general.",
+            "Almacenar todos los datos en una sola computadora central."
+        ],
+        "answer": 1,
+        "explanation": "La democratización de los datos tiene como objetivo empoderar a los empleados de todos los niveles de la organización para que puedan acceder y analizar datos relevantes para tomar mejores decisiones en sus roles diarios."
+    },
+    {
+        "question": "¿Cuál es un ejemplo de cómo la minería de datos puede ser utilizada en el sector de la salud?",
+        "options": [
+            "Para programar citas de pacientes.",
+            "Para predecir qué pacientes tienen un alto riesgo de desarrollar ciertas enfermedades basándose en su historial clínico y factores de estilo de vida.",
+            "Para facturar a las compañías de seguros.",
+            "Para mantener un registro del inventario de medicamentos."
+        ],
+        "answer": 1,
+        "explanation": "La minería de datos puede analizar grandes conjuntos de datos de pacientes para identificar patrones y factores de riesgo, lo que permite a los proveedores de atención médica intervenir de manera proactiva y mejorar los resultados de salud."
+    },
+    {
+        "question": "La principal diferencia entre datos estructurados y no estructurados radica en:",
+        "options": [
+            "El tamaño de los datos.",
+            "La existencia de un modelo de datos predefinido.",
+            "La velocidad a la que se generan los datos.",
+            "El lugar donde se almacenan los datos."
+        ],
+        "answer": 1,
+        "explanation": "Los datos estructurados se adhieren a un modelo de datos bien definido (como las filas y columnas de una base de datos relacional), mientras que los datos no estructurados no tienen un modelo predefinido (como el texto de un correo electrónico)."
+    },
+    {
+        "question": "En el contexto de BI, ¿qué es el 'autoservicio' (self-service BI)?",
+        "options": [
+            "Un sistema donde los usuarios deben construir su propia infraestructura de BI desde cero.",
+            "Un enfoque que permite a los usuarios de negocio crear sus propios informes y análisis sin la intervención del departamento de TI.",
+            "Un servicio de soporte técnico que resuelve problemas de BI.",
+            "Un modelo de negocio donde los clientes pagan por cada informe que consumen."
+        ],
+        "answer": 1,
+        "explanation": "El BI de autoservicio proporciona a los usuarios de negocio herramientas intuitivas y fáciles de usar para que puedan explorar datos y generar sus propias visualizaciones e informes, reduciendo la dependencia del personal de TI."
+    },
+    {
+        "question": "¿Cuál de las siguientes afirmaciones es un ejemplo de una consulta que se podría realizar con OLAP?",
+        "options": [
+            "Mostrar la lista de todos los empleados contratados el mes pasado.",
+            "Comparar las ventas de un producto en diferentes regiones durante los últimos cuatro trimestres.",
+            "Actualizar la dirección de un cliente en la base de datos.",
+            "Predecir qué clientes es probable que dejen de usar un servicio."
+        ],
+        "answer": 1,
+        "explanation": "OLAP está diseñado para el análisis multidimensional, por lo que una consulta que compara una medida (ventas) a través de varias dimensiones (producto, región, tiempo) es un caso de uso clásico."
+    },
+    {
+        "question": "El 'análisis de cohortes' es una técnica de análisis de comportamiento que:",
+        "options": [
+            "Analiza a todos los usuarios como un solo grupo.",
+            "Agrupa a los usuarios en función de características compartidas durante un período de tiempo y sigue su comportamiento a lo largo del tiempo.",
+            "Se enfoca únicamente en el comportamiento de los nuevos usuarios.",
+            "Predice el comportamiento futuro de un solo usuario."
+        ],
+        "answer": 1,
+        "explanation": "El análisis de cohortes agrupa a los usuarios (por ejemplo, todos los que se registraron en enero) y rastrea a ese grupo a lo largo del tiempo para entender cómo cambia su comportamiento, como la tasa de retención o el valor de vida del cliente."
+    },
+    {
+        "question": "La 'visualización de datos' es un componente importante de BI porque:",
+        "options": [
+            "Hace que los informes se vean más coloridos y atractivos.",
+            "Ayuda a los humanos a identificar patrones, tendencias y valores atípicos en los datos de manera más fácil y rápida que mirando tablas de números.",
+            "Es la única forma de analizar datos.",
+            "Reemplaza la necesidad de tener datos de alta calidad."
+        ],
+        "answer": 1,
+        "explanation": "El cerebro humano procesa la información visual mucho más eficientemente que el texto o los números. Las visualizaciones efectivas hacen que los conocimientos complejos sean más fáciles de entender y comunicar."
+    },
+    {
+        "question": "¿Cuál es un desafío ético común asociado con el Big Data y la minería de datos?",
+        "options": [
+            "La dificultad para almacenar grandes volúmenes de datos.",
+            "La posibilidad de violar la privacidad de las personas al inferir información sensible sobre ellas.",
+            "El alto costo del software de análisis.",
+            "La falta de datos para analizar."
+        ],
+        "answer": 1,
+        "explanation": "El análisis de grandes conjuntos de datos puede revelar información personal y sensible que los individuos no compartieron explícitamente, lo que plantea importantes preocupaciones sobre la privacidad, la discriminación y la vigilancia."
+    },
+    {
+        "question": "El término 'lago de datos' (data lake) se refiere a:",
+        "options": [
+            "Un subconjunto de un almacén de datos enfocado en un tema.",
+            "Un repositorio que almacena grandes cantidades de datos brutos en su formato nativo, sin una estructura predefinida.",
+            "Una base de datos relacional tradicional.",
+            "Una herramienta para visualizar datos geográficos."
+        ],
+        "answer": 1,
+        "explanation": "A diferencia de un almacén de datos que requiere datos estructurados, un lago de datos almacena todo tipo de datos (estructurados, semi-estructurados, no estructurados) en su formato original. La estructura se aplica cuando se leen los datos (schema-on-read)."
+    },
+    {
+        "question": "En el contexto de la toma de decisiones, el 'análisis prescriptivo' va más allá del análisis predictivo al:",
+        "options": [
+            "Describir lo que sucedió en el pasado.",
+            "Predecir lo que podría suceder en el futuro.",
+            "Recomendar acciones específicas para lograr un resultado deseado y mostrar el impacto de cada decisión.",
+            "Visualizar los datos en un tablero."
+        ],
+        "answer": 2,
+        "explanation": "El análisis prescriptivo no solo predice un resultado futuro, sino que también sugiere las acciones a tomar para optimizar ese resultado, cuantificando el efecto de cada posible acción."
+    },
+    {
+        "question": "¿Cuál es el rol del 'metadato' en un almacén de datos?",
+        "options": [
+            "Es el dato transaccional principal.",
+            "Es 'dato sobre el dato'; describe la fuente, formato, estructura y reglas de negocio de los datos en el almacén.",
+            "Es un resumen de los resultados del análisis.",
+            "Es un tipo de dato no estructurado."
+        ],
+        "answer": 1,
+        "explanation": "El metadato es crucial para un almacén de datos, ya que proporciona el contexto necesario para entender los datos. Actúa como un diccionario o un mapa de los datos, indicando qué son, de dónde vienen y cómo se relacionan."
+    }
+]
+;
+
+        let quizzes = [];
+        let currentQuiz;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeRemaining = 20 * 60; // 20 minutos en segundos
+        let timerInterval;
+
+        const quizSelectionScreen = document.getElementById('quiz-selection-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const currentQuestionNumberElement = document.getElementById('current-question-number');
+        const scoreElement = document.getElementById('score');
+        const nextButton = document.getElementById('next-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const finalScoreElement = document.getElementById('final-score');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateQuizzes() {
+            quizzes = [];
+            let tempQuestions = [...allQuestions]; // Copia para no alterar el original
+            shuffleArray(tempQuestions);
+            
+            const numQuizzes = Math.ceil(tempQuestions.length / 20);
+
+            for (let i = 0; i < numQuizzes; i++) {
+                const startIndex = i * 20;
+                const endIndex = startIndex + 20;
+                const selectedQuestions = tempQuestions.slice(startIndex, endIndex);
+                quizzes.push({
+                    title: `Examen de Práctica ${i + 1}`,
+                    questions: selectedQuestions
+                });
+            }
+            
+            // Generate quiz selection buttons
+            const quizButtonsContainer = document.querySelector('#quiz-selection-screen .grid');
+            quizButtonsContainer.innerHTML = '';
+            
+            quizzes.forEach((quiz, index) => {
+                const button = document.createElement('button');
+                button.onclick = () => startQuiz(index);
+                button.className = 'card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none';
+                button.textContent = quiz.title;
+                quizButtonsContainer.appendChild(button);
+            });
+        }
+
+        function startQuiz(quizIndex) {
+            currentQuiz = quizzes[quizIndex];
+            currentQuestionIndex = 0;
+            score = 0;
+            timeRemaining = 20 * 60; // 20 minutos por examen
+            
+            quizSelectionScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            startTimer();
+            showQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timer');
+            if (timeRemaining <= 300) {
+                timerElement.classList.add('text-red-600');
+                timerElement.classList.remove('text-blue-600');
+            } else {
+                timerElement.classList.remove('text-red-600');
+                timerElement.classList.add('text-blue-600');
+            }
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= currentQuiz.questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+
+            currentQuestionNumberElement.textContent = currentQuestionIndex + 1;
+            document.querySelector('#quiz-screen .text-lg.font-semibold.text-gray-700').innerHTML = `Pregunta <span id="current-question-number">${currentQuestionIndex + 1}</span> de ${currentQuiz.questions.length}`;
+            scoreElement.textContent = score;
+            questionElement.textContent = currentQuestionData.question;
+            optionsContainer.innerHTML = '';
+            feedbackMessage.classList.add('hidden');
+            feedbackMessage.innerHTML = '';
+            nextButton.disabled = true;
+
+            const options = [...currentQuestionData.options];
+            
+            options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('answer-button', 'block');
+                button.onclick = () => checkAnswer(button, index);
+                optionsContainer.appendChild(button);
+            });
+
+            const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+            document.querySelector('.progress-bar').style.width = `${progress}%`;
+        }
+
+        function checkAnswer(selectedButton, selectedIndex) {
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+            const correctIndex = currentQuestionData.answer;
+
+            Array.from(optionsContainer.children).forEach((button, index) => {
+                button.disabled = true;
+                if (index === correctIndex) {
+                    button.classList.add('correct');
+                }
+            });
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                feedbackMessage.textContent = '¡Respuesta Correcta!';
+                feedbackMessage.className = 'bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-r-lg';
+            } else {
+                selectedButton.classList.add('incorrect');
+                feedbackMessage.innerHTML = `
+                    <div class="font-bold mb-2">¡Respuesta Incorrecta!</div>
+                    <div class="explanation">
+                        <strong class="text-indigo-700">Explicación:</strong>
+                        <p class="text-sm mt-1 text-gray-700">${currentQuestionData.explanation}</p>
+                    </div>
+                `;
+                feedbackMessage.className = 'bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r-lg';
+            }
+
+            feedbackMessage.classList.remove('hidden');
+            scoreElement.textContent = score;
+            nextButton.disabled = false;
+            nextButton.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            finalScoreElement.textContent = `${score}/${currentQuiz.questions.length}`;
+        }
+
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            quizSelectionScreen.classList.remove('hidden');
+            generateQuizzes();
+        }
+
+        window.onload = function() {
+            generateQuizzes();
+            quizSelectionScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
