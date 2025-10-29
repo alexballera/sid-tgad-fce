@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Sesión 11 - SID</title>
+    <meta name="description" content="Cuestionario de práctica para la Sesión 11 de Fundamentos de Sistemas de Información Digitales, sobre Comunicaciones, Redes, Internet y E-Commerce.">
+    <meta name="keywords" content="SID, FCE, UBA, Cuestionario, Redes, Comunicaciones, Internet, E-Commerce">
+    <meta name="author" content="Alexis Ballera - alexisballera@gmail.com">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .quiz-button {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .answer-button {
+            width: 100%;
+            padding: 16px;
+            text-align: left;
+            background-color: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .answer-button:hover:not(:disabled) {
+            background-color: #f3f4f6;
+            border-color: #6366f1;
+            transform: translateX(4px);
+        }
+
+        .answer-button.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            animation: pulse-correct 0.8s ease-in-out;
+        }
+
+        .answer-button.incorrect {
+            background-color: #fecaca;
+            border-color: #ef4444;
+            color: #991b1b;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        @keyframes pulse-correct {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .progress-bar {
+            background: linear-gradient(to right, #10b981, #059669);
+            border-radius: 9999px;
+            height: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .medal {
+            font-size: 4rem;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-10px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Quiz Selection Screen -->
+        <div id="quiz-selection-screen" class="hidden fade-in">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">Cuestionario Sesión 11</h1>
+                <p class="text-xl text-gray-600 mb-2">Comunicaciones, Redes, Internet y E-Commerce</p>
+                <p class="text-lg text-gray-500">Fundamentos de Sistemas de Información Digitales</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Los botones se generan dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number">1</span> de 20</span>
+                    <div class="timer text-blue-600" id="timer">60:00</div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Puntuación: <span id="score">0</span></span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="progress-bar h-2 rounded-full" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 id="question" class="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">Pregunta...</h2>
+                <div id="options-container" class="space-y-3">
+                    <!-- Las opciones se generan dinámicamente -->
+                </div>
+            </div>
+
+            <div id="feedback-message" class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-6 rounded-r-lg hidden">
+                <!-- El feedback se muestra aquí -->
+            </div>
+
+            <div class="text-center">
+                <button id="next-button" onclick="nextQuestion()" class="quiz-button bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none disabled:opacity-50" disabled>
+                    Siguiente Pregunta
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden fade-in">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="medal mb-4">🏆</div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Examen Completado!</h2>
+                    <div class="score-display text-indigo-600 mb-4"><span id="final-score">0</span>/20</div>
+                    <p class="text-lg text-gray-600 mb-6">Has completado el examen de práctica</p>
+                    
+                    <div class="space-y-4">
+                        <button onclick="restartQuiz()" class="quiz-button w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">
+                            Realizar Otro Examen
+                        </button>
+                        <button onclick="window.location.reload()" class="quiz-button w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none">
+                            Volver al Inicio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allQuestions = [
+    {
+        "question": "¿Cuál es el propósito principal de una red de computadoras?",
+        "options": [
+            "Proteger los equipos de virus y malware.",
+            "Compartir recursos y ofrecer servicios.",
+            "Aumentar la velocidad de un solo equipo.",
+            "Almacenar datos de forma indefinida."
+        ],
+        "answer": 1,
+        "explanation": "Una red es un conjunto de equipos informáticos conectados para compartir recursos (como archivos, impresoras, discos) y ofrecer servicios."
+    },
+    {
+        "question": "¿Qué tipo de red se caracteriza por tener un tamaño reducido y alta velocidad, generalmente dentro de un mismo edificio?",
+        "options": [
+            "WAN (Wide Area Network)",
+            "MAN (Metropolitan Area Network)",
+            "LAN (Local Area Network)",
+            "PAN (Personal Area Network)"
+        ],
+        "answer": 2,
+        "explanation": "La LAN (Red de Área Local) se define por su alcance geográfico limitado a un área pequeña como una oficina o un edificio, con alta velocidad de conexión."
+    },
+    {
+        "question": "¿Qué tecnología se utiliza para simular una red privada sobre una infraestructura de red pública como Internet?",
+        "options": [
+            "VLAN (Virtual LAN)",
+            "VPN (Virtual Private Network)",
+            "DSL (Digital Subscriber Line)",
+            "TCP/IP (Transmission Control Protocol/Internet Protocol)"
+        ],
+        "answer": 1,
+        "explanation": "Una VPN (Red Privada Virtual) utiliza tecnologías de cifrado para crear una conexión segura y 'privada' a través de una red pública."
+    },
+    {
+        "question": "En el modelo TCP/IP, ¿qué protocolo es responsable de garantizar que los paquetes de datos lleguen sin errores y en el orden correcto?",
+        "options": [
+            "IP (Internet Protocol)",
+            "UDP (User Datagram Protocol)",
+            "TCP (Transmission Control Protocol)",
+            "HTTP (Hypertext Transfer Protocol)"
+        ],
+        "answer": 2,
+        "explanation": "TCP (Protocolo de Control de Transmisión) establece una conexión y se encarga del movimiento de datos entre computadoras, asegurando la entrega ordenada y sin errores."
+    },
+    {
+        "question": "¿Cuál es la función principal de un 'router' en una red?",
+        "options": [
+            "Conectar dispositivos dentro de la misma LAN.",
+            "Convertir señales digitales en analógicas.",
+            "Enrutar paquetes de datos entre distintas redes.",
+            "Amplificar la señal de una red inalámbrica."
+        ],
+        "answer": 2,
+        "explanation": "Un enrutador (router) es un procesador de comunicaciones que se utiliza para enrutar paquetes de datos a través de distintas redes, asegurando que lleguen a la dirección correcta."
+    },
+    {
+        "question": "En la topología de red en estrella (star topology), ¿qué sucede si el dispositivo central (hub o switch) falla?",
+        "options": [
+            "Solo falla un dispositivo de la red.",
+            "La red sigue funcionando sin problemas.",
+            "Toda la red deja de funcionar.",
+            "La red se vuelve más lenta pero operativa."
+        ],
+        "answer": 2,
+        "explanation": "En una topología de estrella, todos los dispositivos se conectan a un punto central. Si este punto central falla, toda la red se cae."
+    },
+    {
+        "question": "¿Qué es el 'ancho de banda' (bandwidth) en una comunicación de red?",
+        "options": [
+            "La velocidad a la que viajan los datos.",
+            "La cantidad de datos que se pueden transmitir en un período de tiempo.",
+            "La distancia máxima que puede cubrir una señal.",
+            "El número de dispositivos conectados a la red."
+        ],
+        "answer": 1,
+        "explanation": "El ancho de banda es la diferencia entre las frecuencias más alta y más baja que se pueden acomodar en un canal, determinando la capacidad de transmisión del mismo."
+    },
+    {
+        "question": "¿Cuál fue el origen principal de Internet?",
+        "options": [
+            "Un proyecto comercial de empresas de telefonía.",
+            "Una iniciativa de universidades para compartir artículos académicos.",
+            "Un proyecto militar y universitario para crear una red descentralizada.",
+            "Una red social creada para conectar personas a nivel mundial."
+        ],
+        "answer": 2,
+        "explanation": "El origen de Internet fue una combinación de trabajos universitarios con militares (ARPANET) para constituir una red que pudiera seguir funcionando incluso si parte de ella era destruida."
+    },
+    {
+        "question": "¿Qué función cumple el Sistema de Nombres de Dominio (DNS)?",
+        "options": [
+            "Asigna direcciones MAC a los dispositivos.",
+            "Convierte nombres de dominio (ej. google.com) en direcciones IP numéricas.",
+            "Encripta los datos que viajan por la red.",
+            "Administra el flujo de paquetes en una red."
+        ],
+        "answer": 1,
+        "explanation": "El DNS (Domain Name System) es un sistema jerárquico que traduce los nombres de dominio, fáciles de recordar para los humanos, a las direcciones IP numéricas que las máquinas necesitan para comunicarse."
+    },
+    {
+        "question": "¿Qué es una dirección MAC (Media Access Control)?",
+        "options": [
+            "Una dirección IP temporal asignada por un servidor DHCP.",
+            "Un identificador único y físico asignado a la tarjeta de red de un dispositivo.",
+            "El nombre de dominio de un sitio web.",
+            "La dirección de la puerta de enlace de una red."
+        ],
+        "answer": 1,
+        "explanation": "La dirección MAC es un identificador físico único a nivel mundial para cada tarjeta de red, utilizado para la comunicación en la capa de enlace de datos."
+    },
+    {
+        "question": "¿Cuál es la principal diferencia entre E-commerce y E-business?",
+        "options": [
+            "E-commerce es solo para empresas grandes, E-business para pequeñas.",
+            "E-commerce implica transacciones con valor monetario, E-business abarca procesos internos.",
+            "E-commerce se refiere a la venta de bienes, E-business a la de servicios.",
+            "No hay ninguna diferencia, son términos intercambiables."
+        ],
+        "answer": 1,
+        "explanation": "E-commerce se enfoca en transacciones comerciales (compra/venta) que implican un intercambio de valor, mientras que E-business es más amplio y abarca todos los procesos de negocio realizados digitalmente, incluyendo los internos."
+    },
+    {
+        "question": "El modelo de negocio B2C (Business-to-Consumer) se refiere a:",
+        "options": [
+            "Transacciones entre dos consumidores.",
+            "Transacciones entre dos empresas.",
+            "Transacciones del gobierno a los ciudadanos.",
+            "Transacciones de una empresa directamente al consumidor final."
+        ],
+        "answer": 3,
+        "explanation": "B2C describe el comercio directo de un negocio o empresa a los consumidores finales, como las tiendas en línea que venden al público."
+    },
+    {
+        "question": "La 'ubicuidad' es una característica del e-commerce que significa:",
+        "options": [
+            "La capacidad de llegar a mercados globales.",
+            "La disponibilidad del mercado en cualquier lugar y en cualquier momento.",
+            "La riqueza de formatos de contenido (texto, video, audio).",
+            "La personalización de los mensajes de marketing."
+        ],
+        "answer": 1,
+        "explanation": "La ubicuidad se refiere a que el e-commerce está disponible en todas partes y en todo momento, liberando al mercado de las limitaciones geográficas y temporales."
+    },
+    {
+        "question": "¿Qué es la 'desintermediación' como efecto del comercio electrónico?",
+        "options": [
+            "La creación de nuevos intermediarios en la cadena de valor.",
+            "La reducción o eliminación de intermediarios entre el productor y el consumidor.",
+            "El aumento de los costos de transacción para el cliente.",
+            "La necesidad de tener más puntos de contacto físicos."
+        ],
+        "answer": 1,
+        "explanation": "La desintermediación es la eliminación de intermediarios en la cadena de suministro, permitiendo un contacto más directo entre vendedores y compradores, lo que puede reducir costos."
+    },
+    {
+        "question": "Un ejemplo de comercio C2C (Consumer-to-Consumer) es:",
+        "options": [
+            "Amazon vendiendo libros a un cliente.",
+            "Una empresa comprando software a otra.",
+            "Un usuario vendiendo su auto usado a otro en MercadoLibre.",
+            "El gobierno pagando un subsidio a un ciudadano."
+        ],
+        "answer": 2,
+        "explanation": "El comercio C2C implica transacciones directas entre consumidores, como las que se facilitan en plataformas como MercadoLibre u OLX."
+    },
+    {
+        "question": "¿Qué es la Web 2.0?",
+        "options": [
+            "Una web estática con contenido fijo creado por los dueños de los sitios.",
+            "Una web social, interactiva y con contenido generado por los propios usuarios.",
+            "Una web semántica que entiende el significado de la información.",
+            "La primera versión de la World Wide Web."
+        ],
+        "answer": 1,
+        "explanation": "La Web 2.0 se caracteriza por la interactividad, la participación social, el control del usuario en tiempo real y el contenido generado por el usuario (blogs, redes sociales, wikis)."
+    },
+    {
+        "question": "¿Cuál de las siguientes es una limitante cultural para el comercio electrónico?",
+        "options": [
+            "El costo de los dispositivos de acceso a internet.",
+            "La falta de habilidades para usar aplicaciones web.",
+            "La necesidad de ver y tocar el producto antes de comprarlo.",
+            "La velocidad de la conexión a internet."
+        ],
+        "answer": 2,
+        "explanation": "Factores culturales, como la costumbre de querer examinar físicamente un producto antes de la compra, pueden ser una barrera para la adopción del e-commerce."
+    },
+    {
+        "question": "En el modelo OSI, ¿cuántas capas existen?",
+        "options": [
+            "4 capas",
+            "5 capas",
+            "7 capas",
+            "10 capas"
+        ],
+        "answer": 2,
+        "explanation": "El modelo de referencia OSI (Open Systems Interconnection) divide las funciones de comunicación en 7 capas lógicas."
+    },
+    {
+        "question": "¿Qué tecnología inalámbrica de corto alcance se usa para crear Redes de Área Personal (PAN)?",
+        "options": [
+            "Wi-Fi",
+            "Bluetooth",
+            "WiMax",
+            "4G LTE"
+        ],
+        "answer": 1,
+        "explanation": "Bluetooth es el estándar (802.15) diseñado para crear pequeñas redes de área personal (PAN) para conectar dispositivos cercanos como teléfonos, auriculares y teclados."
+    },
+    {
+        "question": "¿Cuál es la función de un módem?",
+        "options": [
+            "Filtrar el tráfico de red no deseado.",
+            "Asignar direcciones IP a los dispositivos.",
+            "Almacenar datos de la red de forma temporal.",
+            "Modular y demodular señales para transmitir datos digitales sobre líneas analógicas."
+        ],
+        "answer": 3,
+        "explanation": "Un módem (modulador-demodulador) convierte las señales digitales de una computadora en señales analógicas para ser transmitidas por medios como la línea telefónica, y viceversa."
+    },
+    {
+        "question": "¿Qué es una VLAN (Red de Área Local Virtual)?",
+        "options": [
+            "Una red que se extiende por varias ciudades.",
+            "Una red física que conecta solo dos dispositivos.",
+            "Una red que usa el espacio público para crear una conexión privada.",
+            "Una red lógica que agrupa dispositivos de una red física más grande como si estuvieran en su propia LAN."
+        ],
+        "answer": 3,
+        "explanation": "Una VLAN permite segmentar una red física grande en subredes lógicas más pequeñas, mejorando la gestión y la seguridad sin cambiar el cableado físico."
+    },
+    {
+        "question": "¿Qué protocolo se utiliza comúnmente para la transferencia de archivos entre un cliente y un servidor?",
+        "options": [
+            "HTTP",
+            "SMTP",
+            "FTP",
+            "Telnet"
+        ],
+        "answer": 2,
+        "explanation": "FTP (Protocolo de Transferencia de Archivos) es el estándar diseñado específicamente para transferir archivos de una computadora a otra a través de una red."
+    },
+    {
+        "question": "La 'densidad de información' en el e-commerce se refiere a:",
+        "options": [
+            "La cantidad total de usuarios en una plataforma.",
+            "La gran cantidad, variedad y calidad de la información disponible para todos los participantes.",
+            "La dificultad para encontrar información relevante.",
+            "La velocidad con la que se actualiza la información."
+        ],
+        "answer": 1,
+        "explanation": "La densidad de información se refiere a la vasta cantidad y calidad de información disponible para todos los participantes del mercado, reduciendo la asimetría de información."
+    },
+    {
+        "question": "¿Cuál de los siguientes es un modelo de ingresos común para un 'Proveedor de Contenido' en e-commerce?",
+        "options": [
+            "Comisión por transacción.",
+            "Venta directa de productos físicos.",
+            "Publicidad y suscripciones.",
+            "Intereses sobre préstamos."
+        ],
+        "answer": 2,
+        "explanation": "Los proveedores de contenido, como sitios de noticias o revistas digitales, suelen generar ingresos a través de publicidad, suscripciones de pago o micropagos por contenido."
+    },
+    {
+        "question": "¿Qué es WiMax?",
+        "options": [
+            "Un estándar para redes de área personal de muy corto alcance.",
+            "Un estándar de comunicación para redes de área amplia inalámbricas (WMAN).",
+            "Un tipo de cable de fibra óptica.",
+            "Un protocolo para el envío de correo electrónico."
+        ],
+        "answer": 1,
+        "explanation": "WiMax (Worldwide Interoperability for Microwave Access) es el estándar IEEE 802.16 para redes inalámbricas metropolitanas, diseñado para ofrecer acceso de banda ancha en un área geográfica extensa."
+    },
+    {
+        "question": "El 'efecto de red' en el contexto del e-commerce implica que:",
+        "options": [
+            "Cuantos más usuarios hay, más lenta se vuelve la red.",
+            "El valor de un servicio aumenta a medida que más personas lo usan.",
+            "La red se satura y deja de crecer.",
+            "Los costos de la red aumentan exponencialmente con cada nuevo usuario."
+        ],
+        "answer": 1,
+        "explanation": "El efecto de red describe el fenómeno por el cual el valor de un producto o servicio para un usuario aumenta a medida que más personas lo utilizan, como en las redes sociales o los mercados en línea."
+    },
+    {
+        "question": "¿Qué es un 'e-tailer'?",
+        "options": [
+            "Un proveedor de servicios de internet.",
+            "Una tienda minorista que opera principalmente en línea.",
+            "Un mercado de subastas entre consumidores.",
+            "Un fabricante de componentes electrónicos."
+        ],
+        "answer": 1,
+        "explanation": "Un e-tailer (electronic retailer) es una tienda que vende productos directamente a los consumidores a través de Internet, siendo el equivalente en línea de una tienda minorista tradicional."
+    },
+    {
+        "question": "¿Cuál es la principal ventaja de la conmutación de paquetes sobre la conmutación de circuitos?",
+        "options": [
+            "Garantiza una velocidad de conexión constante.",
+            "Es más simple de implementar.",
+            "Utiliza la capacidad de la red de manera más eficiente.",
+            "No requiere direcciones de destino."
+        ],
+        "answer": 2,
+        "explanation": "La conmutación de paquetes es más eficiente porque divide los mensajes en paquetes que pueden viajar por diferentes rutas y compartir la capacidad de la red, a diferencia de la conmutación de circuitos que dedica un canal completo a una sola comunicación."
+    },
+    {
+        "question": "¿Qué es la 'brecha digital'?",
+        "options": [
+            "La diferencia de velocidad entre distintas conexiones a internet.",
+            "La distancia física entre dos nodos de una red.",
+            "La desigualdad en el acceso y uso de las tecnologías de la información y la comunicación.",
+            "El tiempo que tarda un paquete en viajar por la red."
+        ],
+        "answer": 2,
+        "explanation": "La brecha digital se refiere a la disparidad entre aquellos que tienen acceso a las tecnologías de la información (como Internet) y aquellos que no, a menudo por factores socioeconómicos, geográficos o de edad."
+    },
+    {
+        "question": "En el contexto de e-commerce, ¿qué es un 'portal'?",
+        "options": [
+            "Un dispositivo físico para conectarse a internet.",
+            "Un sitio web que actúa como punto de entrada a una variedad de contenidos y servicios.",
+            "Un tipo de software de encriptación.",
+            "Un modelo de negocio basado en suscripciones."
+        ],
+        "answer": 1,
+        "explanation": "Un portal es un sitio web que ofrece una amplia gama de recursos y servicios, como correo electrónico, foros, motores de búsqueda y contenido de noticias, funcionando como una 'puerta de entrada' a Internet para muchos usuarios."
+    },
+    {
+        "question": "¿Cuál es la función principal de la capa de Aplicación en el modelo OSI?",
+        "options": [
+            "Transmitir bits a través del medio físico.",
+            "Gestionar las conexiones entre aplicaciones.",
+            "Proporcionar servicios de red directamente a las aplicaciones del usuario.",
+            "Enrutar paquetes a través de la red."
+        ],
+        "answer": 2,
+        "explanation": "La capa de Aplicación (Capa 7) es la más cercana al usuario y proporciona los protocolos y servicios que las aplicaciones de software utilizan para comunicarse a través de la red (ej. HTTP, FTP, SMTP)."
+    },
+    {
+        "question": "¿Qué es el 'Comercio Social' (Social Commerce)?",
+        "options": [
+            "Vender productos a organizaciones sin fines de lucro.",
+            "Usar redes sociales y la interacción social en línea para promocionar y vender productos.",
+            "Un tipo de comercio regulado por el gobierno.",
+            "Comercio que se realiza exclusivamente a través de reuniones en persona."
+        ],
+        "answer": 1,
+        "explanation": "El comercio social utiliza plataformas de redes sociales, reseñas de usuarios y otras interacciones sociales en línea para facilitar la compra y venta de productos y servicios."
+    },
+    {
+        "question": "¿Qué es una 'extranet'?",
+        "options": [
+            "Una red interna de una organización, accesible solo para sus empleados.",
+            "La red pública global de computadoras.",
+            "Una red privada que permite a socios comerciales externos acceder a parte de la red interna de una empresa.",
+            "Una red completamente abierta a cualquier persona."
+        ],
+        "answer": 2,
+        "explanation": "Una extranet es una extensión controlada de la intranet de una empresa que permite el acceso a socios comerciales, proveedores o clientes autorizados a una parte específica de la red."
+    },
+    {
+        "question": "La tecnología RFID (Identificación por Radiofrecuencia) es una mejora sobre los códigos de barras porque:",
+        "options": [
+            "Es más barata de imprimir.",
+            "No requiere una línea de visión directa para ser leída.",
+            "Solo puede almacenar un número de identificación.",
+            "Es una tecnología puramente óptica."
+        ],
+        "answer": 1,
+        "explanation": "A diferencia de los códigos de barras, las etiquetas RFID pueden ser leídas a distancia sin necesidad de una línea de visión directa, lo que permite un seguimiento más rápido y automatizado de los productos."
+    },
+    {
+        "question": "¿Cuál es el propósito de un 'firewall' (cortafuegos) en una red?",
+        "options": [
+            "Acelerar la velocidad de la conexión a internet.",
+            "Monitorear y controlar el tráfico de red entrante y saliente según reglas de seguridad.",
+            "Almacenar copias de seguridad de los datos de la red.",
+            "Traducir nombres de dominio a direcciones IP."
+        ],
+        "answer": 1,
+        "explanation": "Un firewall actúa como una barrera de seguridad entre una red interna de confianza y redes externas no confiables, controlando el tráfico para prevenir accesos no autorizados."
+    },
+    {
+        "question": "¿Qué es la Web 3.0 o Web Semántica?",
+        "options": [
+            "Una red donde todo el contenido es generado por los usuarios.",
+            "Una web donde las máquinas pueden entender el significado y contexto de la información.",
+            "Una versión de la web que solo funciona en dispositivos móviles.",
+            "Una red basada exclusivamente en contenido de video."
+        ],
+        "answer": 1,
+        "explanation": "La Web 3.0, o Web Semántica, busca crear una web donde el software pueda procesar y entender la información de manera similar a un humano, permitiendo una automatización y una interconexión de datos más inteligente."
+    },
+    {
+        "question": "En e-commerce, ¿qué es un 'Corredor de transacciones' (Transaction Broker)?",
+        "options": [
+            "Una tienda que vende sus propios productos.",
+            "Un sitio que pone en contacto a compradores y vendedores pero no participa en la transacción.",
+            "Una empresa que procesa transacciones para clientes a cambio de una comisión.",
+            "Un proveedor de contenido digital."
+        ],
+        "answer": 2,
+        "explanation": "Un corredor de transacciones es un modelo de negocio que procesa transacciones (financieras, de viajes, etc.) en nombre de un consumidor, cobrando una tarifa o comisión por el servicio."
+    },
+    {
+        "question": "¿Cuál es la principal diferencia entre una señal analógica y una digital?",
+        "options": [
+            "La analógica es más rápida que la digital.",
+            "La analógica es una onda continua, mientras que la digital es una onda discreta (pulsos).",
+            "La analógica solo se usa en fibra óptica, la digital en cables de cobre.",
+            "La digital no puede transmitir voz."
+        ],
+        "answer": 1,
+        "explanation": "Una señal analógica es una forma de onda continua que varía suavemente en el tiempo, mientras que una señal digital es discreta y representa la información como una secuencia de valores finitos (generalmente 0 y 1)."
+    },
+    {
+        "question": "¿Qué tipo de medio de transmisión ofrece la mayor capacidad (ancho de banda) y velocidad?",
+        "options": [
+            "Cable de par trenzado",
+            "Cable coaxial",
+            "Fibra óptica",
+            "Microondas terrestres"
+        ],
+        "answer": 2,
+        "explanation": "El cable de fibra óptica transmite datos como pulsos de luz y ofrece un ancho de banda y velocidades de transmisión significativamente mayores que los medios basados en cobre como el par trenzado o el coaxial."
+    },
+    {
+        "question": "¿Qué es un 'Generador de mercado' (Market Creator) en el contexto B2C?",
+        "options": [
+            "Una empresa que fabrica productos para un mercado específico.",
+            "Una plataforma que construye un entorno digital donde compradores y vendedores pueden encontrarse y realizar transacciones.",
+            "Un consultor que analiza las tendencias del mercado.",
+            "Un banco que financia nuevas empresas."
+        ],
+        "answer": 1,
+        "explanation": "Un generador de mercado, como eBay o MercadoLibre, crea un entorno digital (un mercado) que facilita las transacciones entre un gran número de compradores y vendedores."
+    }
+];
+
+        let quizzes = [];
+        let currentQuiz;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeRemaining = 60 * 60; // 60 minutos en segundos
+        let timerInterval;
+
+        const quizSelectionScreen = document.getElementById('quiz-selection-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const currentQuestionNumberElement = document.getElementById('current-question-number');
+        const scoreElement = document.getElementById('score');
+        const nextButton = document.getElementById('next-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const finalScoreElement = document.getElementById('final-score');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateQuizzes() {
+            quizzes = [];
+            let tempQuestions = [...allQuestions]; // Copia para no alterar el original
+            shuffleArray(tempQuestions);
+            
+            const numQuizzes = Math.ceil(tempQuestions.length / 20);
+
+            for (let i = 0; i < numQuizzes; i++) {
+                const startIndex = i * 20;
+                const endIndex = startIndex + 20;
+                const selectedQuestions = tempQuestions.slice(startIndex, endIndex);
+                quizzes.push({
+                    title: `Examen de Práctica ${i + 1}`,
+                    questions: selectedQuestions
+                });
+            }
+            
+            // Generate quiz selection buttons
+            const quizButtonsContainer = document.querySelector('#quiz-selection-screen .grid');
+            quizButtonsContainer.innerHTML = '';
+            
+            quizzes.forEach((quiz, index) => {
+                const button = document.createElement('button');
+                button.onclick = () => startQuiz(index);
+                button.className = 'card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none';
+                button.textContent = quiz.title;
+                quizButtonsContainer.appendChild(button);
+            });
+        }
+
+        function startQuiz(quizIndex) {
+            currentQuiz = quizzes[quizIndex];
+            currentQuestionIndex = 0;
+            score = 0;
+            timeRemaining = 20 * 60; // 20 minutos por examen
+            
+            quizSelectionScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            startTimer();
+            showQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timer');
+            if (timeRemaining <= 300) {
+                timerElement.classList.add('text-red-600');
+                timerElement.classList.remove('text-blue-600');
+            } else {
+                timerElement.classList.remove('text-red-600');
+                timerElement.classList.add('text-blue-600');
+            }
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= currentQuiz.questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+
+            currentQuestionNumberElement.textContent = currentQuestionIndex + 1;
+            document.querySelector('#quiz-screen .text-lg.font-semibold.text-gray-700').innerHTML = `Pregunta <span id="current-question-number">${currentQuestionIndex + 1}</span> de ${currentQuiz.questions.length}`;
+            scoreElement.textContent = score;
+            questionElement.textContent = currentQuestionData.question;
+            optionsContainer.innerHTML = '';
+            feedbackMessage.classList.add('hidden');
+            feedbackMessage.innerHTML = '';
+            nextButton.disabled = true;
+
+            const options = [...currentQuestionData.options];
+            
+            options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('answer-button', 'block');
+                button.onclick = () => checkAnswer(button, index);
+                optionsContainer.appendChild(button);
+            });
+
+            const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+            document.querySelector('.progress-bar').style.width = `${progress}%`;
+        }
+
+        function checkAnswer(selectedButton, selectedIndex) {
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+            const correctIndex = currentQuestionData.answer;
+
+            Array.from(optionsContainer.children).forEach((button, index) => {
+                button.disabled = true;
+                if (index === correctIndex) {
+                    button.classList.add('correct');
+                }
+            });
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                feedbackMessage.textContent = '¡Respuesta Correcta!';
+                feedbackMessage.className = 'bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-r-lg';
+            } else {
+                selectedButton.classList.add('incorrect');
+                feedbackMessage.innerHTML = `
+                    <div class="font-bold mb-2">¡Respuesta Incorrecta!</div>
+                    <div class="explanation">
+                        <strong class="text-indigo-700">Explicación:</strong>
+                        <p class="text-sm mt-1 text-gray-700">${currentQuestionData.explanation}</p>
+                    </div>
+                `;
+                feedbackMessage.className = 'bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r-lg';
+            }
+
+            feedbackMessage.classList.remove('hidden');
+            scoreElement.textContent = score;
+            nextButton.disabled = false;
+            nextButton.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            finalScoreElement.textContent = `${score}/${currentQuiz.questions.length}`;
+        }
+
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            quizSelectionScreen.classList.remove('hidden');
+            generateQuizzes();
+        }
+
+        window.onload = function() {
+            generateQuizzes();
+            quizSelectionScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
