@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Sesión 17 - SID</title>
+    <meta name="description" content="Cuestionario de práctica para la Sesión 17 de Fundamentos de Sistemas de Información Digitales, sobre Adquisición de Sistemas de Información: Decisiones de Inversión, TCO, ROI, VAN, TIR, Tercerización y Selección de Software.">
+    <meta name="keywords" content="SID, FCE, UBA, Cuestionario, Adquisición de SI, Decisiones de Inversión, TCO, ROI, VAN, TIR, Tercerización, Outsourcing, Selección de Software, SLA">
+    <meta name="author" content="Alexis Ballera - alexisballera@gmail.com">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .quiz-button {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .answer-button {
+            width: 100%;
+            padding: 16px;
+            text-align: left;
+            background-color: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .answer-button:hover:not(:disabled) {
+            background-color: #f3f4f6;
+            border-color: #6366f1;
+            transform: translateX(4px);
+        }
+
+        .answer-button.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            animation: pulse-correct 0.8s ease-in-out;
+        }
+
+        .answer-button.incorrect {
+            background-color: #fecaca;
+            border-color: #ef4444;
+            color: #991b1b;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        @keyframes pulse-correct {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .progress-bar {
+            background: linear-gradient(to right, #10b981, #059669);
+            border-radius: 9999px;
+            height: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .medal {
+            font-size: 4rem;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-10px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Quiz Selection Screen -->
+        <div id="quiz-selection-screen" class="hidden fade-in">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">Cuestionario Sesión 17</h1>
+                <p class="text-xl text-gray-600 mb-2">Adquisición de Sistemas de Información</p>
+                <p class="text-lg text-gray-500">Fundamentos de Sistemas de Información Digitales</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Los botones se generan dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number">1</span> de 20</span>
+                    <div class="timer text-blue-600" id="timer">20:00</div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Puntuación: <span id="score">0</span></span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="progress-bar h-2 rounded-full" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 id="question" class="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">Pregunta...</h2>
+                <div id="options-container" class="space-y-3">
+                    <!-- Las opciones se generan dinámicamente -->
+                </div>
+            </div>
+
+            <div id="feedback-message" class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-6 rounded-r-lg hidden">
+                <!-- El feedback se muestra aquí -->
+            </div>
+
+            <div class="text-center">
+                <button id="next-button" onclick="nextQuestion()" class="quiz-button bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none disabled:opacity-50" disabled>
+                    Siguiente Pregunta
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden fade-in">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="medal mb-4">🏆</div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Examen Completado!</h2>
+                    <div class="score-display text-indigo-600 mb-4"><span id="final-score">0</span>/20</div>
+                    <p class="text-lg text-gray-600 mb-6">Has completado el examen de práctica</p>
+                    
+                    <div class="space-y-4">
+                        <button onclick="restartQuiz()" class="quiz-button w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">
+                            Realizar Otro Examen
+                        </button>
+                        <button onclick="window.location.reload()" class="quiz-button w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none">
+                            Volver al Inicio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allQuestions = [
+    {
+        question: "¿Cuál es el objetivo principal de la evaluación económica de proyectos de TI?",
+        options: [
+            "Medir y comparar costos y beneficios para determinar la pertinencia de ejecución del proyecto",
+            "Calcular únicamente los costos directos de hardware y software",
+            "Determinar la cantidad de personal necesario para el proyecto",
+            "Establecer el cronograma de implementación del proyecto"
+        ],
+        answer: 0,
+        explanation: "La evaluación económica de proyectos consiste en la medición y comparación de los costos y beneficios de proyectos con el objetivo de determinar la pertinencia de su ejecución respecto de los objetivos planteados y respecto de otros proyectos."
+    },
+    {
+        question: "¿Qué diferencia existe entre necesidades y medios en la evaluación de proyectos?",
+        options: [
+            "No existe diferencia, son conceptos equivalentes",
+            "Las necesidades se relacionan con beneficios y los medios con costos",
+            "Las necesidades son técnicas y los medios son financieros",
+            "Las necesidades son a corto plazo y los medios a largo plazo"
+        ],
+        answer: 1,
+        explanation: "Las necesidades o problemas a resolver se relacionan con los beneficios del proyecto, mientras que los medios (para satisfacer necesidades) se relacionan con los costos. Por ejemplo, 'Facturar clientes corporativos en forma automática' es una necesidad, mientras que 'Implementar el módulo de Compras de Oracle' es un medio."
+    },
+    {
+        question: "¿Cuál de las siguientes es una característica de los costos atribuibles al proyecto?",
+        options: [
+            "Son costos que existirían independientemente del proyecto",
+            "Son costos que se generan específicamente por la ejecución del proyecto",
+            "Son únicamente los costos de capacitación",
+            "Son costos que no se pueden cuantificar"
+        ],
+        answer: 1,
+        explanation: "Los costos atribuibles al proyecto son aquellos que se generan específicamente por la ejecución del mismo. Se diferencian de los costos no atribuibles, que existirían independientemente de si el proyecto se realiza o no."
+    },
+    {
+        question: "¿Qué tipos de costos deben considerarse en proyectos de TI?",
+        options: [
+            "Únicamente hardware y software",
+            "Solo recursos humanos y capacitación",
+            "Licenciamiento, recursos humanos, capacitación, hardware y recursos físicos",
+            "Exclusivamente costos de implementación"
+        ],
+        answer: 2,
+        explanation: "Los costos en proyectos de TI incluyen: licenciamiento de software aplicativo y de sistemas, recursos humanos necesarios para implementación o desarrollo, capacitación, compra e instalación de hardware, y recursos físicos necesarios para apoyar el proyecto."
+    },
+    {
+        question: "¿Cuál es una forma de generar beneficios mediante la reducción de costos en proyectos de TI?",
+        options: [
+            "Aumentando el personal del área de sistemas",
+            "Mejorando procesos por aplicación de TI o reduciendo recursos necesarios",
+            "Comprando hardware más costoso",
+            "Implementando todos los módulos disponibles del software"
+        ],
+        answer: 1,
+        explanation: "Los beneficios por reducción de costos se pueden obtener mejorando procesos mediante la aplicación de TI o reduciendo la cantidad de recursos necesarios para realizar las operaciones."
+    },
+    {
+        question: "¿Qué interrogante NO es apropiado para identificar beneficios en proyectos de TI?",
+        options: [
+            "¿Tengo forma de reducir costos mejorando procesos?",
+            "¿Puedo incrementar las ventas?",
+            "¿Cuánto costará el hardware más caro disponible?",
+            "¿Podré obtener mejores descuentos en las compras?"
+        ],
+        answer: 2,
+        explanation: "Las interrogantes apropiadas para identificar beneficios incluyen: formas de reducir costos, mejorar procesos, incrementar ingresos, obtener descuentos y evaluar valor residual. El costo del hardware más caro es un costo, no un beneficio."
+    },
+    {
+        question: "¿Cuál es una particularidad crítica de los proyectos de TI?",
+        options: [
+            "No requieren compromiso de los actores involucrados",
+            "Tienen impacto en procesos del área involucrada y otras áreas relacionadas",
+            "No presentan problemas técnicos significativos",
+            "Son independientes del ecosistema de aplicaciones existentes"
+        ],
+        answer: 1,
+        explanation: "Los proyectos de TI tienen particularidades como: compromiso de actores involucrados, impacto en procesos del área involucrada y otras áreas relacionadas, problemas técnicos, complejidad del ecosistema de aplicaciones existentes, y problemas de comunicación."
+    },
+    {
+        question: "¿Qué es el TCO (Total Cost of Ownership)?",
+        options: [
+            "El costo inicial de compra del hardware",
+            "El costo total de propiedad considerando todos los gastos asociados durante la vida útil",
+            "Únicamente los costos de licenciamiento de software",
+            "Los costos de capacitación del personal"
+        ],
+        answer: 1,
+        explanation: "El TCO (Costo Total de Propiedad) es un criterio de inversión que considera todos los costos asociados con la adquisición, implementación, operación y mantenimiento de un sistema durante toda su vida útil, no solo la inversión inicial."
+    },
+    {
+        question: "¿Qué indica el VAN (Valor Actual Neto) en la evaluación de proyectos?",
+        options: [
+            "El precio de compra del software",
+            "El resultado de todos los flujos de caja descontados al tipo de interés determinado",
+            "La cantidad de usuarios del sistema",
+            "El tiempo de implementación del proyecto"
+        ],
+        answer: 1,
+        explanation: "El VAN es el resultado de todos los flujos de caja de un proyecto descontado al tipo de interés determinado. Permite conocer la rentabilidad exacta de la inversión estudiando todos los cobros y pagos en términos absolutos."
+    },
+    {
+        question: "Si el VAN de un proyecto es positivo, ¿qué conclusión se puede obtener?",
+        options: [
+            "El proyecto no es rentable y debe rechazarse",
+            "El proyecto es rentable y se puede aceptar la inversión",
+            "El proyecto no producirá beneficios ni pérdidas",
+            "Se necesita más información para decidir"
+        ],
+        answer: 1,
+        explanation: "Si el VAN es positivo, la inversión será rentable y se puede aceptar la inversión en ese proyecto. Si es negativo, produciría pérdidas y no debe aceptarse. Si es cero, no produce beneficios ni pérdidas y debe evaluarse más."
+    },
+    {
+        question: "¿Qué representa la TIR (Tasa Interna de Retorno)?",
+        options: [
+            "El tiempo necesario para recuperar la inversión",
+            "Un parámetro que indica la viabilidad del proyecto basándose en los flujos de caja previstos",
+            "El costo total del proyecto",
+            "La cantidad de usuarios beneficiados"
+        ],
+        answer: 1,
+        explanation: "La TIR es un parámetro que indica la viabilidad de un proyecto basándose en la estimación de los flujos de caja que se prevén tener a lo largo del proyecto. Es, junto al VAN, el parámetro más importante para calcular viabilidad."
+    },
+    {
+        question: "¿Cuándo un proyecto es rentable según la TIR?",
+        options: [
+            "Cuando TIR < 0",
+            "Cuando TIR = 0",
+            "Cuando TIR > 0, siendo más rentable cuanto mayor sea el valor",
+            "La TIR no indica rentabilidad"
+        ],
+        answer: 2,
+        explanation: "Si TIR > 0, el proyecto será rentable. Cuanto más grande el valor, más rentable será el proyecto. Si TIR < 0, el proyecto produciría pérdidas y no debería aceptarse esta inversión."
+    },
+    {
+        question: "¿Qué mide el ROI (Retorno de la Inversión)?",
+        options: [
+            "El tiempo de implementación del proyecto",
+            "El porcentaje de aumento o disminución de una inversión durante un período determinado",
+            "La cantidad de personal necesario",
+            "El costo del hardware"
+        ],
+        answer: 1,
+        explanation: "El ROI es el porcentaje de aumento o disminución de una inversión durante un período de tiempo determinado. Es una medida utilizada para evaluar el rendimiento de una inversión en particular o entender cuál fue el retorno generado."
+    },
+    {
+        question: "¿Cómo se calcula el ROI?",
+        options: [
+            "Costos totales dividido beneficios totales",
+            "(Ingresos generados - Gastos) / Costo × 100",
+            "Beneficios menos costos iniciales",
+            "Flujos de caja descontados al valor presente"
+        ],
+        answer: 1,
+        explanation: "El ROI se calcula como: los ingresos generados por el proyecto menos los gastos, dividido por el costo, multiplicado por 100. El resultado de este cálculo es igual al retorno de la inversión en porcentaje."
+    },
+    {
+        question: "¿Qué muestra el Período de Recupero o Payback?",
+        options: [
+            "El costo total del proyecto",
+            "El momento en el tiempo en el cual se recupera la inversión realizada",
+            "La rentabilidad total del proyecto",
+            "La cantidad de personal necesario"
+        ],
+        answer: 1,
+        explanation: "El PRI (Período de Recupero) o Payback muestra el momento en el tiempo en el cual se recupera la inversión realizada. Es un indicador que mide en cuánto tiempo se recuperará el total de la inversión a valor presente, considerando el valor del dinero en el tiempo."
+    },
+    {
+        question: "¿Qué consideración importante debe hacerse al comparar proyectos con criterios de inversión como VAN y TIR?",
+        options: [
+            "Se pueden comparar proyectos de cualquier duración sin restricciones",
+            "Se deben comparar proyectos de la misma duración",
+            "Solo se comparan proyectos del mismo costo",
+            "Solo se comparan proyectos del mismo área"
+        ],
+        answer: 1,
+        explanation: "Al usar criterios de inversión como el VAN y TIR que consideran el valor del dinero en el tiempo, se deben comparar proyectos de la misma duración para que la comparación sea válida y relevante."
+    },
+    {
+        question: "¿Qué elementos contempla el TVO (Total Value of Ownership)?",
+        options: [
+            "Únicamente los costos de adquisición",
+            "Los beneficios totales sin considerar costos",
+            "Tanto costos como beneficios del proyecto a lo largo de su vida útil",
+            "Solo el valor de reventa del hardware"
+        ],
+        answer: 2,
+        explanation: "El TVO (Valor Total de Propiedad) es un criterio de inversión que contempla tanto los costos totales como los beneficios del proyecto a lo largo de toda su vida útil, ofreciendo una visión más completa que el TCO que solo considera costos."
+    },
+    {
+        question: "¿Cuál es el propósito de la estrategia de TI en las organizaciones?",
+        options: [
+            "Comprar la última tecnología disponible",
+            "Agregar valor mediante reducción de costos o diferenciación",
+            "Aumentar la cantidad de personal de sistemas",
+            "Implementar todos los sistemas posibles"
+        ],
+        answer: 1,
+        explanation: "Las TIC pueden agregar valor por dos vertientes principales: reducción de costos o diferenciación. La estrategia de TI busca que las inversiones en sistemas y tecnología rediten un valor económico real para el negocio."
+    },
+    {
+        question: "¿Qué beneficios mide el valor de los Sistemas de Información?",
+        options: [
+            "Solo la reducción de costos operativos",
+            "Mejores decisiones administrativas, procesos más eficientes, mayor rentabilidad y ventajas competitivas",
+            "Únicamente el aumento de ventas",
+            "Solo la satisfacción del personal de TI"
+        ],
+        answer: 1,
+        explanation: "El valor de los SI se mide por beneficios como: mejores decisiones administrativas, procesos de negocios más eficientes, rentabilidad más alta, y ventajas competitivas. Estos beneficios justifican que las organizaciones inviertan en sistemas y tecnología."
+    },
+    {
+        question: "¿Qué horizonte temporal caracteriza al proceso estratégico de SI y TI?",
+        options: [
+            "Corto plazo (menos de 1 año)",
+            "Mediano plazo (1-2 años)",
+            "Largo plazo (planificación estratégica)",
+            "Varía según el proyecto específico"
+        ],
+        answer: 2,
+        explanation: "El proceso estratégico de SI y TI se caracteriza por su enfoque de largo plazo, alineándose con la planificación estratégica de la organización y considerando transformaciones organizacionales futuras."
+    },
+    {
+        question: "¿Qué debe incluir la formulación de la visión estratégica de TI?",
+        options: [
+            "Solo la lista de software a comprar",
+            "Lineamientos y objetivos de largo plazo: transformaciones, financiamiento, reacciones de competidores, riesgos",
+            "Únicamente el presupuesto anual de TI",
+            "Solo las especificaciones técnicas del hardware"
+        ],
+        answer: 1,
+        explanation: "La formulación de visión estratégica define lineamientos y objetivos con validez a largo plazo, considerando: transformaciones organizacionales, fuentes de financiamiento, potenciales reacciones de competidores, y riesgos financieros y de gestión."
+    },
+    {
+        question: "¿Cuáles son herramientas útiles para la formulación de la visión estratégica?",
+        options: [
+            "Solo diagramas de red",
+            "FODA, matriz de oportunidad estratégica, matriz de posicionamiento estratégico",
+            "Únicamente hojas de cálculo financieras",
+            "Solo organigramas"
+        ],
+        answer: 1,
+        explanation: "Para la formulación de visión estratégica se utilizan herramientas como: FODA (Fortalezas, Oportunidades, Debilidades, Amenazas), matriz de oportunidad estratégica, matriz de posicionamiento estratégico, junto con creatividad, análisis de costos de cambio y acciones tácticas."
+    },
+    {
+        question: "¿Cómo se relacionan la estrategia de negocio y la estrategia de SI?",
+        options: [
+            "Son completamente independientes",
+            "La estrategia de SI debe estar alineada y derivarse del plan de negocios de la empresa",
+            "La estrategia de SI determina la estrategia de negocio",
+            "No tienen ninguna relación"
+        ],
+        answer: 1,
+        explanation: "La estrategia de SI debe estar alineada con la estrategia de negocio. El plan de negocios de la empresa guía el desarrollo del plan de SI, asegurando que las inversiones tecnológicas soporten los objetivos organizacionales."
+    },
+    {
+        question: "¿Qué es el PES (Plan Estratégico de Sistemas)?",
+        options: [
+            "Un plan operativo de 1 año",
+            "Un plan de largo plazo (5 años) que define la estrategia de sistemas",
+            "Un plan táctico de 3 años",
+            "Un presupuesto mensual de TI"
+        ],
+        answer: 1,
+        explanation: "El PES (Plan Estratégico de Sistemas) es un plan de largo plazo con horizonte de 5 años que define la estrategia general de sistemas alineada con el plan estratégico de negocios de la organización."
+    },
+    {
+        question: "¿Cuál es el horizonte temporal del PTS (Plan Táctico de Sistemas)?",
+        options: [
+            "1 año (corto plazo)",
+            "3 años (mediano plazo)",
+            "5 años (largo plazo)",
+            "10 años (muy largo plazo)"
+        ],
+        answer: 1,
+        explanation: "El PTS (Plan Táctico de Sistemas) tiene un horizonte de mediano plazo de 3 años, ubicándose entre el PES (5 años de largo plazo) y el POS (1 año de corto plazo)."
+    },
+    {
+        question: "¿Qué caracteriza al POS (Plan Operativo de Sistemas)?",
+        options: [
+            "Es un plan de 5 años con enfoque estratégico",
+            "Es un plan de corto plazo (1 año) que incluye presupuesto y plan de adquisiciones",
+            "Es un plan de 3 años con objetivos tácticos",
+            "No requiere presupuesto específico"
+        ],
+        answer: 1,
+        explanation: "El POS (Plan Operativo de Sistemas) es de corto plazo (1 año) y se concreta en el presupuesto de TI, el plan de adquisiciones y los proyectos específicos a ejecutar durante ese período."
+    },
+    {
+        question: "¿Qué tipos de factibilidad deben analizarse en la viabilidad de proyectos de SI?",
+        options: [
+            "Solo factibilidad económica",
+            "Solo factibilidad técnica",
+            "Factibilidad estratégica, operativa/técnica y económica",
+            "Únicamente factibilidad operativa"
+        ],
+        answer: 2,
+        explanation: "El análisis de viabilidad debe considerar tres dimensiones: factibilidad estratégica (análisis empresarial, factores críticos de éxito), factibilidad operativa/técnica, y factibilidad económica (ROI, VAN, TIR, período de recuperación)."
+    },
+    {
+        question: "¿Qué herramientas se utilizan para evaluar la factibilidad estratégica?",
+        options: [
+            "Solo cálculos financieros",
+            "Análisis empresarial, Factores Críticos de Éxito, análisis de cartera, modelo de calificación",
+            "Únicamente diagramas técnicos",
+            "Solo pruebas de software"
+        ],
+        answer: 1,
+        explanation: "La factibilidad estratégica se evalúa mediante: análisis empresarial, identificación de Factores Críticos de Éxito, análisis de cartera de proyectos, y modelos de calificación que evalúan alineamiento con objetivos estratégicos."
+    },
+    {
+        question: "¿Qué modelos se usan para evaluar la factibilidad económica?",
+        options: [
+            "Solo el costo inicial",
+            "Período de recuperación, ROI, VAN, TIR y modelos de valuación de opciones reales",
+            "Únicamente el presupuesto anual",
+            "Solo la TIR"
+        ],
+        answer: 1,
+        explanation: "La factibilidad económica se evalúa con: período de recuperación (Payback), Tasa de Retorno sobre la Inversión (ROI), Valor Actual Neto (VAN), Tasa Interna de Rendimiento (TIR), y modelos de valuación de opciones reales."
+    },
+    {
+        question: "¿Qué factores deben considerarse en los planes de sistemas según la estructura organizativa?",
+        options: [
+            "Solo el organigrama formal",
+            "Estructura, cultura, antecedentes organizacionales, skills del personal, apoyo directivo, tipo de tareas, stakeholders",
+            "Únicamente el presupuesto disponible",
+            "Solo la tecnología disponible"
+        ],
+        answer: 1,
+        explanation: "Los factores a considerar incluyen: estructura organizativa, cultura organizativa, antecedentes, skills del personal de TI y usuarios finales, apoyo de Dirección, tipo de tareas y decisiones a soportar, y stakeholders."
+    },
+    {
+        question: "¿Cuáles son retos importantes en la planificación de sistemas?",
+        options: [
+            "Solo el costo del hardware",
+            "Administración del cambio, limitaciones tecnológicas y de capacidades, relación entre planes, avances tecnológicos, medio ambiente",
+            "Únicamente la capacitación del personal",
+            "Solo la instalación del software"
+        ],
+        answer: 1,
+        explanation: "Los retos incluyen: administración del cambio, limitaciones tecnológicas y de capacidades del personal, relación entre planes de negocios y sistemas, avances tecnológicos y barreras de entrada, y consideraciones de medio ambiente (Green IT)."
+    },
+    {
+        question: "¿Cuáles son las principales alternativas para la selección de software?",
+        options: [
+            "Solo desarrollo interno",
+            "Solo compra de productos terminados",
+            "Desarrollo por departamento de sistemas, desarrollo por usuario final, producto terminado, suite, paquete, tercerización",
+            "Únicamente tercerización"
+        ],
+        answer: 2,
+        explanation: "Las alternativas incluyen: desarrollo por el departamento de sistemas, desarrollo por usuario final, compra de producto terminado, suite de productos, paquete de productos, y tercerización (outsourcing)."
+    },
+    {
+        question: "¿Qué etapas incluye el ciclo de selección de software?",
+        options: [
+            "Solo instalación y prueba",
+            "Definición de requerimientos, evaluación de alternativas, selección, negociación, implementación",
+            "Únicamente compra e instalación",
+            "Solo capacitación de usuarios"
+        ],
+        answer: 1,
+        explanation: "El ciclo de selección incluye: definición de requerimientos, búsqueda y evaluación de alternativas, selección del proveedor y producto, negociación de contrato y condiciones, e implementación del sistema."
+    },
+    {
+        question: "¿Qué costos deben considerarse en el precio total de una solución de software?",
+        options: [
+            "Solo el precio de las licencias",
+            "Licenciamiento (tipos y formas), capacitaciones (previa, durante y post), mantenimiento (operación y licenciamiento)",
+            "Únicamente la instalación inicial",
+            "Solo el hardware necesario"
+        ],
+        answer: 1,
+        explanation: "Los costos incluyen: licenciamiento con sus diferentes tipos y formas, capacitaciones en todas las etapas (previa, durante y post implementación), y mantenimiento tanto operativo como de licenciamiento."
+    },
+    {
+        question: "¿Qué es una buena práctica en la selección de software?",
+        options: [
+            "Comprar sin evaluar alternativas",
+            "Organizar licitaciones abiertas, analizar proveedores, establecer SLA, solicitar código fuente",
+            "Aceptar la primera propuesta recibida",
+            "No negociar con proveedores"
+        ],
+        answer: 1,
+        explanation: "Las buenas prácticas incluyen: organizar licitaciones abiertas, realizar análisis de proveedores, establecer SLA (Acuerdos de Nivel de Servicio), y solicitar el código fuente para su resguardo y protección."
+    },
+    {
+        question: "¿Qué es un SLA (Service Level Agreement)?",
+        options: [
+            "Un documento de instalación de software",
+            "Un Acuerdo de Nivel de Servicio que establece compromisos de calidad y disponibilidad",
+            "Un manual de usuario del sistema",
+            "Un presupuesto de TI"
+        ],
+        answer: 1,
+        explanation: "Un SLA (Acuerdo de Nivel de Servicio) es un contrato que establece compromisos específicos sobre calidad, disponibilidad, tiempos de respuesta y otros parámetros de servicio entre el proveedor y el cliente."
+    },
+    {
+        question: "¿Por qué es importante solicitar el código fuente en la adquisición de software?",
+        options: [
+            "Para modificarlo inmediatamente sin autorización",
+            "Para resguardo y protección ante posibles problemas con el proveedor",
+            "Para venderlo a terceros",
+            "No es importante solicitarlo"
+        ],
+        answer: 1,
+        explanation: "Solicitar el código fuente para su resguardo es una buena práctica que protege a la organización ante posibles problemas con el proveedor (quiebra, discontinuación del producto, conflictos), permitiendo continuidad operativa."
+    },
+    {
+        question: "¿Qué diferencia hay entre desarrollo interno y tercerización de software?",
+        options: [
+            "No hay diferencias significativas",
+            "Desarrollo interno usa recursos propios; tercerización delega en proveedor externo",
+            "Desarrollo interno es siempre más costoso",
+            "Tercerización es siempre más rápida"
+        ],
+        answer: 1,
+        explanation: "El desarrollo interno utiliza el departamento de sistemas propio de la organización, mientras que la tercerización (outsourcing) delega el desarrollo o implementación a un proveedor externo especializado."
+    },
+    {
+        question: "¿Qué es una suite de productos de software?",
+        options: [
+            "Un único programa aislado",
+            "Un conjunto integrado de productos que trabajan juntos y comparten información",
+            "Un hardware especializado",
+            "Un servicio de consultoría"
+        ],
+        answer: 1,
+        explanation: "Una suite de productos es un conjunto integrado de aplicaciones de software que trabajan juntas de manera coordinada, compartiendo datos e interfaces, como Microsoft Office o Adobe Creative Cloud."
+    },
+    {
+        question: "¿Cuál es una ventaja de comprar un producto terminado versus desarrollo a medida?",
+        options: [
+            "Siempre es más barato a largo plazo",
+            "Menor tiempo de implementación y costos iniciales más predecibles",
+            "Se adapta perfectamente a todos los procesos únicos de la organización",
+            "No requiere capacitación de usuarios"
+        ],
+        answer: 1,
+        explanation: "Los productos terminados generalmente ofrecen menor tiempo de implementación y costos iniciales más predecibles, aunque pueden requerir adaptaciones de procesos. El desarrollo a medida se adapta mejor a necesidades específicas pero toma más tiempo y tiene mayor riesgo."
+    },
+    {
+        question: "¿Qué debe incluir la definición de requerimientos en la selección de software?",
+        options: [
+            "Solo una lista de funciones deseadas",
+            "Requerimientos funcionales, técnicos, de integración, de seguridad, de capacitación y soporte",
+            "Únicamente el presupuesto disponible",
+            "Solo la cantidad de usuarios"
+        ],
+        answer: 1,
+        explanation: "La definición de requerimientos debe ser integral, incluyendo: requerimientos funcionales (qué debe hacer), técnicos (plataforma, rendimiento), de integración (con sistemas existentes), de seguridad, y de capacitación y soporte."
+    },
+    {
+        question: "¿Qué aspectos deben evaluarse de los proveedores en una licitación?",
+        options: [
+            "Solo el precio ofrecido",
+            "Capacidad técnica, experiencia, estabilidad financiera, referencias, casos de éxito, soporte",
+            "Únicamente la ubicación geográfica",
+            "Solo la antigüedad de la empresa"
+        ],
+        answer: 1,
+        explanation: "El análisis de proveedores debe considerar múltiples dimensiones: capacidad técnica, experiencia en el sector, estabilidad financiera, referencias de clientes, casos de éxito documentados, y calidad del soporte y servicios post-venta."
+    },
+    {
+        question: "¿Qué es la tercerización u outsourcing de TI?",
+        options: [
+            "Comprar hardware usado",
+            "Delegar funciones o servicios de TI a un proveedor externo especializado",
+            "Capacitar al personal interno",
+            "Desarrollar software internamente"
+        ],
+        answer: 1,
+        explanation: "La tercerización u outsourcing de TI consiste en delegar funciones, servicios o procesos de tecnología a un proveedor externo especializado, permitiendo a la organización concentrarse en su core business."
+    },
+    {
+        question: "¿Cuáles son motivaciones comunes para la tercerización de servicios de TI?",
+        options: [
+            "Aumentar el personal interno de TI",
+            "Reducir costos, acceder a expertise especializado, enfocarse en core business, escalabilidad",
+            "Hacer más compleja la gestión de TI",
+            "Eliminar completamente el área de sistemas"
+        ],
+        answer: 1,
+        explanation: "Las motivaciones incluyen: reducción de costos operativos, acceso a expertise y tecnologías especializadas, enfoque en el core business, mayor escalabilidad y flexibilidad, y conversión de costos fijos en variables."
+    },
+    {
+        question: "¿Qué riesgos debe considerar una organización al tercerizar servicios de TI?",
+        options: [
+            "No existen riesgos en la tercerización",
+            "Pérdida de control, dependencia del proveedor, riesgos de seguridad, problemas de calidad de servicio",
+            "Solo el riesgo de costos más altos",
+            "Únicamente problemas de comunicación"
+        ],
+        answer: 1,
+        explanation: "Los riesgos de tercerización incluyen: pérdida de control sobre procesos críticos, dependencia del proveedor (vendor lock-in), riesgos de seguridad y confidencialidad, problemas de calidad de servicio, y dificultades de coordinación."
+    },
+    {
+        question: "¿Qué tipos de licenciamiento de software existen?",
+        options: [
+            "Solo licencias gratuitas",
+            "Perpetuas, por suscripción, por usuario, por dispositivo, empresariales, SaaS",
+            "Únicamente licencias de prueba",
+            "Solo licencias open source"
+        ],
+        answer: 1,
+        explanation: "Los tipos de licenciamiento incluyen: licencias perpetuas (compra única), por suscripción (pago recurrente), por usuario concurrente o nominado, por dispositivo, licencias empresariales (volumen), y modelos SaaS (Software as a Service)."
+    },
+    {
+        question: "¿Qué ventaja ofrece el modelo de licenciamiento SaaS (Software as a Service)?",
+        options: [
+            "Requiere inversión inicial alta en infraestructura",
+            "Costos operativos predecibles, actualizaciones automáticas, accesibilidad desde cualquier lugar",
+            "Funciona solo sin conexión a internet",
+            "No requiere mantenimiento pero tiene costos impredecibles"
+        ],
+        answer: 1,
+        explanation: "El modelo SaaS ofrece: costos operativos predecibles (suscripción mensual/anual), actualizaciones automáticas sin intervención, accesibilidad desde cualquier ubicación con internet, menor inversión inicial en infraestructura, y escalabilidad rápida."
+    },
+    {
+        question: "¿Qué debe negociarse en un contrato de adquisición de software?",
+        options: [
+            "Solo el precio de las licencias",
+            "Precio, plazos de entrega, términos de pago, SLA, mantenimiento, capacitación, soporte, actualizaciones, penalizaciones",
+            "Únicamente la fecha de instalación",
+            "Solo las condiciones de capacitación"
+        ],
+        answer: 1,
+        explanation: "La negociación debe cubrir: precio total y estructura de costos, plazos de entrega e implementación, términos de pago, SLA, alcance del mantenimiento, capacitación incluida, soporte técnico, política de actualizaciones, y cláusulas de penalización."
+    },
+    {
+        question: "¿Por qué las organizaciones deben preguntarse si el peso invertido en TI es distinto al invertido en otras áreas?",
+        options: [
+            "Porque la TI es siempre más costosa",
+            "Para reflexionar que las inversiones en TI deben evaluarse con los mismos criterios económicos que otras inversiones",
+            "Porque la TI no requiere evaluación económica",
+            "Porque las inversiones en TI son menos importantes"
+        ],
+        answer: 1,
+        explanation: "Esta pregunta busca reflexionar que las inversiones en bytes o equipos informáticos deben evaluarse con los mismos criterios económicos rigurosos que las inversiones en maquinaria o capacitación, considerando costos y beneficios objetivamente."
+    },
+    {
+        question: "¿Cuáles son razones válidas para realizar un proyecto de SI?",
+        options: [
+            "Solo porque está de moda la tecnología",
+            "Necesidades de la organización, oportunidades de mejora, cumplimiento de normativas",
+            "Únicamente porque hay presupuesto disponible",
+            "Solo para igualar a la competencia"
+        ],
+        answer: 1,
+        explanation: "Las razones válidas incluyen: necesidades reales de la organización, oportunidades concretas de mejora en procesos o servicios, y cumplimiento de normativas o regulaciones obligatorias. No debe basarse solo en modas tecnológicas o disponibilidad presupuestaria."
+    },
+    {
+        question: "¿Qué es un análisis de cartera en la factibilidad estratégica?",
+        options: [
+            "Una revisión de inversiones financieras",
+            "Un análisis de múltiples proyectos de SI para priorizar según valor estratégico y recursos",
+            "Un estudio de mercado",
+            "Un análisis de proveedores"
+        ],
+        answer: 1,
+        explanation: "El análisis de cartera evalúa múltiples proyectos de SI simultáneamente para priorizarlos según su valor estratégico, retorno esperado, riesgos y recursos disponibles, optimizando la asignación de recursos limitados."
+    },
+    {
+        question: "¿Qué son los Factores Críticos de Éxito (FCE) en proyectos de SI?",
+        options: [
+            "Únicamente métricas financieras",
+            "Elementos clave que deben cumplirse para que el proyecto logre sus objetivos estratégicos",
+            "Solo aspectos técnicos del proyecto",
+            "Requisitos de hardware"
+        ],
+        answer: 1,
+        explanation: "Los Factores Críticos de Éxito son elementos esenciales que deben cumplirse para que el proyecto alcance sus objetivos estratégicos. Incluyen aspectos como apoyo directivo, recursos adecuados, gestión del cambio, y alineamiento con objetivos de negocio."
+    },
+    {
+        question: "¿Cómo impacta la madurez de las tecnologías en los proyectos de TI?",
+        options: [
+            "No tiene impacto relevante",
+            "Tecnologías inmaduras aumentan riesgos técnicos, problemas de integración y costos no previstos",
+            "Siempre es mejor usar tecnologías nuevas",
+            "La madurez solo afecta los costos de licenciamiento"
+        ],
+        answer: 1,
+        explanation: "La madurez de las tecnologías es crítica: tecnologías inmaduras o de vanguardia aumentan riesgos técnicos, pueden tener problemas de integración con sistemas existentes, escasez de profesionales capacitados, y costos no previstos por bugs o limitaciones."
+    },
+    {
+        question: "¿Por qué es importante el compromiso de los actores involucrados en proyectos de TI?",
+        options: [
+            "Solo para cumplir con políticas corporativas",
+            "Porque impacta procesos, requiere cambios culturales y operativos, y sin compromiso el proyecto puede fracasar",
+            "No es importante si la tecnología es buena",
+            "Solo para facilitar la capacitación"
+        ],
+        answer: 1,
+        explanation: "El compromiso de actores involucrados es crítico porque los proyectos de TI impactan procesos de trabajo, requieren cambios culturales y operativos, y sin compromiso y adopción de usuarios y directivos, el proyecto puede fracasar independientemente de la calidad técnica."
+    },
+    {
+        question: "¿Qué implica la complejidad del ecosistema de aplicaciones existentes en nuevos proyectos?",
+        options: [
+            "No afecta los nuevos proyectos",
+            "Requiere análisis de integración, compatibilidad, migración de datos y puede aumentar costos y riesgos",
+            "Solo afecta la documentación",
+            "Únicamente impacta la capacitación"
+        ],
+        answer: 1,
+        explanation: "La complejidad del ecosistema existente requiere: análisis detallado de puntos de integración, evaluación de compatibilidad técnica, planificación de migración de datos, gestión de interfaces, y puede aumentar significativamente costos, tiempo y riesgos del proyecto."
+    },
+    {
+        question: "¿Qué desafío representa el mercado laboral especializado en proyectos de TI?",
+        options: [
+            "Siempre hay abundancia de profesionales disponibles",
+            "Escasez de recursos humanos especializados, costos elevados, necesidad de capacitación y retención de talento",
+            "No es un desafío relevante",
+            "Solo afecta a proyectos muy grandes"
+        ],
+        answer: 1,
+        explanation: "La especialización de recursos humanos genera desafíos como: escasez de profesionales con skills específicos, costos elevados de contratación, necesidad de inversión en capacitación, dificultad de retención de talento, y riesgo de dependencia de personas clave."
+    },
+    {
+        question: "¿Qué consideración de Green IT debe incluirse en la planificación de sistemas?",
+        options: [
+            "No es relevante para proyectos de TI",
+            "Eficiencia energética, reducción de huella de carbono, gestión de residuos electrónicos, virtualización",
+            "Solo el color de los equipos",
+            "Únicamente el reciclaje de papel"
+        ],
+        answer: 1,
+        explanation: "Las consideraciones de Green IT (TI Verde) incluyen: eficiencia energética de equipos y datacenters, reducción de huella de carbono, gestión responsable de residuos electrónicos, virtualización para optimizar recursos, y responsabilidad ambiental corporativa."
+    },
+    {
+        question: "¿Cuál es la relación entre la administración del cambio y el éxito de proyectos de TI?",
+        options: [
+            "La administración del cambio no es necesaria",
+            "Es crítica para la adopción, requiere comunicación, capacitación, gestión de resistencias y soporte continuo",
+            "Solo se necesita al final del proyecto",
+            "Únicamente afecta a proyectos organizacionales"
+        ],
+        answer: 1,
+        explanation: "La administración del cambio es crítica porque: facilita la adopción del nuevo sistema, requiere comunicación efectiva de beneficios, capacitación adecuada, gestión de resistencias y miedos, soporte continuo, y participación de stakeholders desde el inicio."
+    },
+    {
+        question: "¿Por qué se debe considerar el valor del dinero en el tiempo en criterios como VAN y TIR?",
+        options: [
+            "Es solo una complicación matemática innecesaria",
+            "Porque un peso hoy vale más que un peso en el futuro debido a inflación y oportunidad de inversión",
+            "Para hacer más complejos los cálculos",
+            "No es necesario considerarlo"
+        ],
+        answer: 1,
+        explanation: "El valor del dinero en el tiempo es fundamental porque un peso hoy vale más que un peso en el futuro debido a: inflación que reduce poder adquisitivo, oportunidad de invertir y generar retornos, y riesgos futuros. VAN y TIR descuentan flujos futuros para comparar correctamente."
+    },
+    {
+        question: "¿Qué diferencia hay entre desarrollo por usuario final y por departamento de sistemas?",
+        options: [
+            "No hay diferencias significativas",
+            "Usuario final crea soluciones específicas con herramientas accesibles; sistemas desarrolla soluciones empresariales complejas",
+            "Usuario final siempre es más rápido",
+            "Departamento de sistemas solo compra software"
+        ],
+        answer: 1,
+        explanation: "El desarrollo por usuario final utiliza herramientas accesibles (Excel, Access, aplicaciones low-code) para crear soluciones departamentales específicas rápidamente. El departamento de sistemas desarrolla soluciones empresariales complejas, integradas, escalables y con estándares de calidad y seguridad más rigurosos."
+    },
+    {
+        question: "¿Qué es un modelo de calificación en la evaluación de proyectos?",
+        options: [
+            "Un sistema de notas escolares",
+            "Un método sistemático para evaluar y puntuar proyectos según criterios estratégicos, técnicos y económicos",
+            "Solo una lista de precios",
+            "Un ranking de proveedores"
+        ],
+        answer: 1,
+        explanation: "Un modelo de calificación es un método sistemático que asigna puntajes a proyectos según múltiples criterios ponderados (alineamiento estratégico, beneficios esperados, viabilidad técnica, retorno económico, riesgos) para facilitar la comparación objetiva y priorización."
+    },
+    {
+        question: "¿Qué debe incluir un presupuesto de TI derivado del POS?",
+        options: [
+            "Solo los costos de hardware",
+            "Inversiones en hardware/software, costos operativos, personal, capacitación, mantenimiento, contingencias",
+            "Únicamente salarios del área de sistemas",
+            "Solo licencias de software"
+        ],
+        answer: 1,
+        explanation: "El presupuesto de TI debe incluir: inversiones en hardware y software, costos operativos (electricidad, conectividad), personal (salarios, contrataciones), capacitación, mantenimiento y soporte, servicios tercerizados, seguridad, y reservas para contingencias."
+    },
+    {
+        question: "¿Cuál es el propósito de un plan de adquisiciones en el POS?",
+        options: [
+            "Comprar todo lo disponible en el mercado",
+            "Planificar sistemáticamente compras de hardware, software y servicios alineadas con proyectos y presupuesto",
+            "Solo registrar compras ya realizadas",
+            "Únicamente para cumplir requisitos administrativos"
+        ],
+        answer: 1,
+        explanation: "El plan de adquisiciones planifica sistemáticamente las compras de hardware, software y servicios necesarias, alineándolas con los proyectos del POS y el presupuesto aprobado, asegurando procesos de licitación adecuados, mejores precios y disponibilidad oportuna."
+    },
+    {
+        question: "¿Qué implica la cultura organizativa en la planificación de sistemas?",
+        options: [
+            "Solo las políticas formales de la empresa",
+            "Valores, creencias, resistencia al cambio, estilo de gestión, comunicación que impactan adopción tecnológica",
+            "Únicamente el código de vestimenta",
+            "Solo las celebraciones corporativas"
+        ],
+        answer: 1,
+        explanation: "La cultura organizativa incluye: valores y creencias compartidos, actitud hacia el cambio y la tecnología, estilo de gestión (jerárquico vs colaborativo), patrones de comunicación, apertura a la innovación. Estos factores impactan críticamente la adopción y éxito de nuevos sistemas."
+    },
+    {
+        question: "¿Por qué los antecedentes de la organización son relevantes en planificación de sistemas?",
+        options: [
+            "No son relevantes para proyectos futuros",
+            "Experiencias previas (éxitos/fracasos) influyen en expectativas, confianza y apoyo a nuevos proyectos",
+            "Solo para escribir la historia de la empresa",
+            "Únicamente para estadísticas"
+        ],
+        answer: 1,
+        explanation: "Los antecedentes organizacionales son críticos porque: experiencias previas con proyectos de TI (éxitos y fracasos) influyen en expectativas, nivel de confianza en TI, disposición a invertir, apoyo directivo, y nivel de escepticismo o entusiasmo de usuarios hacia nuevos proyectos."
+    },
+    {
+        question: "¿Qué habilidades (skills) del personal son importantes considerar en proyectos de TI?",
+        options: [
+            "Solo habilidades técnicas del área de sistemas",
+            "Skills técnicos de TI, alfabetización digital de usuarios, capacidad de aprendizaje, gestión del cambio",
+            "Únicamente certificaciones profesionales",
+            "Solo experiencia en años"
+        ],
+        answer: 1,
+        explanation: "Debe considerarse: skills técnicos del personal de TI (programación, infraestructura, seguridad), nivel de alfabetización digital de usuarios finales, capacidad de aprendizaje y adaptación, habilidades de gestión del cambio, y gaps que requieren capacitación o contratación."
+    },
+    {
+        question: "¿Por qué el apoyo y comprensión de la Dirección es crítico en proyectos de TI?",
+        options: [
+            "Solo para aprobar presupuestos",
+            "Proporciona respaldo estratégico, recursos, priorización, gestión de resistencias y patrocinio visible",
+            "No es particularmente crítico",
+            "Únicamente para ceremonias de inauguración"
+        ],
+        answer: 1,
+        explanation: "El apoyo directivo es crítico porque: proporciona respaldo estratégico y legitimidad al proyecto, asegura recursos necesarios, facilita priorización entre áreas, ayuda a gestionar resistencias organizacionales, y el patrocinio visible de directivos aumenta significativamente probabilidad de éxito."
+    },
+    {
+        question: "¿Qué significa que stakeholders deben considerarse en la planificación de sistemas?",
+        options: [
+            "Solo se refiere a los accionistas de la empresa",
+            "Identificar todas las partes interesadas (usuarios, directivos, clientes, proveedores, reguladores) y gestionar sus expectativas",
+            "Únicamente el equipo de proyecto",
+            "Solo el área de sistemas"
+        ],
+        answer: 1,
+        explanation: "Los stakeholders incluyen todas las partes interesadas: usuarios internos, directivos, clientes, proveedores, áreas afectadas, reguladores, accionistas. Deben identificarse sus intereses, expectativas, nivel de influencia, y gestionarse activamente su participación y comunicación durante el proyecto."
+    },
+    {
+        question: "¿Qué tipo de tareas y decisiones deben ser soportadas por los sistemas según la planificación?",
+        options: [
+            "Solo tareas operativas rutinarias",
+            "Tareas operacionales, tácticas y estratégicas; decisiones estructuradas, semi-estructuradas y no estructuradas según nivel organizacional",
+            "Únicamente decisiones financieras",
+            "Solo procesos administrativos"
+        ],
+        answer: 1,
+        explanation: "Los sistemas deben soportar diferentes niveles: tareas operacionales (transacciones diarias), tácticas (gestión departamental), y estratégicas (planificación de largo plazo); así como decisiones estructuradas (rutinarias), semi-estructuradas (análisis con criterio) y no estructuradas (estratégicas complejas)."
+    },
+    {
+        question: "¿Cómo impactan los avances tecnológicos en la planificación estratégica de SI?",
+        options: [
+            "No deben considerarse en la planificación",
+            "Generan oportunidades y amenazas, pueden obsolescer planes, reducir barreras de entrada, cambiar ventajas competitivas",
+            "Solo aumentan los costos",
+            "Únicamente afectan al hardware"
+        ],
+        answer: 1,
+        explanation: "Los avances tecnológicos (cloud, AI, IoT, blockchain) generan nuevas oportunidades de negocio y amenazas competitivas, pueden obsolescer sistemas planificados, reducir barreras de entrada facilitando competencia, cambiar ventajas competitivas, y requieren flexibilidad en la planificación estratégica."
+    },
+    {
+        question: "¿Qué son las barreras de entrada en el contexto de SI y ventajas competitivas?",
+        options: [
+            "Solo restricciones físicas de acceso",
+            "Factores que dificultan a nuevos competidores entrar al mercado (inversión en TI, economías de escala, red de clientes)",
+            "Únicamente regulaciones gubernamentales",
+            "Solo costos de publicidad"
+        ],
+        answer: 1,
+        explanation: "Las barreras de entrada son factores que dificultan a nuevos competidores ingresar al mercado, como: inversiones significativas en sistemas de TI, economías de escala en procesamiento de datos, redes de clientes establecidas, integración con proveedores, know-how tecnológico. Avances tecnológicos pueden reducir estas barreras."
+    },
+    {
+        question: "¿Cuál es un beneficio de las licitaciones abiertas en la adquisición de software?",
+        options: [
+            "Reducir la cantidad de propuestas a evaluar",
+            "Aumentar competencia entre proveedores, obtener mejores precios, mayor transparencia y opciones",
+            "Simplificar el proceso eligiendo al primer proveedor",
+            "Evitar la negociación de contratos"
+        ],
+        answer: 1,
+        explanation: "Las licitaciones abiertas aumentan la competencia entre proveedores potenciales, lo que generalmente resulta en mejores precios, condiciones más favorables, mayor transparencia en el proceso, más opciones para comparar, y cumplimiento de normativas de compras públicas o corporativas."
+    },
+    {
+        question: "¿Qué información debe incluirse en un RFP (Request for Proposal) para adquisición de SI?",
+        options: [
+            "Solo el presupuesto disponible",
+            "Contexto organizacional, requerimientos funcionales/técnicos, criterios de evaluación, plazos, condiciones contractuales",
+            "Únicamente el nombre del software deseado",
+            "Solo la fecha límite de entrega"
+        ],
+        answer: 1,
+        explanation: "Un RFP (Solicitud de Propuesta) debe incluir: contexto y objetivos organizacionales, requerimientos funcionales detallados, especificaciones técnicas, criterios de evaluación ponderados, restricciones y supuestos, plazos de entrega e implementación, condiciones contractuales, y formato de respuesta esperado."
+    },
+    {
+        question: "¿Qué es vendor lock-in y por qué es un riesgo en adquisición de SI?",
+        options: [
+            "Un contrato que asegura precios fijos",
+            "Dependencia excesiva de un proveedor que dificulta cambiar a alternativas por costos prohibitivos o incompatibilidad",
+            "Un beneficio de las relaciones de largo plazo",
+            "Un tipo de licenciamiento de software"
+        ],
+        answer: 1,
+        explanation: "Vendor lock-in es la dependencia excesiva de un proveedor específico que hace muy difícil o costoso cambiar a alternativas por: formatos propietarios incompatibles, costos de migración prohibitivos, integración profunda, falta de estándares abiertos, pérdida de know-how. Reduce poder de negociación y flexibilidad futura."
+    }
+];
+        let currentQuiz;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeRemaining = 20 * 60; // 20 minutos en segundos
+        let timerInterval;
+
+        const quizSelectionScreen = document.getElementById('quiz-selection-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const currentQuestionNumberElement = document.getElementById('current-question-number');
+        const scoreElement = document.getElementById('score');
+        const nextButton = document.getElementById('next-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const finalScoreElement = document.getElementById('final-score');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateQuizzes() {
+            quizzes = [];
+            let tempQuestions = [...allQuestions]; // Copia para no alterar el original
+            shuffleArray(tempQuestions);
+            
+            const numQuizzes = Math.ceil(tempQuestions.length / 20);
+
+            for (let i = 0; i < numQuizzes; i++) {
+                const startIndex = i * 20;
+                const endIndex = startIndex + 20;
+                const selectedQuestions = tempQuestions.slice(startIndex, endIndex);
+                quizzes.push({
+                    title: `Examen de Práctica ${i + 1}`,
+                    questions: selectedQuestions
+                });
+            }
+            
+            // Generate quiz selection buttons
+            const quizButtonsContainer = document.querySelector('#quiz-selection-screen .grid');
+            quizButtonsContainer.innerHTML = '';
+            
+            quizzes.forEach((quiz, index) => {
+                const button = document.createElement('button');
+                button.onclick = () => startQuiz(index);
+                button.className = 'card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none';
+                button.textContent = quiz.title;
+                quizButtonsContainer.appendChild(button);
+            });
+        }
+
+        function startQuiz(quizIndex) {
+            currentQuiz = quizzes[quizIndex];
+            currentQuestionIndex = 0;
+            score = 0;
+            timeRemaining = 20 * 60; // 20 minutos por examen
+            
+            quizSelectionScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            startTimer();
+            showQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timer');
+            if (timeRemaining <= 300) {
+                timerElement.classList.add('text-red-600');
+                timerElement.classList.remove('text-blue-600');
+            } else {
+                timerElement.classList.remove('text-red-600');
+                timerElement.classList.add('text-blue-600');
+            }
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= currentQuiz.questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+
+            currentQuestionNumberElement.textContent = currentQuestionIndex + 1;
+            document.querySelector('#quiz-screen .text-lg.font-semibold.text-gray-700').innerHTML = `Pregunta <span id="current-question-number">${currentQuestionIndex + 1}</span> de ${currentQuiz.questions.length}`;
+            scoreElement.textContent = score;
+            questionElement.textContent = currentQuestionData.question;
+            optionsContainer.innerHTML = '';
+            feedbackMessage.classList.add('hidden');
+            feedbackMessage.innerHTML = '';
+            nextButton.disabled = true;
+
+            const options = [...currentQuestionData.options];
+            
+            options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('answer-button', 'block');
+                button.onclick = () => checkAnswer(button, index);
+                optionsContainer.appendChild(button);
+            });
+
+            const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+            document.querySelector('.progress-bar').style.width = `${progress}%`;
+        }
+
+        function checkAnswer(selectedButton, selectedIndex) {
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+            const correctIndex = currentQuestionData.answer;
+
+            Array.from(optionsContainer.children).forEach((button, index) => {
+                button.disabled = true;
+                if (index === correctIndex) {
+                    button.classList.add('correct');
+                }
+            });
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                feedbackMessage.textContent = '¡Respuesta Correcta!';
+                feedbackMessage.className = 'bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-r-lg';
+            } else {
+                selectedButton.classList.add('incorrect');
+                feedbackMessage.innerHTML = `
+                    <div class="font-bold mb-2">¡Respuesta Incorrecta!</div>
+                    <div class="explanation">
+                        <strong class="text-indigo-700">Explicación:</strong>
+                        <p class="text-sm mt-1 text-gray-700">${currentQuestionData.explanation}</p>
+                    </div>
+                `;
+                feedbackMessage.className = 'bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r-lg';
+            }
+
+            feedbackMessage.classList.remove('hidden');
+            scoreElement.textContent = score;
+            nextButton.disabled = false;
+            nextButton.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            finalScoreElement.textContent = `${score}/${currentQuiz.questions.length}`;
+        }
+
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            quizSelectionScreen.classList.remove('hidden');
+            generateQuizzes();
+        }
+
+        window.onload = function() {
+            generateQuizzes();
+            quizSelectionScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

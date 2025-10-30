@@ -94,7 +94,7 @@
         <!-- Pantalla de selección de cuestionarios -->
         <div id="quiz-selection-screen">
             <h1 class="text-3xl font-bold text-center mb-4 text-indigo-700">Selecciona un Examen de Práctica - Sesión 9</h1>
-            <p class="text-center text-gray-600 mb-8">Cada examen contiene 15 preguntas aleatorias sobre el modelo relacional, sus conceptos y restricciones. ¡Mucha suerte!</p>
+            <p class="text-center text-gray-600 mb-8">Cada examen contiene 20 preguntas aleatorias sobre el modelo relacional, álgebra relacional, sus operaciones y conceptos fundamentales. ¡Mucha suerte!</p>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                 <button onclick="startQuiz(0)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 1</button>
                 <button onclick="startQuiz(1)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 2</button>
@@ -112,7 +112,7 @@
         <!-- Pantalla del cuestionario -->
         <div id="quiz-screen" class="hidden">
             <div class="flex justify-between items-center mb-6">
-                <div class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number"></span> de 15</div>
+                <div class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number"></span> de 20</div>
                 <div class="text-lg font-semibold text-gray-700">Puntaje: <span id="score">0</span></div>
             </div>
             <div class="card p-6 mb-6">
@@ -129,7 +129,7 @@
             <p class="text-xl text-gray-700 mb-6">Tu puntaje final es:</p>
             <div class="text-5xl font-extrabold text-white gradient-bg p-8 rounded-full inline-block shadow-lg mb-8">
                 <span id="final-score"></span>
-                <span class="block text-2xl font-normal mt-2">de 15</span>
+                <span class="block text-2xl font-normal mt-2">de 20</span>
             </div>
             <p class="text-lg text-gray-600 mb-4">¡Sigue practicando para dominar el modelo relacional!</p>
             <button class="quiz-button py-4 px-8 mt-4 bg-indigo-600 text-white font-bold text-lg rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none" onclick="restartQuiz()">Volver a la selección</button>
@@ -303,6 +303,579 @@
                 ],
                 answer: 1,
                 explanation: "La atomicidad de los valores es una propiedad fundamental del modelo relacional. Significa que cada atributo en una tupla debe tener un único valor indivisible, lo cual es la base de la Primera Forma Normal (1FN)."
+            },
+            // ÁLGEBRA RELACIONAL - OPERACIONES FUNDAMENTALES
+            {
+                question: "¿Qué es el álgebra relacional?",
+                options: [
+                    "Un lenguaje de programación",
+                    "Un lenguaje de consultas procedimental que sirve como base formal para SQL",
+                    "Un tipo de base de datos",
+                    "Un sistema operativo para bases de datos"
+                ],
+                answer: 1,
+                explanation: "El álgebra relacional es un lenguaje de consultas procedimental que consiste en un conjunto de operaciones que toman una o dos relaciones como entrada y producen una nueva relación como resultado. Sirve como base formal para lenguajes como SQL."
+            },
+            {
+                question: "¿Qué operación del álgebra relacional se utiliza para seleccionar filas (tuplas) que cumplen cierta condición?",
+                options: [
+                    "Proyección (Π)",
+                    "Selección (σ)",
+                    "Unión (∪)",
+                    "Producto Cartesiano (×)"
+                ],
+                answer: 1,
+                explanation: "La operación de Selección (σ) es una operación unaria que selecciona tuplas que satisfacen un predicado dado. Por ejemplo, σnombre_sucursal='Madrid'(cuenta) selecciona todas las cuentas de la sucursal Madrid."
+            },
+            {
+                question: "¿Qué operación del álgebra relacional se utiliza para seleccionar columnas (atributos) específicos?",
+                options: [
+                    "Selección (σ)",
+                    "Proyección (Π)",
+                    "Diferencia (−)",
+                    "Reunión (⋈)"
+                ],
+                answer: 1,
+                explanation: "La operación de Proyección (Π) devuelve una relación excluyendo algunos atributos y eliminando filas duplicadas automáticamente. Por ejemplo, Πnombre,apellido(estudiante) devuelve solo las columnas nombre y apellido."
+            },
+            {
+                question: "¿Cuál es la propiedad de cierre del álgebra relacional?",
+                options: [
+                    "Todas las operaciones deben cerrarse con punto y coma",
+                    "El resultado de una operación relacional es también una relación",
+                    "Las operaciones solo funcionan con tablas cerradas",
+                    "Solo se pueden realizar operaciones en horarios específicos"
+                ],
+                answer: 1,
+                explanation: "La propiedad de cierre significa que las operaciones del álgebra relacional toman relaciones como entrada y producen relaciones como salida. Esto permite componer operaciones para formar consultas complejas."
+            },
+            {
+                question: "¿Qué condiciones deben cumplirse para que dos relaciones puedan unirse mediante la operación de Unión (∪)?",
+                options: [
+                    "Deben tener el mismo nombre",
+                    "Deben tener la misma aridad (número de atributos) y dominios compatibles",
+                    "Deben estar en la misma base de datos",
+                    "No hay condiciones especiales"
+                ],
+                answer: 1,
+                explanation: "Para que la operación de Unión sea válida, las relaciones deben ser compatibles: deben tener el mismo número de atributos (aridad) y los dominios de los atributos i-ésimos deben ser iguales para todo i."
+            },
+            {
+                question: "¿Qué hace la operación de Diferencia de Conjuntos (−) en el álgebra relacional?",
+                options: [
+                    "Suma dos relaciones",
+                    "Devuelve las tuplas que están en la primera relación pero no en la segunda",
+                    "Multiplica dos relaciones",
+                    "Divide una relación por otra"
+                ],
+                answer: 1,
+                explanation: "La operación de Diferencia (r − s) produce una relación que contiene todas las tuplas que están en r pero no están en s. Las relaciones deben ser compatibles (misma aridad y dominios)."
+            },
+            {
+                question: "¿Qué es el Producto Cartesiano (×) en el álgebra relacional?",
+                options: [
+                    "Una multiplicación numérica",
+                    "Una operación que combina cada tupla de una relación con cada tupla de otra relación",
+                    "Una división de tablas",
+                    "Una suma de relaciones"
+                ],
+                answer: 1,
+                explanation: "El Producto Cartesiano combina información de dos relaciones creando una tupla en el resultado por cada par posible de tuplas de las relaciones de entrada. Si r tiene n tuplas y s tiene m tuplas, r × s tiene n*m tuplas."
+            },
+            {
+                question: "¿Para qué sirve la operación de Renombramiento (ρ) en el álgebra relacional?",
+                options: [
+                    "Para eliminar tablas",
+                    "Para asignar un nuevo nombre a una relación o a sus atributos",
+                    "Para crear índices",
+                    "Para ordenar datos"
+                ],
+                answer: 1,
+                explanation: "La operación de Renombramiento permite dar un nuevo nombre al resultado de una expresión o renombrar sus atributos. Es especialmente útil cuando se necesita hacer un producto cartesiano de una relación consigo misma."
+            },
+            // OPERACIONES ADICIONALES
+            {
+                question: "¿Qué es la Reunión Natural (⋈) en el álgebra relacional?",
+                options: [
+                    "Una operación que ordena las tuplas",
+                    "Una operación que combina un producto cartesiano con una selección, igualando atributos comunes y eliminando duplicados",
+                    "Una operación que elimina tuplas duplicadas",
+                    "Una operación que cuenta las tuplas"
+                ],
+                answer: 1,
+                explanation: "La Reunión Natural combina dos relaciones basándose en la igualdad de valores en sus atributos comunes. Es equivalente a realizar un producto cartesiano, una selección forzando igualdad en atributos comunes, y una proyección eliminando duplicados."
+            },
+            {
+                question: "¿Qué operación del álgebra relacional es adecuada para consultas que incluyen 'para todos'?",
+                options: [
+                    "Unión (∪)",
+                    "División (÷)",
+                    "Proyección (Π)",
+                    "Selección (σ)"
+                ],
+                answer: 1,
+                explanation: "La operación de División es especialmente útil para consultas del tipo 'encontrar todos los X que están relacionados con todos los Y'. Por ejemplo, 'encontrar clientes que tienen cuenta en todas las sucursales de Arganzuela'."
+            },
+            {
+                question: "¿Cuál es la diferencia entre la Reunión Natural (⋈) y la Reunión Theta (⋈θ)?",
+                options: [
+                    "No hay diferencia",
+                    "La Reunión Theta permite un predicado arbitrario θ, mientras que la Natural solo iguala atributos comunes",
+                    "La Natural es más lenta",
+                    "La Theta solo funciona con números"
+                ],
+                answer: 1,
+                explanation: "La Reunión Natural automáticamente iguala atributos con el mismo nombre. La Reunión Theta (r ⋈θ s = σθ(r × s)) permite especificar cualquier condición de reunión mediante el predicado θ."
+            },
+            {
+                question: "¿Qué hace la operación de Intersección de Conjuntos (∩)?",
+                options: [
+                    "Suma dos relaciones",
+                    "Devuelve las tuplas que están presentes en ambas relaciones",
+                    "Elimina tuplas duplicadas",
+                    "Ordena las tuplas"
+                ],
+                answer: 1,
+                explanation: "La operación de Intersección (r ∩ s) devuelve todas las tuplas que están tanto en r como en s. Puede expresarse usando diferencia: r ∩ s = r − (r − s). Las relaciones deben ser compatibles."
+            },
+            // ÁLGEBRA RELACIONAL EXTENDIDA
+            {
+                question: "¿Qué permite la Proyección Generalizada que la proyección normal no permite?",
+                options: [
+                    "Seleccionar más filas",
+                    "Usar funciones aritméticas en la lista de proyección y renombrar atributos resultantes",
+                    "Crear índices",
+                    "Eliminar tuplas"
+                ],
+                answer: 1,
+                explanation: "La Proyección Generalizada extiende la proyección para permitir expresiones aritméticas y renombrar atributos con 'as'. Por ejemplo: Πnombre,(límite − saldo) as disponible(tarjeta)."
+            },
+            {
+                question: "¿Cuáles son las funciones de agregación más comunes en el álgebra relacional extendida?",
+                options: [
+                    "LEFT, RIGHT, CENTER",
+                    "SUM, AVG, COUNT, MIN, MAX",
+                    "UPPER, LOWER, TRIM",
+                    "INSERT, UPDATE, DELETE"
+                ],
+                answer: 1,
+                explanation: "Las funciones de agregación toman un conjunto de valores (multiconjunto) y devuelven un único valor. Las más comunes son SUM (suma), AVG (promedio), COUNT (contar), MIN (mínimo) y MAX (máximo)."
+            },
+            {
+                question: "¿Qué diferencia hay entre una Reunión Natural y una Reunión Externa (Outer Join)?",
+                options: [
+                    "No hay diferencia",
+                    "La Reunión Externa preserva tuplas que no tienen coincidencia, rellenando con nulos",
+                    "La Externa es más rápida",
+                    "La Natural solo funciona con números"
+                ],
+                answer: 1,
+                explanation: "La Reunión Externa incluye tuplas de una o ambas relaciones que no tienen coincidencia en la otra, rellenando con valores nulos los atributos faltantes. Puede ser por la izquierda (⟕), derecha (⟖) o completa (⟗)."
+            },
+            {
+                question: "¿Cómo manejan las funciones de agregación los valores nulos?",
+                options: [
+                    "Los tratan como cero",
+                    "Ignoran los valores nulos antes de aplicar la agregación",
+                    "Convierten todo en nulo",
+                    "Generan un error"
+                ],
+                answer: 1,
+                explanation: "Las funciones de agregación eliminan los valores nulos del conjunto de entrada antes de aplicar la función. Si el resultado es un conjunto vacío, la función devuelve nulo."
+            },
+            // VALORES NULOS Y LÓGICA
+            {
+                question: "¿Qué resultado produce una comparación con un valor nulo en el álgebra relacional?",
+                options: [
+                    "Siempre devuelve cierto",
+                    "Devuelve el valor lógico 'desconocido'",
+                    "Siempre devuelve falso",
+                    "Genera un error"
+                ],
+                answer: 1,
+                explanation: "Cualquier comparación que involucra un valor nulo devuelve el valor lógico especial 'desconocido' (ni cierto ni falso). Esto lleva a una lógica de tres valores en lugar de la lógica booleana tradicional."
+            },
+            {
+                question: "En la lógica de tres valores, ¿qué resulta de (cierto AND desconocido)?",
+                options: [
+                    "Cierto",
+                    "Desconocido",
+                    "Falso",
+                    "Nulo"
+                ],
+                answer: 1,
+                explanation: "En la lógica de tres valores del álgebra relacional: (cierto AND desconocido) = desconocido, (falso AND desconocido) = falso, y (desconocido AND desconocido) = desconocido."
+            },
+            {
+                question: "¿Cómo trata la operación de Selección (σ) las tuplas cuando el predicado devuelve 'desconocido'?",
+                options: [
+                    "Las incluye en el resultado",
+                    "No las añade al resultado (igual que si fuera falso)",
+                    "Genera un error",
+                    "Las marca especialmente"
+                ],
+                answer: 1,
+                explanation: "La operación de Selección solo añade una tupla al resultado si el predicado devuelve cierto. Si devuelve falso o desconocido, la tupla no se incluye en el resultado."
+            },
+            // MODIFICACIÓN DE LA BASE DE DATOS
+            {
+                question: "¿Qué operación se usa para eliminar tuplas en el álgebra relacional?",
+                options: [
+                    "Proyección",
+                    "Borrado mediante r ← r − E",
+                    "Selección",
+                    "División"
+                ],
+                answer: 1,
+                explanation: "El borrado se expresa como r ← r − E, donde E es una expresión del álgebra relacional que especifica las tuplas a eliminar. Solo se pueden borrar tuplas completas, no valores específicos de atributos."
+            },
+            {
+                question: "¿Cómo se expresa la inserción de tuplas en el álgebra relacional?",
+                options: [
+                    "r ← r × E",
+                    "r ← r ∪ E",
+                    "r ← r − E",
+                    "r ← r ⋈ E"
+                ],
+                answer: 1,
+                explanation: "La inserción se expresa como r ← r ∪ E, donde E es una expresión del álgebra relacional que produce el conjunto de tuplas a insertar. Para insertar una sola tupla, E puede ser una relación constante."
+            },
+            {
+                question: "¿Qué operación se utiliza para actualizar valores de atributos en tuplas existentes?",
+                options: [
+                    "Selección",
+                    "Proyección Generalizada combinada con la relación original",
+                    "Unión",
+                    "Producto Cartesiano"
+                ],
+                answer: 1,
+                explanation: "La actualización se realiza usando Proyección Generalizada: r ← ΠF1,F2,...,Fn(r), donde Fi representa el atributo sin cambios o una expresión que calcula el nuevo valor. Para actualizar solo algunas tuplas, se combina con selección."
+            },
+            // CONCEPTOS AVANZADOS DEL MODELO RELACIONAL
+            {
+                question: "¿Por qué es importante evitar valores nulos en las bases de datos relacionales?",
+                options: [
+                    "Ocupan mucho espacio",
+                    "Crean complicaciones en operaciones y pueden afectar la consistencia de los resultados",
+                    "Son ilegales en SQL",
+                    "Ralentizan las consultas significativamente"
+                ],
+                answer: 1,
+                explanation: "Los valores nulos indican información desconocida o inexistente y crean complicaciones: requieren lógica de tres valores, afectan agregaciones, comparaciones y reuniones, y pueden llevar a resultados inconsistentes o inesperados."
+            },
+            {
+                question: "¿Qué significa que los dominios sean atómicos en el modelo relacional?",
+                options: [
+                    "Que contengan números pequeños",
+                    "Que sus elementos se consideren unidades indivisibles sin partes constituyentes",
+                    "Que sean únicos en la base de datos",
+                    "Que no puedan ser nulos"
+                ],
+                answer: 1,
+                explanation: "Un dominio atómico es aquel cuyos elementos se consideran indivisibles. Por ejemplo, el conjunto de números enteros es atómico, pero un conjunto de listas no lo sería. Esta es la base de la Primera Forma Normal (1FN)."
+            },
+            {
+                question: "¿Cuál es la ventaja de tener múltiples relaciones en lugar de una sola relación grande?",
+                options: [
+                    "Es más complicado y profesional",
+                    "Evita repetición de información, reduce valores nulos y mejora la integridad",
+                    "Ocupa menos espacio siempre",
+                    "Es más rápido automáticamente"
+                ],
+                answer: 1,
+                explanation: "Dividir la información en múltiples relaciones conectadas mediante claves evita la duplicación innecesaria de datos, minimiza valores nulos para datos incompletos y facilita el mantenimiento de la consistencia."
+            },
+            {
+                question: "¿Qué asegura un diagrama de esquema de base de datos relacional?",
+                options: [
+                    "Que las consultas sean rápidas",
+                    "Una representación visual de relaciones, claves primarias y claves externas",
+                    "Que no haya errores de sintaxis",
+                    "La seguridad de los datos"
+                ],
+                answer: 1,
+                explanation: "El diagrama de esquema representa gráficamente la estructura de la base de datos, mostrando las relaciones (tablas), sus claves primarias (subrayadas) y las dependencias de claves externas (flechas), facilitando la comprensión del diseño."
+            },
+            // DISEÑO Y NORMALIZACIÓN
+            {
+                question: "¿Qué es la normalización en el contexto de bases de datos relacionales?",
+                options: [
+                    "Convertir todos los datos a un formato estándar",
+                    "El proceso de organizar datos para minimizar redundancia y dependencias problemáticas",
+                    "Hacer que todas las tablas tengan el mismo tamaño",
+                    "Eliminar todos los valores nulos"
+                ],
+                answer: 1,
+                explanation: "La normalización es el proceso de estructurar esquemas de relaciones para generar estructuras pequeñas, estables y flexibles que minimicen redundancias y relaciones problemáticas de varios a varios."
+            },
+            {
+                question: "¿Qué objetivo tiene la integridad referencial en bases de datos relacionales?",
+                options: [
+                    "Acelerar las consultas",
+                    "Asegurar que las relaciones entre tablas acopladas permanezcan consistentes",
+                    "Reducir el tamaño de la base de datos",
+                    "Encriptar los datos"
+                ],
+                answer: 1,
+                explanation: "La integridad referencial son reglas que garantizan consistencia entre tablas relacionadas. Por ejemplo, asegura que no se pueda agregar un registro con una clave foránea que no tenga correspondencia en la tabla referenciada."
+            },
+            // DBMS Y ENTORNO DE ARCHIVOS
+            {
+                question: "¿Cuál es el principal problema del entorno de archivos tradicional que resuelven los DBMS?",
+                options: [
+                    "Los archivos son demasiado grandes",
+                    "Redundancia, inconsistencia de datos y dependencia programa-datos",
+                    "Los archivos no pueden almacenar imágenes",
+                    "Los archivos son demasiado rápidos"
+                ],
+                answer: 1,
+                explanation: "Los entornos de archivos tradicionales sufren de datos duplicados en múltiples archivos (redundancia), inconsistencias cuando la misma información tiene valores diferentes, y fuerte acoplamiento entre programas y estructuras de datos."
+            },
+            {
+                question: "¿Qué es la separación de vistas lógica y física de los datos en un DBMS?",
+                options: [
+                    "Tener dos copias de los datos",
+                    "Permitir que los usuarios vean los datos conceptualmente sin preocuparse por su almacenamiento físico real",
+                    "Usar dos servidores diferentes",
+                    "Tener permisos de lectura y escritura separados"
+                ],
+                answer: 1,
+                explanation: "La vista lógica presenta los datos según la percepción del usuario (abstracta), mientras la vista física muestra cómo están realmente organizados en el almacenamiento. El DBMS separa estas vistas proporcionando independencia de datos."
+            },
+            {
+                question: "¿Qué es el Lenguaje de Definición de Datos (DDL)?",
+                options: [
+                    "Un lenguaje para consultar datos",
+                    "Un lenguaje para especificar la estructura y características de la base de datos",
+                    "Un lenguaje de programación",
+                    "Un sistema operativo"
+                ],
+                answer: 1,
+                explanation: "El DDL (Data Definition Language) se utiliza para definir el esquema de la base de datos, incluyendo la creación de tablas, especificación de tipos de datos, restricciones y otras propiedades estructurales."
+            },
+            {
+                question: "¿Qué es el Lenguaje de Manipulación de Datos (DML)?",
+                options: [
+                    "Un lenguaje para crear tablas",
+                    "Un lenguaje para agregar, modificar, eliminar y recuperar datos en la base de datos",
+                    "Un lenguaje para diseñar interfaces",
+                    "Un sistema de archivos"
+                ],
+                answer: 1,
+                explanation: "El DML (Data Manipulation Language) como SQL permite a usuarios y programadores manipular los datos: insertar nuevos registros, actualizar existentes, eliminar y recuperar información mediante consultas."
+            },
+            // OPERACIONES ESPECIALES Y CASOS DE USO
+            {
+                question: "¿Por qué es útil la operación de asignación (←) en el álgebra relacional?",
+                options: [
+                    "Para hacer las consultas más lentas",
+                    "Para escribir consultas complejas como programas secuenciales asignando resultados a variables temporales",
+                    "Para crear índices",
+                    "Para encriptar datos"
+                ],
+                answer: 1,
+                explanation: "La operación de asignación permite descomponer consultas complejas en pasos más simples, asignando resultados intermedios a variables de relación temporal. Mejora la legibilidad sin añadir poder expresivo."
+            },
+            {
+                question: "¿Qué es un multiconjunto en el contexto de funciones de agregación?",
+                options: [
+                    "Un conjunto que no contiene duplicados",
+                    "Un conjunto que puede contener valores repetidos, usado en agregaciones",
+                    "Múltiples conjuntos diferentes",
+                    "Un conjunto vacío"
+                ],
+                answer: 1,
+                explanation: "Un multiconjunto (o bolsa) es una colección que puede contener elementos duplicados. Las funciones de agregación operan sobre multiconjuntos, permitiendo que los valores se repitan en el conjunto de entrada."
+            },
+            {
+                question: "¿Cuándo se utiliza típicamente la palabra clave 'distinct' en funciones de agregación?",
+                options: [
+                    "Siempre es obligatoria",
+                    "Para eliminar duplicados antes de aplicar la función de agregación",
+                    "Para agregar más duplicados",
+                    "Para acelerar la consulta"
+                ],
+                answer: 1,
+                explanation: "La palabra clave 'distinct' se utiliza cuando queremos eliminar valores duplicados antes de aplicar la agregación. Por ejemplo, COUNT(DISTINCT ciudad) cuenta las ciudades únicas, no todas las ocurrencias."
+            },
+            {
+                question: "¿Qué hace la operación de agrupación (G) en el álgebra relacional extendida?",
+                options: [
+                    "Ordena las tuplas",
+                    "Divide las tuplas en grupos con los mismos valores para ciertos atributos y aplica funciones de agregación a cada grupo",
+                    "Elimina grupos",
+                    "Crea nuevas tablas"
+                ],
+                answer: 1,
+                explanation: "La operación de agrupación (G1,G2,...,Gn GF1(A1),...,Fm(Am)(E)) divide las tuplas en grupos basándose en los valores de los atributos de agrupación, luego aplica funciones de agregación a cada grupo."
+            },
+            // PROPIEDADES Y CARACTERÍSTICAS
+            {
+                question: "¿Por qué se dice que la Reunión Natural es asociativa?",
+                options: [
+                    "Porque se puede asociar con cualquier tabla",
+                    "Porque (r ⋈ s) ⋈ t = r ⋈ (s ⋈ t), permitiendo cambiar el orden de ejecución",
+                    "Porque requiere membresía",
+                    "Porque es rápida"
+                ],
+                answer: 1,
+                explanation: "La propiedad asociativa significa que podemos cambiar el orden en que se realizan las reuniones sin afectar el resultado final. Esto es importante para la optimización de consultas."
+            },
+            {
+                question: "¿Qué sucede con las filas duplicadas en la operación de Proyección?",
+                options: [
+                    "Se mantienen todas",
+                    "Se eliminan automáticamente porque las relaciones son conjuntos",
+                    "Se marcan con un asterisco",
+                    "Generan un error"
+                ],
+                answer: 1,
+                explanation: "Dado que las relaciones son matemáticamente conjuntos, la operación de Proyección elimina automáticamente todas las filas duplicadas del resultado, manteniendo solo ocurrencias únicas."
+            },
+            {
+                question: "¿Cuál es la aridad del resultado de un Producto Cartesiano r × s si r tiene 5 atributos y s tiene 3?",
+                options: [
+                    "5 atributos",
+                    "8 atributos (5 + 3)",
+                    "15 atributos (5 × 3)",
+                    "2 atributos"
+                ],
+                answer: 1,
+                explanation: "La aridad (número de atributos) del resultado del Producto Cartesiano es la suma de las aridades de las relaciones de entrada. Si r tiene 5 atributos y s tiene 3, r × s tendrá 8 atributos."
+            },
+            {
+                question: "¿Qué pasa cuando se realiza una Reunión Natural entre dos relaciones que no tienen atributos comunes?",
+                options: [
+                    "Genera un error",
+                    "Produce un Producto Cartesiano completo",
+                    "Devuelve una relación vacía",
+                    "Devuelve solo la primera relación"
+                ],
+                answer: 1,
+                explanation: "Si dos relaciones no tienen atributos con nombres comunes, la Reunión Natural se reduce a un Producto Cartesiano, ya que no hay atributos sobre los cuales forzar la igualdad."
+            },
+            // COMPARACIONES Y PREDICADOS
+            {
+                question: "¿Qué tipos de operadores de comparación se pueden usar en el predicado de Selección?",
+                options: [
+                    "Solo igualdad (=)",
+                    "=, ≠, <, ≤, >, ≥ y conectivas lógicas ∧, ∨, ¬",
+                    "Solo números",
+                    "Solo texto"
+                ],
+                answer: 1,
+                explanation: "El predicado de selección puede incluir operadores de comparación (=, ≠, <, ≤, >, ≥) y conectivas lógicas (AND ∧, OR ∨, NOT ¬), permitiendo condiciones complejas e incluso comparaciones entre dos atributos."
+            },
+            {
+                question: "¿Cuál es el resultado de (falso OR desconocido) en la lógica de tres valores?",
+                options: [
+                    "Falso",
+                    "Desconocido",
+                    "Cierto",
+                    "Nulo"
+                ],
+                answer: 1,
+                explanation: "En la lógica de tres valores: (cierto OR desconocido) = cierto, (falso OR desconocido) = desconocido, y (desconocido OR desconocido) = desconocido."
+            },
+            {
+                question: "¿Qué es (NOT desconocido) en la lógica de tres valores?",
+                options: [
+                    "Cierto",
+                    "Desconocido",
+                    "Falso",
+                    "Error"
+                ],
+                answer: 1,
+                explanation: "La negación de desconocido sigue siendo desconocido: (NOT desconocido) = desconocido, manteniendo la consistencia de la lógica de tres valores."
+            },
+            // APLICACIONES PRÁCTICAS
+            {
+                question: "¿Qué tipo de consulta se beneficia especialmente del uso de Reunión Externa?",
+                options: [
+                    "Consultas que solo necesitan datos completos",
+                    "Consultas que necesitan incluir registros incluso si no tienen correspondencia en la otra tabla",
+                    "Consultas de solo lectura",
+                    "Consultas que ordenan datos"
+                ],
+                answer: 1,
+                explanation: "La Reunión Externa es ideal cuando necesitamos preservar información de registros que no tienen correspondencia en la otra tabla, rellenando con nulos los atributos faltantes. Por ejemplo, mostrar todos los empleados incluso si no tienen asignación de proyecto."
+            },
+            {
+                question: "¿Cómo se puede expresar la operación de Intersección usando operaciones fundamentales?",
+                options: [
+                    "r ∩ s = r ∪ s",
+                    "r ∩ s = r − (r − s)",
+                    "r ∩ s = r × s",
+                    "r ∩ s = r ⋈ s"
+                ],
+                answer: 1,
+                explanation: "La Intersección puede expresarse usando la Diferencia: r ∩ s = r − (r − s). Esto demuestra que la Intersección no añade poder expresivo al álgebra, aunque simplifica consultas."
+            },
+            {
+                question: "¿Qué ventaja ofrece el modelo relacional sobre modelos anteriores como el jerárquico y de red?",
+                options: [
+                    "Es más complicado",
+                    "Su simplicidad facilita el trabajo del programador ocultando detalles de implementación",
+                    "Solo funciona en computadoras modernas",
+                    "Requiere menos memoria"
+                ],
+                answer: 1,
+                explanation: "El modelo relacional logró su posición dominante gracias a su simplicidad conceptual, que facilita significativamente el trabajo del programador comparado con modelos anteriores que requerían entender estructuras complejas de punteros y navegación."
+            },
+            {
+                question: "¿Por qué las claves primarias deben tener valores estables que raramente cambien?",
+                options: [
+                    "Para ahorrar espacio",
+                    "Porque son referenciadas por claves externas en otras tablas, y cambiarlas afectaría múltiples relaciones",
+                    "Por regulaciones legales",
+                    "Para mejorar el rendimiento únicamente"
+                ],
+                answer: 1,
+                explanation: "Las claves primarias deben ser estables porque son referenciadas por claves externas en otras tablas. Cambiar una clave primaria requeriría actualizar todas las referencias en cascada, lo que es complejo y propenso a errores."
+            },
+            {
+                question: "¿Qué información típicamente contiene un diccionario de datos en un DBMS corporativo?",
+                options: [
+                    "Solo los nombres de las tablas",
+                    "Definiciones de elementos de datos, sus características, uso, propiedad, autorización y seguridad",
+                    "Solo las contraseñas",
+                    "Solo el código de las aplicaciones"
+                ],
+                answer: 1,
+                explanation: "El diccionario de datos almacena metadatos completos: definiciones de elementos, tipos, formatos, uso en programas, quién es propietario de cada dato, niveles de autorización y requisitos de seguridad."
+            },
+            {
+                question: "¿Qué representa un Diagrama Entidad-Relación (E-R)?",
+                options: [
+                    "El rendimiento de la base de datos",
+                    "Las entidades (cuadros) y relaciones (líneas) entre ellas en el modelo de datos",
+                    "El código SQL",
+                    "Los usuarios del sistema"
+                ],
+                answer: 1,
+                explanation: "Un diagrama E-R documenta gráficamente el modelo conceptual de datos. Los cuadros representan entidades (personas, lugares, cosas, eventos), y las líneas representan las relaciones entre ellas, incluyendo notación para cardinalidades (1:1, 1:N)."
+            },
+            {
+                question: "¿Cuál es el resultado si se aplica una función de agregación a un conjunto completamente vacío (después de eliminar nulos)?",
+                options: [
+                    "Cero",
+                    "Nulo",
+                    "Error",
+                    "Uno"
+                ],
+                answer: 1,
+                explanation: "Si después de eliminar valores nulos el conjunto resultante está vacío, las funciones de agregación devuelven nulo. Esto evita que valores nulos contaminen resultados y permite distinguir 'sin datos' de 'suma cero'."
+            },
+            {
+                question: "¿Cuál es la diferencia fundamental entre un lenguaje procedimental y uno no procedimental en el contexto de consultas?",
+                options: [
+                    "La velocidad de ejecución",
+                    "El procedimental especifica cómo obtener los datos; el no procedimental solo especifica qué datos se necesitan",
+                    "El tamaño del código",
+                    "El tipo de datos que manejan"
+                ],
+                answer: 1,
+                explanation: "En un lenguaje procedimental (como el álgebra relacional), el usuario especifica la secuencia de operaciones para obtener el resultado. En uno no procedimental (como el cálculo relacional o SQL declarativo), el usuario solo describe qué información desea, y el sistema determina cómo obtenerla."
             }
         ];
 
@@ -330,12 +903,12 @@
             }
         }
         
-        // Función para generar los 10 exámenes, cada uno con 15 preguntas aleatorias
+        // Función para generar los 10 exámenes, cada uno con 20 preguntas aleatorias
         function generateQuizzes() {
             quizzes = [];
             for (let i = 0; i < 10; i++) {
                 shuffleArray(allQuestions);
-                const selectedQuestions = allQuestions.slice(0, 15);
+                const selectedQuestions = allQuestions.slice(0, 20);
                 quizzes.push({
                     title: `Examen de Práctica ${i + 1}`,
                     questions: selectedQuestions

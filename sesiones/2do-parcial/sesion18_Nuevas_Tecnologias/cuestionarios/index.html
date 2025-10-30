@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Sesión 18 - SID</title>
+    <meta name="description" content="Cuestionario de práctica para la Sesión 18 de Fundamentos de Sistemas de Información Digitales, sobre Nuevas Tecnologías: Inteligencia Artificial, Machine Learning, Blockchain, Robótica, Sistemas Expertos, IoT y transformación digital.">
+    <meta name="keywords" content="SID, FCE, UBA, Cuestionario, Nuevas Tecnologías, Inteligencia Artificial, Machine Learning, Deep Learning, Blockchain, Smart Contracts, Robótica, Sistemas Expertos, IoT, Industria 4.0">
+    <meta name="author" content="Alexis Ballera - alexisballera@gmail.com">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .quiz-button {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .answer-button {
+            width: 100%;
+            padding: 16px;
+            text-align: left;
+            background-color: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .answer-button:hover:not(:disabled) {
+            background-color: #f3f4f6;
+            border-color: #6366f1;
+            transform: translateX(4px);
+        }
+
+        .answer-button.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            animation: pulse-correct 0.8s ease-in-out;
+        }
+
+        .answer-button.incorrect {
+            background-color: #fecaca;
+            border-color: #ef4444;
+            color: #991b1b;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        @keyframes pulse-correct {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .progress-bar {
+            background: linear-gradient(to right, #10b981, #059669);
+            border-radius: 9999px;
+            height: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .medal {
+            font-size: 4rem;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-10px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Quiz Selection Screen -->
+        <div id="quiz-selection-screen" class="hidden fade-in">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">Cuestionario Sesión 18</h1>
+                <p class="text-xl text-gray-600 mb-2">Nuevas Tecnologías y Transformación Digital</p>
+                <p class="text-lg text-gray-500">Fundamentos de Sistemas de Información Digitales</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Los botones se generan dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number">1</span> de 20</span>
+                    <div class="timer text-blue-600" id="timer">20:00</div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Puntuación: <span id="score">0</span></span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="progress-bar h-2 rounded-full" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 id="question" class="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">Pregunta...</h2>
+                <div id="options-container" class="space-y-3">
+                    <!-- Las opciones se generan dinámicamente -->
+                </div>
+            </div>
+
+            <div id="feedback-message" class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-6 rounded-r-lg hidden">
+                <!-- El feedback se muestra aquí -->
+            </div>
+
+            <div class="text-center">
+                <button id="next-button" onclick="nextQuestion()" class="quiz-button bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none disabled:opacity-50" disabled>
+                    Siguiente Pregunta
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden fade-in">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="medal mb-4">🏆</div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Examen Completado!</h2>
+                    <div class="score-display text-indigo-600 mb-4"><span id="final-score">0</span>/20</div>
+                    <p class="text-lg text-gray-600 mb-6">Has completado el examen de práctica</p>
+                    
+                    <div class="space-y-4">
+                        <button onclick="restartQuiz()" class="quiz-button w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">
+                            Realizar Otro Examen
+                        </button>
+                        <button onclick="window.location.reload()" class="quiz-button w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none">
+                            Volver al Inicio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allQuestions = [
+    {
+        question: "¿Qué característica distingue a un sistema de Inteligencia Artificial de un programa informático convencional?",
+        options: [
+            "La capacidad de ejecutar cálculos muy rápidamente",
+            "La habilidad de aprender de la experiencia y ajustar su comportamiento futuro de forma autónoma",
+            "El uso de interfaces gráficas avanzadas",
+            "La capacidad de almacenar grandes cantidades de datos"
+        ],
+        answer: 1,
+        explanation: "La característica distintiva de la IA es su capacidad de aprender de la experiencia. Mientras los sistemas convencionales operan sobre reglas pre-programadas, los sistemas de IA pueden analizar resultados, identificar errores y ajustar su comportamiento futuro de forma autónoma, encarnando el principio de 'no tropezar dos veces con la misma piedra'."
+    },
+    {
+        question: "¿Cuál es el Teorema de Tesler sobre Inteligencia Artificial?",
+        options: [
+            "La IA solo puede existir en computadoras cuánticas",
+            "Inteligencia artificial es todo lo que aún no ha sido conseguido",
+            "La IA es más inteligente que los humanos",
+            "La IA debe tener conciencia propia"
+        ],
+        answer: 1,
+        explanation: "El Teorema de Tesler establece que 'Inteligencia artificial es todo lo que aún no ha sido conseguido'. Esta definición reflexiva sugiere que una vez que una máquina logra realizar una tarea, dejamos de considerarla 'inteligencia artificial' y se convierte en computación convencional, moviendo constantemente la frontera de lo que consideramos IA."
+    },
+    {
+        question: "¿Qué tres factores clave han convergido para impulsar el resurgimiento actual de la IA?",
+        options: [
+            "Computadoras más baratas, internet más rápido y pantallas más grandes",
+            "Algoritmos mejorados, potencia de cálculo masiva (GPUs) y disponibilidad de Big Data",
+            "Más programadores, más inversión privada y más universidades",
+            "Mejores interfaces de usuario, menor consumo energético y mayor portabilidad"
+        ],
+        answer: 1,
+        explanation: "El resurgimiento explosivo de la IA se debe a la confluencia de tres factores: (1) algoritmos mejorados como redes neuronales profundas y transformers, (2) potencia de cálculo masiva con GPUs que hacen viable entrenar modelos complejos, y (3) disponibilidad de Big Data generado por la digitalización global que sirve como combustible para el entrenamiento."
+    },
+    {
+        question: "¿Qué diferencia existe entre IA débil (Weak AI) e IA fuerte (Strong AI)?",
+        options: [
+            "La IA débil es más lenta que la IA fuerte",
+            "La IA débil está diseñada para tareas específicas; la IA fuerte tendría capacidades cognitivas comparables a las humanas en cualquier dominio",
+            "La IA débil solo funciona offline mientras la IA fuerte requiere conexión",
+            "La IA débil es menos costosa que la IA fuerte"
+        ],
+        answer: 1,
+        explanation: "La IA débil o estrecha está diseñada y entrenada para una tarea específica (como reconocimiento facial o recomendaciones). Todos los sistemas de IA actuales son débiles. La IA fuerte o general sería capaz de aprender y razonar en cualquier dominio intelectual comparable a un ser humano, pero sigue siendo un objetivo teórico no alcanzado."
+    },
+    {
+        question: "¿Qué es el Machine Learning (ML)?",
+        options: [
+            "Un lenguaje de programación específico para robots",
+            "Algoritmos que tras ser entrenados con datos hacen predicciones o toman decisiones sin estar específicamente programados para cada tarea",
+            "Un tipo de hardware especializado para IA",
+            "Una técnica para programar más rápido"
+        ],
+        answer: 1,
+        explanation: "El Machine Learning es un subcampo de la IA donde los algoritmos, tras ser 'entrenados' con un conjunto de datos, generan modelos matemáticos a partir de inferencias, permitiéndoles hacer predicciones, tomar decisiones o realizar tareas sin haber sido programadas específicamente para cada situación particular."
+    },
+    {
+        question: "¿Cuál es la diferencia fundamental entre aprendizaje supervisado y no supervisado?",
+        options: [
+            "El supervisado requiere más computadoras que el no supervisado",
+            "En supervisado se conoce el resultado esperado en los datos de entrenamiento; en no supervisado no se conoce a priori",
+            "El supervisado es más rápido que el no supervisado",
+            "El no supervisado solo funciona con imágenes"
+        ],
+        answer: 1,
+        explanation: "En aprendizaje supervisado, el modelo se entrena con datos etiquetados donde se conoce el resultado esperado (ej: imágenes etiquetadas como 'gato' o 'no gato'). En aprendizaje no supervisado, el modelo explora datos sin etiquetar para encontrar patrones ocultos por sí mismo (ej: segmentar clientes sin categorías predefinidas)."
+    },
+    {
+        question: "¿Qué son las Redes Neuronales en el contexto de IA?",
+        options: [
+            "Conexiones físicas entre computadoras",
+            "Estructuras computacionales inspiradas en el cerebro con capas de nodos interconectados que ajustan sus pesos durante el entrenamiento",
+            "Cables especiales para transmitir datos",
+            "Diagramas de flujo de programación"
+        ],
+        answer: 1,
+        explanation: "Las Redes Neuronales son arquitecturas computacionales inspiradas en el cerebro, compuestas por capas de nodos ('neuronas' artificiales) interconectados. Cada conexión tiene un 'peso' numérico que se ajusta durante el entrenamiento. Este proceso de ajuste de pesos es el 'aprendizaje': la red modifica las conexiones para minimizar errores."
+    },
+    {
+        question: "¿Qué caracteriza al Deep Learning (Aprendizaje Profundo)?",
+        options: [
+            "Programas que analizan datos del océano profundo",
+            "Redes neuronales con muchas capas intermedias que pueden aprender representaciones jerárquicas complejas",
+            "Algoritmos que funcionan durante la noche",
+            "Sistemas que requieren muchos programadores"
+        ],
+        answer: 1,
+        explanation: "Deep Learning se refiere al uso de redes neuronales con muchas capas intermedias ('capas ocultas'). La 'profundidad' permite aprender representaciones jerárquicas: las primeras capas detectan características simples (bordes, colores), las intermedias formas complejas (ojos, narices) y las finales patrones completos (rostros)."
+    },
+    {
+        question: "¿Qué diferencia a los modelos de IA generativa de los modelos discriminativos?",
+        options: [
+            "Los generativos son más caros que los discriminativos",
+            "Los generativos crean contenido nuevo original; los discriminativos clasifican o predicen a partir de datos existentes",
+            "Los generativos solo funcionan con texto",
+            "Los discriminativos son más precisos siempre"
+        ],
+        answer: 1,
+        explanation: "Los modelos discriminativos clasifican o predicen a partir de datos existentes (ej: ¿esta imagen es un gato o un perro?). Los modelos generativos crean contenido completamente nuevo que se asemeja a sus datos de entrenamiento (texto coherente, imágenes fotorrealistas, música, código)."
+    },
+    {
+        question: "¿Qué innovación arquitectónica catalizó la revolución de la IA generativa?",
+        options: [
+            "Los transistores más pequeños",
+            "La arquitectura Transformer con mecanismo de atención introducida en 2017",
+            "Las pantallas táctiles más grandes",
+            "Las baterías de mayor duración"
+        ],
+        answer: 1,
+        explanation: "La arquitectura Transformer introducida en 2017 catalizó la revolución generativa. A diferencia de modelos secuenciales anteriores, los transformers usan un mecanismo de 'atención' que permite ponderar la importancia de todas las palabras simultáneamente, otorgando comprensión contextual profunda y capturando relaciones complejas."
+    },
+    {
+        question: "¿Qué caracteriza a los Modelos GPT (Generative Pre-trained Transformer)?",
+        options: [
+            "Son modelos pre-entrenados en vastos corpus de texto que aprenden gramática, hechos y razonamiento del lenguaje",
+            "Solo funcionan con comandos de voz",
+            "Requieren programación manual para cada respuesta",
+            "Solo pueden traducir entre idiomas"
+        ],
+        answer: 0,
+        explanation: "Los modelos GPT son pre-entrenados en vastos corpus de texto (gran parte de internet) para aprender gramática, hechos, estilos de razonamiento y estructuras del lenguaje humano. Después pueden ajustarse para tareas específicas (conversación, traducción, código). Funcionan prediciendo la siguiente palabra más probable con alto contexto."
+    },
+    {
+        question: "¿Qué es la IA Multimodal?",
+        options: [
+            "IA que funciona en múltiples países",
+            "Una red neuronal capaz de procesar, comprender e interconectar diferentes tipos de datos: texto, imágenes, audio, video",
+            "IA que tiene varios precios",
+            "Sistemas que requieren múltiples programadores"
+        ],
+        answer: 1,
+        explanation: "La IA Multimodal es una única red neuronal capaz de procesar, comprender e interconectar diferentes tipos de datos (modalidades) de forma nativa: texto, imágenes, audio, video y código. Modelos como GPT-4o y Gemini pueden 'ver', 'escuchar' y generar respuestas combinando estas modalidades, permitiendo interacción más natural."
+    },
+    {
+        question: "¿Qué problema resuelve la arquitectura RAG (Generación Aumentada por Recuperación)?",
+        options: [
+            "Mejora la velocidad de los procesadores",
+            "Mitiga alucinaciones de LLMs y permite acceso a conocimiento actualizado mediante búsqueda en bases de datos externas",
+            "Reduce el tamaño de las pantallas",
+            "Elimina la necesidad de internet"
+        ],
+        answer: 1,
+        explanation: "RAG resuelve el problema de 'alucinaciones' (información inventada) y falta de acceso a conocimiento actualizado. Funciona recuperando información relevante de bases de datos externas autorizadas antes de generar la respuesta, 'anclando' al LLM en datos verificables. Es el puente que hace la IA generativa confiable para uso empresarial."
+    },
+    {
+        question: "¿Cómo funciona el proceso de RAG?",
+        options: [
+            "Genera respuestas y luego las verifica",
+            "Recupera información relevante de una base de conocimiento, la aumenta al prompt, y luego genera respuesta basada exclusivamente en ese contexto",
+            "Solo busca en internet sin procesar los datos",
+            "Almacena todas las respuestas posibles previamente"
+        ],
+        answer: 1,
+        explanation: "RAG opera en 3 pasos: (1) ante una consulta, busca información relevante en una base de conocimiento externa autorizada, (2) 'aumenta' el prompt original con esta información recuperada proporcionando contexto fáctico, (3) pide al LLM generar respuesta basándose exclusivamente en ese contexto verificable, operando 'a libro abierto' vs 'a libro cerrado'."
+    },
+    {
+        question: "¿Qué son los Sistemas Expertos (SE)?",
+        options: [
+            "Programadores con mucha experiencia",
+            "Sistemas que capturan conocimiento humano en reglas SI-ENTONCES para resolver problemas en áreas específicas",
+            "Computadoras más rápidas que las normales",
+            "Aplicaciones de redes sociales"
+        ],
+        answer: 1,
+        explanation: "Los Sistemas Expertos son aplicaciones de IA que capturan conocimiento tácito de expertos humanos en un dominio específico, codificándolo en una base de conocimiento con reglas 'SI-ENTONCES'. Un motor de inferencia usa estas reglas para resolver problemas similar al experto. Ejemplos: MYCIN (infecciones), aprobación de créditos."
+    },
+    {
+        question: "¿Cuál es la diferencia fundamental entre Sistemas Expertos y sistemas de IA modernos basados en ML?",
+        options: [
+            "Los Sistemas Expertos son más económicos",
+            "Sistemas Expertos usan conocimiento codificado por humanos en reglas; IA moderna infiere conocimiento de los datos automáticamente",
+            "Los Sistemas Expertos funcionan sin electricidad",
+            "La IA moderna solo funciona con imágenes"
+        ],
+        answer: 1,
+        explanation: "Sistemas Expertos operan con 'conocimiento codificado': humanos traducen experiencia en reglas explícitas (costoso, lento, frágil). IA moderna opera con 'conocimiento inferido': Machine Learning aprende reglas directamente de los patrones en datos, eliminando el cuello de botella de codificación manual, manejando mayor complejidad y adaptándose autónomamente."
+    },
+    {
+        question: "¿Qué son los Copilotos de IA?",
+        options: [
+            "Programas para pilotos de aviones",
+            "Asistentes de IA generativa integrados en herramientas de software que ayudan proactivamente comprendiendo el contexto de la tarea del usuario",
+            "Robots que conducen automóviles",
+            "Sistemas de GPS avanzados"
+        ],
+        answer: 1,
+        explanation: "Los Copilotos de IA (como Microsoft Copilot, GitHub Copilot) son asistentes que integran IA generativa en herramientas cotidianas (Outlook, PowerPoint, Excel, editores de código). No solo responden comandos; comprenden el contexto de la tarea del usuario para ofrecer ayuda proactiva (redactar correos, sugerir código, analizar datos)."
+    },
+    {
+        question: "¿Qué aplicaciones tiene la IA en identificación de modelos predictivos y reconocimiento?",
+        options: [
+            "Solo puede reconocer texto escrito a mano",
+            "Reconocimiento de imágenes, voz y video, identificación de patrones predictivos, prevención de fraude, desarrollo de medicamentos, detección de plagas",
+            "Únicamente puede predecir el clima",
+            "Solo funciona con datos numéricos simples"
+        ],
+        answer: 1,
+        explanation: "Las aplicaciones actuales de IA incluyen: identificación de modelos predictivos, reconocimiento de imágenes/voz/video, automatización de robots y transportes, prevención de fraude en finanzas (ciberseguridad), identificación de nuevos medicamentos y tratamientos personalizados, detección de cultivos enfermos o plagas, y análisis avanzado de datos."
+    },
+    {
+        question: "¿Qué son los Chatbots modernos?",
+        options: [
+            "Programas que solo pueden enviar mensajes pre-escritos",
+            "Aplicaciones de IA que simulan conversaciones usando PLN y ML para comprender intención y mantener conversaciones contextuales fluidas",
+            "Robots físicos que hablan",
+            "Sistemas telefónicos tradicionales"
+        ],
+        answer: 1,
+        explanation: "Los chatbots modernos usan Procesamiento del Lenguaje Natural (PLN) y Machine Learning para comprender la intención del usuario a partir de lenguaje natural y mantener conversaciones contextuales y fluidas, a diferencia de los antiguos basados en menús. Ofrecen soporte 24/7 y aprenden de cada interacción mejorando continuamente."
+    },
+    {
+        question: "¿Qué es el diseño generativo en ingeniería?",
+        options: [
+            "Dibujar manualmente en computadora",
+            "Usar IA para explorar miles de diseños optimizados según objetivos y restricciones, generando geometrías que humanos no habrían concebido",
+            "Copiar diseños existentes",
+            "Imprimir documentos de diseño"
+        ],
+        answer: 1,
+        explanation: "El diseño generativo usa IA para explorar miles de posibles diseños. Los ingenieros definen objetivos y restricciones (peso, resistencia, material, costo), y el algoritmo genera y optimiza iterativamente geometrías, creando formas orgánicas altamente eficientes. Airbus lo usó en el A320 reduciendo peso y mejorando eficiencia de combustible."
+    },
+    {
+        question: "¿Qué es el mantenimiento predictivo basado en IA?",
+        options: [
+            "Revisar máquinas cada semana sin importar su estado",
+            "Sensores de IoT recopilan datos en tiempo real que la IA analiza para predecir fallos antes de que ocurran, permitiendo mantenimiento proactivo",
+            "Reemplazar todas las piezas anualmente",
+            "Esperar que las máquinas se rompan para repararlas"
+        ],
+        answer: 1,
+        explanation: "El mantenimiento predictivo usa sensores de IoT que recopilan datos en tiempo real (vibraciones, temperatura). Modelos de IA analizan estos datos para predecir fallos antes de que ocurran, permitiendo programar mantenimiento proactivamente. Minimiza tiempo de inactividad no planificado. PepsiCo lo implementó en Frito-Lay mejorando rendimiento."
+    },
+    {
+        question: "¿Qué son los Gemelos Digitales (Digital Twins)?",
+        options: [
+            "Copias de respaldo de archivos",
+            "Réplica virtual y dinámica de un activo físico alimentada en tiempo real con sensores de IoT, usada para simular escenarios y optimizar operaciones",
+            "Pantallas duplicadas en monitores",
+            "Discos duros externos"
+        ],
+        answer: 1,
+        explanation: "Un Gemelo Digital es una réplica virtual dinámica de un activo físico, proceso o fábrica entera. Se alimenta continuamente de datos en tiempo real de sensores de IoT. La IA simula escenarios ('¿qué pasaría si...?'), analiza rendimiento y predice comportamiento futuro en este entorno virtual, optimizando operaciones sin riesgo."
+    },
+    {
+        question: "Según el AI Index 2025, ¿qué tendencia está democratizando el acceso a la IA?",
+        options: [
+            "Las computadoras son más grandes",
+            "Modelos más eficientes y pequeños alcanzan alto rendimiento; costos de inferencia han caído 280 veces en 18 meses",
+            "Solo grandes empresas pueden usar IA",
+            "La IA es más cara que nunca"
+        ],
+        answer: 1,
+        explanation: "El AI Index 2025 destaca que modelos más eficientes y pequeños están alcanzando rendimientos que antes requerían modelos gigantescos. Los costos de inferencia (usar un modelo ya entrenado) han caído más de 280 veces en 18 meses. Esta combinación de mayor eficiencia y menor costo está democratizando el acceso a IA sofisticada."
+    },
+    {
+        question: "¿Qué porcentaje de adopción de IA alcanzaron las organizaciones en 2024 según reportes de industria?",
+        options: [
+            "10% de las organizaciones",
+            "78% de las organizaciones adoptaron IA, con más del doble usando IA generativa",
+            "Solo 5% de las organizaciones",
+            "100% de las organizaciones"
+        ],
+        answer: 1,
+        explanation: "La adopción de IA en organizaciones experimentó una aceleración masiva, saltando del 55% en 2023 al 78% en 2024. El uso de IA generativa en al menos una función empresarial se más que duplicó en el mismo período, reflejando la rápida integración de estas tecnologías en operaciones empresariales."
+    },
+    {
+        question: "¿Qué es AI TRiSM (Trust, Risk, and Security Management)?",
+        options: [
+            "Un tipo de procesador de computadora",
+            "Enfoque estructurado para garantizar gobernanza, confiabilidad, equidad, seguridad y privacidad de sistemas de IA",
+            "Un lenguaje de programación",
+            "Una marca de computadoras"
+        ],
+        answer: 1,
+        explanation: "AI TRiSM (Trust, Risk, and Security Management) es un enfoque estructurado destacado por Gartner para garantizar gobernanza, confiabilidad, equidad, seguridad y privacidad de sistemas de IA. Proporciona las 'barandillas' técnicas y de políticas indispensables para adopción empresarial segura y escalable ante el rápido avance tecnológico."
+    },
+    {
+        question: "¿Qué son los AI Agents (Agentes de IA) según Gartner 2025?",
+        options: [
+            "Vendedores de software de IA",
+            "Entidades de software autónomas que perciben su entorno, toman decisiones y ejecutan acciones para lograr objetivos con mínima intervención humana",
+            "Personas que trabajan en IA",
+            "Empresas que venden IA"
+        ],
+        answer: 1,
+        explanation: "Los AI Agents son entidades de software autónomas o semiautónomas que van más allá de asistentes actuales. Usando LLMs y otras técnicas, pueden percibir su entorno (digital o físico), tomar decisiones complejas y ejecutar acciones para lograr objetivos predefinidos con mínima intervención humana, automatizando flujos de trabajo completos."
+    },
+    {
+        question: "¿Qué son los Machine Customers (Clientes Máquina)?",
+        options: [
+            "Tiendas que venden máquinas",
+            "Actores económicos no humanos (dispositivos IoT, asistentes virtuales) autorizados para comprar bienes y servicios autónomamente",
+            "Clientes que compran online",
+            "Programas de fidelización"
+        ],
+        answer: 1,
+        explanation: "Los Machine Customers son actores económicos no humanos (dispositivos de IoT, asistentes virtuales) autorizados para comprar bienes y servicios autónomamente (ej: refrigerador que pide leche). Gartner proyecta 8 mil millones de 'clientes máquina' B2B para 2030, obligando a rediseñar modelos de negocio para interactuar con estos nuevos actores."
+    },
+    {
+        question: "¿Qué es una Distributed Ledger Technology (DLT)?",
+        options: [
+            "Un libro de contabilidad de papel",
+            "Base de datos replicada y distribuida entre múltiples nodos en red peer-to-peer sin autoridad central, con estado determinado por consenso",
+            "Un tipo de impresora",
+            "Software de procesamiento de texto"
+        ],
+        answer: 1,
+        explanation: "Una DLT es una base de datos que no reside en servidor central sino que se replica y distribuye entre múltiples computadoras (nodos) en red peer-to-peer. Sin autoridad central que valide transacciones, el estado del registro se determina colectivamente mediante un algoritmo de consenso que sincroniza todas las copias."
+    },
+    {
+        question: "¿Qué diferencia a una Blockchain de otras DLT?",
+        options: [
+            "Blockchain es más lenta siempre",
+            "Blockchain tiene estructura de bloques enlazados cronológicamente con hashes criptográficos, creando una cadena a prueba de manipulaciones",
+            "Blockchain solo funciona con dinero",
+            "No hay diferencias significativas"
+        ],
+        answer: 1,
+        explanation: "Blockchain se distingue por su estructura de datos: bloques enlazados cronológicamente. Cada bloque contiene transacciones y su hash único (huella digital). Crucialmente, cada nuevo bloque incluye el hash del bloque anterior, creando encadenamiento criptográfico que hace la cadena a prueba de manipulaciones (alterar un bloque cambia todos los hashes posteriores)."
+    },
+    {
+        question: "¿Cómo garantiza la Blockchain la inmutabilidad de los datos?",
+        options: [
+            "Mediante contraseñas fuertes",
+            "Cada bloque incluye el hash del bloque anterior; alterar un bloque cambiaría su hash y rompería toda la cadena, siendo inmediatamente detectable",
+            "Almacenando datos en papel",
+            "Usando antivirus potentes"
+        ],
+        answer: 1,
+        explanation: "La inmutabilidad se logra mediante hashes criptográficos. Cada bloque contiene el hash del bloque anterior. Si alguien altera una transacción pasada, su hash cambia, y como ese hash está en el siguiente bloque, toda la cadena se rompe. Para alterar exitosamente se necesitaría controlar la mayoría de la red (ataque 51%), extremadamente costoso y difícil."
+    },
+    {
+        question: "¿Qué es Proof of Work (PoW)?",
+        options: [
+            "Un certificado laboral",
+            "Algoritmo de consenso donde mineros compiten resolviendo puzzles computacionales complejos para añadir bloques, requiriendo gran poder computacional",
+            "Un tipo de contrato de empleo",
+            "Una técnica de estudio"
+        ],
+        answer: 1,
+        explanation: "Proof of Work (usado por Bitcoin) es un algoritmo de consenso donde participantes (mineros) compiten para resolver un complejo puzzle computacional. El primero en resolverlo añade el siguiente bloque y recibe recompensa. Requiere inmensa potencia computacional y energía. Es extremadamente seguro pero criticado por consumo energético."
+    },
+    {
+        question: "¿Qué es Proof of Stake (PoS)?",
+        options: [
+            "Un tipo de apuesta deportiva",
+            "Algoritmo de consenso donde validadores apuestan criptomoneda como garantía; son elegidos para crear bloques ponderadamente por su apuesta",
+            "Un juego de cartas",
+            "Un tipo de inversión tradicional"
+        ],
+        answer: 1,
+        explanation: "Proof of Stake reemplaza la minería computacional con selección económica. Participantes (validadores) 'apuestan' (bloquean) criptomoneda como garantía. El protocolo elige a un validador para crear el bloque (pseudoaleatorio pero ponderado por apuesta). Si actúa mal, pierde su participación. Es drásticamente más eficiente energéticamente que PoW."
+    },
+    {
+        question: "¿Cuál es la principal ventaja de PoS sobre PoW?",
+        options: [
+            "PoS es más antiguo que PoW",
+            "PoS consume significativamente menos energía, es más rápido y escalable que PoW",
+            "PoS solo funciona con Bitcoin",
+            "PoS requiere más computadoras"
+        ],
+        answer: 1,
+        explanation: "La principal ventaja de PoS es la eficiencia energética: consume muchísimo menos energía que PoW (que es comparable al consumo de países enteros). PoS también permite mayor velocidad de transacción y mejor escalabilidad. Sin embargo, plantea preocupaciones sobre centralización si grandes entidades acumulan mucha criptomoneda."
+    },
+    {
+        question: "¿Qué son los Contratos Inteligentes (Smart Contracts)?",
+        options: [
+            "Contratos escritos por abogados expertos",
+            "Programas almacenados en blockchain que se ejecutan automáticamente cuando se cumplen condiciones predefinidas codificadas, sin intermediarios",
+            "Documentos impresos con tinta especial",
+            "Acuerdos verbales entre empresas"
+        ],
+        answer: 1,
+        explanation: "Un Smart Contract es un programa informático almacenado en blockchain que se ejecuta automáticamente cuando se cumplen condiciones predefinidas y codificadas. Como una máquina expendedora (dinero correcto → producto), automatiza ejecución de acuerdos sin intermediarios, confianza o cumplimiento manual. Ej: liberar pago cuando sensor confirma entrega."
+    },
+    {
+        question: "¿Cómo se aplica Blockchain en la cadena de suministro?",
+        options: [
+            "Solo para pagar facturas",
+            "Proporciona trazabilidad completa de productos desde origen a consumidor, registrando cada paso inmutablemente para autenticidad y cumplimiento",
+            "Únicamente para enviar correos electrónicos",
+            "Solo para almacenar fotos de productos"
+        ],
+        answer: 1,
+        explanation: "Blockchain proporciona una 'única fuente de verdad' compartida entre productores, transportistas, minoristas y reguladores. Permite trazabilidad completa desde origen hasta consumidor final, registrando cada paso inmutablemente. Invaluable para autenticidad (anti-falsificación), cumplimiento normativo y optimización logística. Walmart reduce de días a segundos la identificación de contaminación."
+    },
+    {
+        question: "¿Qué son las Finanzas Descentralizadas (DeFi)?",
+        options: [
+            "Bancos tradicionales online",
+            "Ecosistema que recrea servicios financieros (préstamos, seguros, intercambios) de forma abierta y sin intermediarios usando contratos inteligentes",
+            "Cajeros automáticos modernos",
+            "Tarjetas de crédito digitales"
+        ],
+        answer: 1,
+        explanation: "DeFi busca recrear el sistema financiero tradicional (préstamos, seguros, intercambios de activos) de manera abierta, interoperable y sin intermediarios como bancos. Mediante contratos inteligentes, usuarios prestan/piden prestado directamente, obtienen rendimientos o intercambian activos en plataformas descentralizadas, todo programáticamente y disponible 24/7."
+    },
+    {
+        question: "¿Cómo usa Blockchain la industria de bienes raíces?",
+        options: [
+            "Solo para publicar anuncios de propiedades",
+            "Tokenización de propiedad permite inversión fraccionada; smart contracts automatizan pagos de alquiler y distribución de ingresos",
+            "Únicamente para tomar fotos de casas",
+            "Solo para calcular impuestos"
+        ],
+        answer: 1,
+        explanation: "Blockchain simplifica procesos lentos y burocráticos mediante: (1) tokenización que representa propiedad como token digital, facilitando inversión fraccionada y transferencia, (2) smart contracts que automatizan pagos de alquiler y distribución de ingresos a inversores, reduciendo intermediarios y costos."
+    },
+    {
+        question: "¿Qué hace Everledger con Blockchain?",
+        options: [
+            "Vende diamantes online",
+            "Crea registro digital inmutable para activos únicos (diamantes, arte, vinos) con identidad digital que registra procedencia e historial de propiedad",
+            "Fabrica joyas",
+            "Ofrece seguros de hogar"
+        ],
+        answer: 1,
+        explanation: "Everledger usa blockchain para crear registro digital inmutable para activos únicos como diamantes, obras de arte y vinos de lujo. Cada activo recibe identidad digital que registra procedencia, historial de propiedad y características. Solución robusta anti-fraude, anti-falsificación y anti 'diamantes de conflicto', garantizando autenticidad y origen lícito."
+    },
+    {
+        question: "¿Qué aspecto controvertido presenta la IA relacionado con sesgos discriminatorios?",
+        options: [
+            "La IA nunca tiene sesgos",
+            "Si no se interviene, la IA aprenderá los mismos sesgos de sus programadores o de los datos de entrenamiento",
+            "Los sesgos solo afectan a programas viejos",
+            "La IA elimina automáticamente todos los sesgos"
+        ],
+        answer: 1,
+        explanation: "Un aspecto controvertido crítico es que si no se interviene específicamente, la IA aprenderá los mismos sesgos de sus programadores o de los datos con que se entrene. Esto puede resultar en decisiones discriminatorias en contratación, créditos, justicia penal, perpetuando y amplificando inequidades sociales existentes."
+    },
+    {
+        question: "¿Qué desafío plantea la IA respecto a la responsabilidad legal?",
+        options: [
+            "Las IAs pueden contratar abogados propios",
+            "Si una IA toma una decisión que resulta en perjuicio, surge la pregunta de quién es el responsable legalmente",
+            "Las IAs no pueden cometer errores",
+            "Solo el usuario final es siempre responsable"
+        ],
+        answer: 1,
+        explanation: "La IA plantea el desafío de la responsabilidad legal: si una IA toma una decisión que resulta en perjuicio para un individuo, ¿quién es el responsable? ¿El desarrollador del algoritmo, la empresa que lo implementó, el usuario que lo operó? Esta ambigüedad legal requiere nuevos marcos regulatorios y de gobernanza."
+    },
+    {
+        question: "¿Qué riesgos económicos y laborales plantea la IA?",
+        options: [
+            "La IA crea automáticamente nuevos empleos para todos",
+            "Existe la posibilidad de que la IA reemplace trabajo humano, planteando desafíos sobre desempleo masivo y reconversión laboral",
+            "La IA no afecta el mercado laboral",
+            "Solo afecta trabajos de baja calificación"
+        ],
+        answer: 1,
+        explanation: "La IA plantea riesgos económicos y laborales: ¿Es posible que la IA reemplace trabajo realizado por humanos? ¿Qué trabajos? ¿Cómo evitar desempleo masivo? Estos desafíos requieren políticas de reconversión laboral, educación continua y posiblemente reestructuración de sistemas de protección social."
+    },
+    {
+        question: "¿Cuál es el origen histórico de los Sistemas Expertos?",
+        options: [
+            "Se inventaron en 2020",
+            "Origen en los años 60's, difusión en los 80's, declive posterior al no obtener resultados esperados",
+            "Fueron creados por Leonardo da Vinci",
+            "Son más nuevos que el iPhone"
+        ],
+        answer: 1,
+        explanation: "Los Sistemas Expertos tienen origen en los años 60's, experimentaron difusión masiva en los 80's como una de las primeras aplicaciones comerciales exitosas de IA, pero entraron en declive posterior al no obtener los resultados esperados, contribuyendo al 'invierno de la IA' antes del resurgimiento con ML moderno."
+    },
+    {
+        question: "¿Qué componentes tiene un Sistema Experto?",
+        options: [
+            "Solo una computadora y un teclado",
+            "Subsistema de adquisición de conocimiento, base de conocimiento, motor de inferencia, base de hechos, subsistema de justificación",
+            "Únicamente pantalla y mouse",
+            "Solo conexión a internet"
+        ],
+        answer: 1,
+        explanation: "Un Sistema Experto tiene: (1) Subsistema de adquisición de conocimiento para sistematizar expertise, (2) Base de conocimiento con reglas y heurísticas, (3) Motor de inferencia que evalúa el problema usando la base de conocimiento, (4) Base de hechos con características del problema actual, (5) Subsistema de justificación que explica la solución."
+    },
+    {
+        question: "¿Qué caracteriza al ciclo de Machine Learning?",
+        options: [
+            "Solo se ejecuta una vez y termina",
+            "Entendimiento del negocio, de datos, preparación de datos, selección de algoritmo y entrenamiento, evaluación, implementación del modelo",
+            "Únicamente consiste en comprar software",
+            "Solo requiere programación básica"
+        ],
+        answer: 1,
+        explanation: "El ciclo de ML incluye: (1) Entendimiento del negocio y objetivos, (2) Entendimiento de los datos disponibles, (3) Preparación y limpieza de datos, (4) Selección del algoritmo y entrenamiento del modelo, (5) Evaluación del rendimiento del modelo, (6) Implementación del modelo en producción. Es un proceso iterativo continuo."
+    },
+    {
+        question: "¿Qué algoritmos de ML se usan para clasificación?",
+        options: [
+            "Solo hojas de cálculo",
+            "K-Means, Support Vector Machine (SVM), Árboles de decisión",
+            "Únicamente procesadores de texto",
+            "Solo navegadores web"
+        ],
+        answer: 1,
+        explanation: "Los algoritmos de clasificación permiten agrupar muestras en 'clusters' o grupos con características comunes. Ejemplos principales: K-Means (agrupa por similitud de características), Support Vector Machine (SVM, separa clases con hiperplanos), y Árboles de decisión (clasifican mediante reglas jerárquicas)."
+    },
+    {
+        question: "¿Qué permiten hacer los algoritmos de regresión en ML?",
+        options: [
+            "Hacer estimaciones de una variable a partir de otras variables",
+            "Solo almacenar datos históricos",
+            "Únicamente borrar información",
+            "Solo imprimir reportes"
+        ],
+        answer: 0,
+        explanation: "Los algoritmos de regresión permiten hacer estimaciones de una variable a partir de otras. Tipos principales: Regresión Lineal (simple o múltiple, relaciones lineales), Exponencial (crecimiento/decrecimiento exponencial), y Logística (transforma valores continuos en Sí/No, útil para clasificación binaria)."
+    },
+    {
+        question: "¿Qué simula un perceptrón en una red neuronal?",
+        options: [
+            "Una impresora",
+            "Una neurona que recibe estímulos (datos de entrada), los procesa con pesos y genera una respuesta (salida)",
+            "Un mouse de computadora",
+            "Un cable de red"
+        ],
+        answer: 1,
+        explanation: "Un perceptrón simula el funcionamiento de una neurona biológica. Es la unidad básica de una red neuronal: recibe un conjunto de estímulos (datos de entrada X0, X1, X2...), cada uno multiplicado por un peso (w0, w1, w2...), suma estos productos, aplica una función de activación (σ), y genera una respuesta (salida)."
+    },
+    {
+        question: "¿Qué representa una 'capa oculta' en una red neuronal profunda?",
+        options: [
+            "Datos secretos que nadie puede ver",
+            "Capas intermedias entre entrada y salida que procesan y transforman información en niveles de abstracción crecientes",
+            "Información borrada del sistema",
+            "Archivos protegidos por contraseña"
+        ],
+        answer: 1,
+        explanation: "Las 'capas ocultas' son capas intermedias entre la entrada y salida de una red neuronal. Procesan y transforman información en niveles de abstracción crecientes. En Deep Learning, múltiples capas ocultas permiten aprender jerarquías complejas: primeras capas detectan características simples, intermedias formas complejas, finales patrones completos."
+    },
+    {
+        question: "¿Qué papel jugó la inversión privada en IA según el AI Index 2024?",
+        options: [
+            "La inversión privada se detuvo completamente",
+            "Alcanzó niveles récord, con EEUU liderando; IA generativa atrajo $33.9 mil millones globalmente en 2024",
+            "Solo gobiernos invierten en IA",
+            "La inversión es mínima e insignificante"
+        ],
+        answer: 1,
+        explanation: "La inversión privada en IA alcanzó niveles récord, con Estados Unidos liderando de manera abrumadora, especialmente en IA generativa que atrajo $33.9 mil millones a nivel mundial en 2024. Casi el 90% de los modelos notables en 2024 provinieron del sector privado, reflejando el liderazgo de la industria en innovación."
+    },
+    {
+        question: "¿Qué tendencia muestra el reporte sobre 'incidentes de IA'?",
+        options: [
+            "Los incidentes han desaparecido completamente",
+            "Fuerte aumento de incidentes reportados (deepfakes, sesgos) como consecuencia de avance tecnológico más rápido que marcos regulatorios",
+            "No hay incidentes de IA documentados",
+            "Solo ocurren incidentes menores sin importancia"
+        ],
+        answer: 1,
+        explanation: "El fuerte aumento de 'incidentes de IA' reportados (deepfakes, sesgos algorítmicos con consecuencias sociales) es consecuencia directa de que el avance tecnológico, liderado por industria, es más rápido que la capacidad de gobiernos y sociedad para establecer marcos regulatorios adecuados. Esto genera necesidad imperiosa de gobernanza robusta."
+    },
+    {
+        question: "¿Qué caracteriza a la robótica moderna según los materiales de estudio?",
+        options: [
+            "Solo construir máquinas simples",
+            "Integración de mecánica, electrónica e informática con autonomía para operar y tomar decisiones sin intervención humana directa",
+            "Únicamente robots de juguete",
+            "Solo dibujos animados de robots"
+        ],
+        answer: 1,
+        explanation: "La robótica moderna es una disciplina que integra mecánica, electrónica e informática. Un robot moderno es un sistema complejo con características clave como autonomía: la capacidad de operar y tomar decisiones sin intervención humana directa, combinando sensores, actuadores, algoritmos de control y, cada vez más, inteligencia artificial."
+    },
+    {
+        question: "¿Qué es la Industria 4.0?",
+        options: [
+            "La cuarta empresa más grande del mundo",
+            "Cuarta Revolución Industrial caracterizada por convergencia de IA, IoT, robótica y blockchain en fábricas inteligentes",
+            "Un edificio industrial de 4 pisos",
+            "Una marca de maquinaria"
+        ],
+        answer: 1,
+        explanation: "La Industria 4.0 es el paradigma de la Cuarta Revolución Industrial, caracterizada por la convergencia e integración de tecnologías emergentes: IA, IoT, robótica avanzada y blockchain. Crea fábricas inteligentes donde sistemas ciber-físicos, análisis de datos y automatización autónoma reconfiguran radicalmente la manufactura y cadenas de suministro."
+    },
+    {
+        question: "¿Cuál es el poder transformador de la convergencia tecnológica en Industria 4.0?",
+        options: [
+            "Cada tecnología debe usarse por separado",
+            "El verdadero poder reside en la sinergia de la integración: IA + IoT + Robótica + Blockchain crean ecosistemas inteligentes autónomos",
+            "Solo una tecnología es suficiente",
+            "La convergencia no aporta beneficios"
+        ],
+        answer: 1,
+        explanation: "El argumento central es que tecnologías como IA, Blockchain, Robótica e IoT no deben analizarse aisladamente. Su verdadero y disruptivo poder transformador reside en la sinergia que emerge de su integración: juntas reconfiguran modelos de negocio, cadenas de suministro y la naturaleza del trabajo, creando ecosistemas inteligentes y autónomos."
+    },
+    {
+        question: "¿Qué rol juega IoT en la sinergia de Industria 4.0?",
+        options: [
+            "IoT solo sirve para electrodomésticos del hogar",
+            "IoT proporciona datos en tiempo real de sensores que alimentan IA para mantenimiento predictivo, gemelos digitales y automatización",
+            "IoT solo funciona sin internet",
+            "IoT no tiene relación con Industria 4.0"
+        ],
+        answer: 1,
+        explanation: "El IoT (Internet de las Cosas) es fundamental en Industria 4.0: sensores recopilan datos en tiempo real de maquinaria y procesos. Estos datos alimentan sistemas de IA para mantenimiento predictivo, crean gemelos digitales para simulación, y permiten automatización inteligente mediante robótica colaborativa, cerrando el ciclo de optimización continua."
+    },
+    {
+        question: "¿Qué caracteriza a los robots colaborativos (cobots) en Industria 4.0?",
+        options: [
+            "Trabajan aislados de los humanos por seguridad",
+            "Diseñados para trabajar junto a humanos de forma segura, con sensores y límites de fuerza que previenen lesiones",
+            "Solo pueden trabajar de noche",
+            "Reemplazan completamente a todos los trabajadores"
+        ],
+        answer: 1,
+        explanation: "Los cobots (robots colaborativos) están diseñados específicamente para trabajar junto a humanos de forma segura, sin barreras físicas. Incorporan sensores avanzados y límites de fuerza que detectan presencia humana y detienen movimientos para prevenir lesiones, permitiendo colaboración directa donde robots aportan precisión/fuerza y humanos flexibilidad/juicio."
+    },
+    {
+        question: "¿Cómo se integra Blockchain en la sinergia de Industria 4.0?",
+        options: [
+            "Blockchain solo sirve para criptomonedas",
+            "Blockchain registra inmutablemente cada transacción de la cadena de suministro, integrándose con IoT y IA para trazabilidad transparente",
+            "Blockchain no tiene aplicación industrial",
+            "Blockchain solo funciona en finanzas"
+        ],
+        answer: 1,
+        explanation: "En Industria 4.0, Blockchain se integra registrando inmutablemente cada transacción/movimiento en la cadena de suministro. Sensores de IoT reportan eventos que se registran en blockchain, proporcionando trazabilidad verificable. Smart contracts automatizan pagos cuando IA confirma calidad. Esta integración crea ecosistemas de confianza transparentes y eficientes."
+    },
+    {
+        question: "¿Qué impacto tiene la fabricación personalizada habilitada por IA?",
+        options: [
+            "Solo permite producción en masa estándar",
+            "Permite personalización en masa: productos adaptados a preferencias individuales sin sacrificar eficiencia de producción en línea",
+            "Hace la manufactura más lenta siempre",
+            "Solo funciona para productos muy simples"
+        ],
+        answer: 1,
+        explanation: "La IA permite 'personalización en masa': adaptar productos a preferencias individuales manteniendo eficiencia de producción en línea. Por ejemplo, en moda, algoritmos de IA ajustan patrones en tiempo real basándose en medidas específicas del cliente, enviando instrucciones personalizadas a máquinas de corte/confección, combinando customización con escala."
+    },
+    {
+        question: "¿Qué significa que 'la IA débil está ampliándose'?",
+        options: [
+            "La IA se está volviendo menos útil",
+            "Modelos multimodales pueden realizar tareas cada vez más diversas y amplias sin ser IA general, emergiendo 'IA débil pero amplia'",
+            "La IA solo puede hacer una sola tarea",
+            "La tecnología está retrocediendo"
+        ],
+        answer: 1,
+        explanation: "Aunque toda IA actual es 'débil' (sin conciencia o inteligencia general), modelos multimodales más recientes pueden realizar una gama cada vez más amplia y diversa de tareas, procesando texto, imágenes y audio simultáneamente. Esto sugiere emergencia de 'IA débil pero amplia': sin inteligencia general, pero operando exitosamente en múltiples dominios antes separados."
+    },
+    {
+        question: "¿Por qué RAG es considerado el 'puente arquitectónico' para uso empresarial de IA?",
+        options: [
+            "Porque es más barato que otras opciones",
+            "Porque ancla respuestas en datos verificables, mitigando alucinaciones y permitiendo acceso a conocimiento interno actualizado, haciendo la IA confiable",
+            "Porque solo funciona en empresas pequeñas",
+            "Porque elimina la necesidad de programadores"
+        ],
+        answer: 1,
+        explanation: "RAG es el 'puente' que permite a IA generativa transitar de herramienta de consumo a solución empresarial confiable porque: ancla respuestas en datos verificables de bases de conocimiento internas, mitiga drásticamente alucinaciones, asegura información precisa y actualizada, y minimiza riesgos legales. Sin RAG, la confianza empresarial sería limitada."
+    },
+    {
+        question: "¿Qué porcentaje de los modelos notables de IA en 2024 provinieron de la industria privada?",
+        options: [
+            "Menos del 10%",
+            "Casi el 90% provinieron del sector privado",
+            "Todos provinieron de gobiernos",
+            "50% exactamente"
+        ],
+        answer: 1,
+        explanation: "Casi el 90% de los modelos notables de IA en 2024 provinieron del sector privado, reflejando el liderazgo abrumador de la industria en innovación de IA. Este dominio privado, combinado con inversiones récord ($33.9 mil millones en IA generativa), contrasta con la capacidad gubernamental de regulación, creando brechas de gobernanza."
+    },
+    {
+        question: "¿Cuántos 'clientes máquina' B2B proyecta Gartner para 2030?",
+        options: [
+            "Menos de 1 millón",
+            "8 mil millones de clientes máquina B2B",
+            "No habrá clientes máquina",
+            "100 mil exactamente"
+        ],
+        answer: 1,
+        explanation: "Gartner proyecta que para 2030 habrá 8 mil millones de 'clientes máquina' B2B: actores económicos no humanos autorizados para comprar bienes y servicios autónomamente. Esto obligará a empresas a rediseñar completamente modelos de negocio, marketing y ventas para interactuar con estos nuevos actores económicos, no solo humanos."
+    },
+    {
+        question: "¿Qué reduce el diseño generativo en aplicaciones aeroespaciales?",
+        options: [
+            "El precio de los pasajes",
+            "Peso de componentes mejorando eficiencia de combustible mediante geometrías orgánicas optimizadas que humanos no habrían concebido",
+            "El tamaño de las ventanas",
+            "La cantidad de asientos"
+        ],
+        answer: 1,
+        explanation: "El diseño generativo reduce significativamente el peso de componentes. Airbus lo utilizó para rediseñar partes del A320: ingenieros definen objetivos (peso, resistencia, material) y el algoritmo genera geometrías orgánicas altamente eficientes que humanos no habrían concebido, reduciendo peso y mejorando dramáticamente eficiencia de combustible."
+    },
+    {
+        question: "¿Qué es un 'ataque del 51%' en blockchain?",
+        options: [
+            "Un virus informático común",
+            "Cuando un actor malicioso controla la mayoría del poder computacional/participación de la red para alterar la cadena",
+            "Un tipo de publicidad engañosa",
+            "Un error de programación"
+        ],
+        answer: 1,
+        explanation: "Un 'ataque del 51%' ocurre cuando un actor malicioso logra controlar la mayoría (más del 50%) del poder computacional (en PoW) o de la participación apostada (en PoS) de la red. Esto le permitiría teóricamente reescribir la blockchain alterando transacciones pasadas. Es extremadamente costoso y difícil en redes grandes, siendo una medida de su seguridad."
+    },
+    {
+        question: "¿Qué hace la función hash en blockchain?",
+        options: [
+            "Comprime archivos para ahorrar espacio",
+            "Convierte cualquier cantidad de datos en una cadena única de longitud fija (huella digital); cualquier cambio en datos cambia el hash",
+            "Encripta contraseñas de usuarios",
+            "Acelera la conexión a internet"
+        ],
+        answer: 1,
+        explanation: "Una función hash es un algoritmo que convierte cualquier cantidad de datos de entrada en una cadena de caracteres de longitud fija y única (una 'huella digital' digital). Propiedades clave: el mismo dato siempre genera el mismo hash, es imposible calcular datos a partir del hash, y cualquier cambio mínimo en datos cambia completamente el hash."
+    },
+    {
+        question: "¿Cuál fue una aplicación exitosa de chatbots mencionada en los materiales?",
+        options: [
+            "Solo para juegos de video",
+            "'Andy' en Accenture Argentina resolvía consultas de empleados sobre beneficios; 'Agustín' en FCE-UBA ayudaba con sistema de notas",
+            "Únicamente para vender productos",
+            "Solo para traducir idiomas"
+        ],
+        answer: 1,
+        explanation: "Ejemplos exitosos: 'Andy' chatbot de Accenture en Argentina resolvía consultas de empleados sobre beneficios y políticas internas (RRHH); 'Agustín' asistente virtual en Facultad de Ciencias Económicas UBA ayudaba a profesores con nuevo sistema de carga de notas. Demuestran aplicación más allá de atención al cliente: RRHH y educación."
+    },
+    {
+        question: "¿Cómo implementó PepsiCo el mantenimiento predictivo con IA?",
+        options: [
+            "No usa mantenimiento predictivo",
+            "En plantas de Frito-Lay, mejorando rendimiento de equipos y aumentando capacidad de producción mediante análisis de datos de sensores",
+            "Solo revisa máquinas manualmente",
+            "Únicamente reemplaza equipos antiguos"
+        ],
+        answer: 1,
+        explanation: "PepsiCo implementó mantenimiento predictivo con IA en sus plantas de Frito-Lay. Sensores de IoT recopilan datos en tiempo real sobre funcionamiento de maquinaria. Modelos de IA analizan estos datos para predecir fallos antes de que ocurran, permitiendo mantenimiento proactivo. Resultado: mejora de rendimiento de equipos y aumento de capacidad de producción."
+    },
+    {
+        question: "¿Por qué Walmart usa blockchain en su cadena de suministro de alimentos?",
+        options: [
+            "Para hacer publicidad de productos",
+            "Para rastrear origen de productos alimenticios, reduciendo de días a segundos el tiempo para identificar fuentes de contaminación",
+            "Solo para calcular precios",
+            "Únicamente para gestionar empleados"
+        ],
+        answer: 1,
+        explanation: "Walmart utiliza blockchain para rastrear el origen de productos alimenticios en su cadena de suministro. Beneficio crítico: en caso de brote de contaminación alimentaria, puede identificar la fuente exacta en segundos (vs días antes), permitiendo retiros selectivos rápidos, minimizando riesgo para consumidores y pérdidas económicas de retiros masivos innecesarios."
+    },
+    {
+        question: "¿Qué visión planteó Bill Gates sobre el futuro de los asistentes de IA?",
+        options: [
+            "Que cada persona tendrá múltiples asistentes sin conexión entre ellos",
+            "Que cada individuo tendrá un asistente personal de IA que comprende su vida y anticipa necesidades sin interactuar con múltiples apps",
+            "Que los asistentes desaparecerán completamente",
+            "Que solo grandes empresas tendrán asistentes"
+        ],
+        answer: 1,
+        explanation: "Bill Gates visiona un futuro cercano donde cada individuo tendrá un asistente personal de IA que, al tener comprensión profunda de su vida y trabajo, podrá anticipar necesidades y automatizar tareas complejas sin necesidad de interactuar con múltiples aplicaciones distintas, convergiendo funcionalidades en un único agente inteligente personalizado."
+    },
+    {
+        question: "¿Qué permite la tokenización de bienes raíces en blockchain?",
+        options: [
+            "Solo permite ver fotos de propiedades",
+            "Representar propiedad como token digital facilitando inversión fraccionada y transferencia simplificada de propiedad",
+            "Únicamente calcular impuestos",
+            "Solo hacer inspecciones virtuales"
+        ],
+        answer: 1,
+        explanation: "La tokenización permite representar la propiedad de un bien inmueble como un token digital en blockchain. Esto facilita: (1) inversión fraccionada (múltiples inversores poseen fracciones), (2) transferencia de propiedad simplificada sin burocracia tradicional, (3) mayor liquidez del activo, (4) acceso a inversión inmobiliaria para más personas con capitales menores."
+    },
+    {
+        question: "¿Qué garantiza Everledger con blockchain para diamantes?",
+        options: [
+            "Solo el precio de los diamantes",
+            "Autenticidad, origen lícito y prevención de 'diamantes de conflicto' mediante registro inmutable de procedencia e historial",
+            "Únicamente el tamaño de los diamantes",
+            "Solo el color de las piedras"
+        ],
+        answer: 1,
+        explanation: "Everledger usa blockchain para crear identidad digital inmutable de cada diamante, registrando procedencia, historial de propiedad y características. Garantiza: autenticidad (anti-falsificación), origen lícito (combate 'diamantes de conflicto' que financian violencia), trazabilidad completa durante toda la vida útil, proporcionando confianza a compradores y cumplimiento regulatorio."
+    },
+    {
+        question: "¿Qué característica de los transformers mejoró el procesamiento del lenguaje natural?",
+        options: [
+            "Procesar palabras de manera más lenta",
+            "Mecanismo de 'atención' que pondera importancia de todas las palabras simultáneamente vs procesamiento secuencial anterior",
+            "Solo funciona con un idioma",
+            "Requiere menos datos que modelos anteriores"
+        ],
+        answer: 1,
+        explanation: "Los transformers superaron limitación clave de modelos anteriores en PLN mediante el mecanismo de 'atención': en lugar de procesar texto secuencialmente (palabra por palabra), pueden ponderar importancia de todas las palabras en una secuencia simultáneamente. Esto otorga comprensión contextual profunda, capturando relaciones complejas entre palabras muy separadas en texto."
+    }
+];
+        let currentQuiz;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeRemaining = 20 * 60; // 20 minutos en segundos
+        let timerInterval;
+
+        const quizSelectionScreen = document.getElementById('quiz-selection-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const currentQuestionNumberElement = document.getElementById('current-question-number');
+        const scoreElement = document.getElementById('score');
+        const nextButton = document.getElementById('next-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const finalScoreElement = document.getElementById('final-score');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateQuizzes() {
+            quizzes = [];
+            let tempQuestions = [...allQuestions]; // Copia para no alterar el original
+            shuffleArray(tempQuestions);
+            
+            const numQuizzes = Math.ceil(tempQuestions.length / 20);
+
+            for (let i = 0; i < numQuizzes; i++) {
+                const startIndex = i * 20;
+                const endIndex = startIndex + 20;
+                const selectedQuestions = tempQuestions.slice(startIndex, endIndex);
+                quizzes.push({
+                    title: `Examen de Práctica ${i + 1}`,
+                    questions: selectedQuestions
+                });
+            }
+            
+            // Generate quiz selection buttons
+            const quizButtonsContainer = document.querySelector('#quiz-selection-screen .grid');
+            quizButtonsContainer.innerHTML = '';
+            
+            quizzes.forEach((quiz, index) => {
+                const button = document.createElement('button');
+                button.onclick = () => startQuiz(index);
+                button.className = 'card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none';
+                button.textContent = quiz.title;
+                quizButtonsContainer.appendChild(button);
+            });
+        }
+
+        function startQuiz(quizIndex) {
+            currentQuiz = quizzes[quizIndex];
+            currentQuestionIndex = 0;
+            score = 0;
+            timeRemaining = 20 * 60; // 20 minutos por examen
+            
+            quizSelectionScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            startTimer();
+            showQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timer');
+            if (timeRemaining <= 300) {
+                timerElement.classList.add('text-red-600');
+                timerElement.classList.remove('text-blue-600');
+            } else {
+                timerElement.classList.remove('text-red-600');
+                timerElement.classList.add('text-blue-600');
+            }
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= currentQuiz.questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+
+            currentQuestionNumberElement.textContent = currentQuestionIndex + 1;
+            document.querySelector('#quiz-screen .text-lg.font-semibold.text-gray-700').innerHTML = `Pregunta <span id="current-question-number">${currentQuestionIndex + 1}</span> de ${currentQuiz.questions.length}`;
+            scoreElement.textContent = score;
+            questionElement.textContent = currentQuestionData.question;
+            optionsContainer.innerHTML = '';
+            feedbackMessage.classList.add('hidden');
+            feedbackMessage.innerHTML = '';
+            nextButton.disabled = true;
+
+            const options = [...currentQuestionData.options];
+            
+            options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('answer-button', 'block');
+                button.onclick = () => checkAnswer(button, index);
+                optionsContainer.appendChild(button);
+            });
+
+            const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+            document.querySelector('.progress-bar').style.width = `${progress}%`;
+        }
+
+        function checkAnswer(selectedButton, selectedIndex) {
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+            const correctIndex = currentQuestionData.answer;
+
+            Array.from(optionsContainer.children).forEach((button, index) => {
+                button.disabled = true;
+                if (index === correctIndex) {
+                    button.classList.add('correct');
+                }
+            });
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                feedbackMessage.textContent = '¡Respuesta Correcta!';
+                feedbackMessage.className = 'bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-r-lg';
+            } else {
+                selectedButton.classList.add('incorrect');
+                feedbackMessage.innerHTML = `
+                    <div class="font-bold mb-2">¡Respuesta Incorrecta!</div>
+                    <div class="explanation">
+                        <strong class="text-indigo-700">Explicación:</strong>
+                        <p class="text-sm mt-1 text-gray-700">${currentQuestionData.explanation}</p>
+                    </div>
+                `;
+                feedbackMessage.className = 'bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r-lg';
+            }
+
+            feedbackMessage.classList.remove('hidden');
+            scoreElement.textContent = score;
+            nextButton.disabled = false;
+            nextButton.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            finalScoreElement.textContent = `${score}/${currentQuiz.questions.length}`;
+        }
+
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            quizSelectionScreen.classList.remove('hidden');
+            generateQuizzes();
+        }
+
+        window.onload = function() {
+            generateQuizzes();
+            quizSelectionScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

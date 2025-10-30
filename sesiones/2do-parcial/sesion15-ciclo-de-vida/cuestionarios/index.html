@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Sesión 15 - SID</title>
+    <meta name="description" content="Cuestionario de práctica para la Sesión 15 de Fundamentos de Sistemas de Información Digitales, sobre Ciclo de Vida del Desarrollo de Software (SDLC), metodologías tradicionales y ágiles.">
+    <meta name="keywords" content="SID, FCE, UBA, Cuestionario, SDLC, Ciclo de Vida, Cascada, Espiral, Incremental, Prototipos, Ágil, Scrum, Kanban, DevOps, CI/CD">
+    <meta name="author" content="Alexis Ballera - alexisballera@gmail.com">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .quiz-button {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .answer-button {
+            width: 100%;
+            padding: 16px;
+            text-align: left;
+            background-color: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .answer-button:hover:not(:disabled) {
+            background-color: #f3f4f6;
+            border-color: #6366f1;
+            transform: translateX(4px);
+        }
+
+        .answer-button.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            animation: pulse-correct 0.8s ease-in-out;
+        }
+
+        .answer-button.incorrect {
+            background-color: #fecaca;
+            border-color: #ef4444;
+            color: #991b1b;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        @keyframes pulse-correct {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .progress-bar {
+            background: linear-gradient(to right, #10b981, #059669);
+            border-radius: 9999px;
+            height: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .medal {
+            font-size: 4rem;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-10px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Quiz Selection Screen -->
+        <div id="quiz-selection-screen" class="hidden fade-in">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">Cuestionario Sesión 15</h1>
+                <p class="text-xl text-gray-600 mb-2">Ciclo de Vida del Desarrollo de Software</p>
+                <p class="text-lg text-gray-500">Fundamentos de Sistemas de Información Digitales</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Los botones se generan dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number">1</span> de 20</span>
+                    <div class="timer text-blue-600" id="timer">20:00</div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Puntuación: <span id="score">0</span></span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="progress-bar h-2 rounded-full" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 id="question" class="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">Pregunta...</h2>
+                <div id="options-container" class="space-y-3">
+                    <!-- Las opciones se generan dinámicamente -->
+                </div>
+            </div>
+
+            <div id="feedback-message" class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-6 rounded-r-lg hidden">
+                <!-- El feedback se muestra aquí -->
+            </div>
+
+            <div class="text-center">
+                <button id="next-button" onclick="nextQuestion()" class="quiz-button bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none disabled:opacity-50" disabled>
+                    Siguiente Pregunta
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden fade-in">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="medal mb-4">🏆</div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Examen Completado!</h2>
+                    <div class="score-display text-indigo-600 mb-4"><span id="final-score">0</span>/20</div>
+                    <p class="text-lg text-gray-600 mb-6">Has completado el examen de práctica</p>
+                    
+                    <div class="space-y-4">
+                        <button onclick="restartQuiz()" class="quiz-button w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">
+                            Realizar Otro Examen
+                        </button>
+                        <button onclick="window.location.reload()" class="quiz-button w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none">
+                            Volver al Inicio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allQuestions = [
+    {
+        question: "¿Qué es el Ciclo de Vida del Desarrollo de Software (SDLC)?",
+        options: [
+            "Un lenguaje de programación específico para desarrollo de software",
+            "La secuencia de etapas por las que pasa un producto de software desde su concepción inicial hasta su retiro",
+            "Un framework exclusivo para desarrollo web",
+            "Una herramienta de gestión de proyectos"
+        ],
+        answer: 1,
+        explanation: "El SDLC representa la secuencia de etapas por las que pasa un producto de software desde su concepción inicial hasta su retiro. Es un marco conceptual que organiza y estructura el proceso de desarrollo."
+    },
+    {
+        question: "En el modelo en Cascada (Waterfall), ¿cuál es la característica principal de su estructura?",
+        options: [
+            "Las actividades se ejecutan en modo secuencial, donde el resultado de una etapa es la entrada de la siguiente",
+            "Todas las etapas se ejecutan simultáneamente",
+            "Las etapas se repiten en ciclos cortos de 2 semanas",
+            "El cliente define los requisitos al final del proyecto"
+        ],
+        answer: 0,
+        explanation: "El modelo en Cascada se caracteriza por ejecutar las actividades en modo secuencial, donde el resultado de una etapa es la entrada de la siguiente. Este flujo unidireccional es similar a una cascada de agua."
+    },
+    {
+        question: "¿Cuáles son las fases principales del modelo en Cascada en orden correcto?",
+        options: [
+            "Diseño, Análisis, Pruebas, Implementación, Mantenimiento",
+            "Análisis de Requisitos, Diseño, Implementación, Pruebas, Despliegue, Mantenimiento",
+            "Implementación, Análisis, Diseño, Pruebas, Mantenimiento",
+            "Pruebas, Diseño, Análisis, Implementación, Despliegue"
+        ],
+        answer: 1,
+        explanation: "Las fases del modelo en Cascada en orden son: Análisis de Requisitos, Diseño (general y detallado), Implementación (codificación), Pruebas (verificación), Despliegue (instalación) y Mantenimiento."
+    },
+    {
+        question: "¿Cuál es la principal desventaja del modelo en Cascada?",
+        options: [
+            "Requiere demasiada documentación técnica",
+            "Es muy flexible ante los cambios",
+            "Rigidez e inflexibilidad: los cambios en requisitos son muy costosos y cualquier modificación requiere volver a fases anteriores",
+            "No permite la participación del cliente"
+        ],
+        answer: 2,
+        explanation: "La principal desventaja del modelo en Cascada es su rigidez e inflexibilidad. Los cambios en los requisitos son extremadamente costosos porque cualquier modificación significativa requiere regresar a las primeras fases, invalidando el trabajo posterior."
+    },
+    {
+        question: "En el modelo en Cascada, ¿cuándo ve el cliente por primera vez el producto funcional?",
+        options: [
+            "En la fase de análisis de requisitos",
+            "Durante la implementación",
+            "En la fase de despliegue, a menudo meses o años después del inicio del proyecto",
+            "Al inicio de cada semana"
+        ],
+        answer: 2,
+        explanation: "En el modelo en Cascada, el cliente ve por primera vez el producto funcional en la fase de despliegue, después de que se hayan completado todas las fases anteriores. Esto puede ocurrir meses o incluso años después del inicio del proyecto, creando un riesgo enorme de que el producto no satisfaga las necesidades reales."
+    },
+    {
+        question: "¿Qué es el 'feedback tardío' en el contexto del modelo en Cascada?",
+        options: [
+            "El equipo demora en responder correos electrónicos",
+            "El cliente debe esperar hasta las etapas finales para interactuar con una versión funcional del producto",
+            "Las reuniones de seguimiento se programan con meses de anticipación",
+            "Los desarrolladores tardan en entregar el código"
+        ],
+        answer: 1,
+        explanation: "El 'feedback tardío' es una desventaja crítica del modelo en Cascada: el cliente debe tener paciencia y no interactúa con una versión funcional del producto hasta las etapas finales. Esto crea un riesgo de que el producto final, aunque cumpla con las especificaciones escritas, no satisfaga las necesidades reales del usuario."
+    },
+    {
+        question: "¿Qué son los 'estados de bloqueo' en el modelo en Cascada?",
+        options: [
+            "Cuando el sistema no permite acceso a ciertos usuarios",
+            "Situaciones donde ciertos miembros del equipo deben esperar inactivos a que otros completen su trabajo debido a la interdependencia secuencial",
+            "Errores de compilación que impiden ejecutar el software",
+            "Problemas de seguridad que bloquean el acceso al código"
+        ],
+        answer: 1,
+        explanation: "Los 'estados de bloqueo' ocurren debido a la interdependencia secuencial de las tareas en el modelo Cascada. Por ejemplo, los testers deben esperar inactivos a que los desarrolladores completen su trabajo, reduciendo drásticamente la eficiencia y productividad general del proyecto."
+    },
+    {
+        question: "¿Qué representa el modelo en V en relación con el modelo en Cascada?",
+        options: [
+            "Un modelo completamente diferente e incompatible",
+            "Una evolución que enfatiza la relación entre las fases de desarrollo y las actividades de prueba",
+            "Un modelo exclusivo para desarrollo de videojuegos",
+            "Una metodología ágil moderna"
+        ],
+        answer: 1,
+        explanation: "El modelo en V no es radicalmente distinto del modelo en Cascada, sino una evolución que pone mayor énfasis en la relación entre las fases de desarrollo y las actividades de prueba. Su representación gráfica en forma de 'V' ilustra cómo cada etapa del desarrollo está asociada con una etapa de verificación y validación."
+    },
+    {
+        question: "En el modelo en V, ¿qué actividades se asocian respectivamente en los lados descendente y ascendente de la V?",
+        options: [
+            "Izquierda: Pruebas / Derecha: Desarrollo",
+            "Izquierda: Desarrollo (análisis, diseño, codificación) / Derecha: Pruebas (unitarias, integración, sistema, aceptación)",
+            "Izquierda: Documentación / Derecha: Implementación",
+            "Izquierda: Mantenimiento / Derecha: Despliegue"
+        ],
+        answer: 1,
+        explanation: "En el modelo en V, el lado izquierdo (descendente) representa las fases de desarrollo (análisis de requisitos, diseño de arquitectura, diseño de componentes, codificación), mientras que el lado derecho (ascendente) representa las pruebas correspondientes (unitarias, integración, sistema, aceptación)."
+    },
+    {
+        question: "¿Cuál es el caso de uso ideal para el modelo en Cascada según el análisis moderno?",
+        options: [
+            "Proyectos con requisitos muy volátiles y cambiantes",
+            "Aplicaciones móviles que requieren actualizaciones frecuentes",
+            "Proyectos con requisitos muy estables y bien definidos, donde la predictibilidad es máxima",
+            "Startups que necesitan validar rápidamente su producto"
+        ],
+        answer: 2,
+        explanation: "El modelo en Cascada es ideal para proyectos con requisitos muy estables y bien definidos, donde la predictibilidad es máxima. Fue diseñado para contextos donde los cambios son excepcionales y costosos, similar a la construcción física."
+    },
+    {
+        question: "¿Qué es el modelo Incremental en el desarrollo de software?",
+        options: [
+            "Un modelo que aumenta gradualmente el presupuesto del proyecto",
+            "Un enfoque que produce el software en una serie de 'incrementos' funcionales, entregando valor por partes",
+            "Una metodología que incrementa el tamaño del equipo progresivamente",
+            "Un sistema que aumenta la complejidad del código gradualmente"
+        ],
+        answer: 1,
+        explanation: "El modelo Incremental produce el software en una serie de 'incrementos' funcionales. Cada incremento es una porción operativa del software que entrega valor al usuario final, en lugar de esperar a entregar un producto monolítico al final."
+    },
+    {
+        question: "En el modelo Incremental, ¿qué es el 'producto fundamental' o 'core product'?",
+        options: [
+            "La documentación técnica básica del proyecto",
+            "El primer incremento que implementa los requisitos más básicos y esenciales, aunque limitado es utilizable",
+            "El presupuesto mínimo necesario para iniciar el proyecto",
+            "El equipo principal de desarrolladores"
+        ],
+        answer: 1,
+        explanation: "El 'core product' es el primer incremento del modelo Incremental que implementa los requisitos más básicos y esenciales. Aunque limitado, es utilizable y proporciona una plataforma para que el cliente lo evalúe y ofrezca feedback."
+    },
+    {
+        question: "¿Cuál es una ventaja estratégica del modelo Incremental?",
+        options: [
+            "Requiere menos programadores que otros modelos",
+            "Permite obtener retroalimentación temprana y continua del cliente, reduciendo el riesgo de construir un producto inadecuado",
+            "Elimina la necesidad de realizar pruebas",
+            "No requiere planificación inicial"
+        ],
+        answer: 1,
+        explanation: "El modelo Incremental permite obtener retroalimentación temprana y continua del cliente, reduciendo drásticamente el riesgo de construir un producto que no se ajuste a sus necesidades. Además, el valor de la inversión comienza a materializarse mucho antes."
+    },
+    {
+        question: "¿Cuál es el objetivo principal del modelo de Prototipos?",
+        options: [
+            "Construir el producto final lo más rápido posible",
+            "Clarificar los requisitos a través de la experimentación cuando hay alta incertidumbre",
+            "Reemplazar completamente la documentación técnica",
+            "Reducir el costo del proyecto al mínimo"
+        ],
+        answer: 1,
+        explanation: "El objetivo principal del modelo de Prototipos no es construir el producto final, sino clarificar los requisitos a través de la experimentación. Se utiliza cuando un cliente tiene una necesidad clara pero no puede articular los requisitos detallados."
+    },
+    {
+        question: "¿Qué es un 'prototipo desechable' (Throwaway Prototype)?",
+        options: [
+            "Un prototipo construido solo para aprender y validar requisitos, que se descarta antes de desarrollar el sistema real",
+            "Un prototipo que falla todas las pruebas",
+            "Un sistema que se retira rápidamente de producción",
+            "Un producto que no satisface al cliente"
+        ],
+        answer: 0,
+        explanation: "Un prototipo desechable se construye con el único propósito de aprender y validar requisitos. Una vez que ha cumplido su objetivo, se descarta, y el sistema real se desarrolla desde cero utilizando un proceso más formal enfocado en calidad, arquitectura y mantenibilidad."
+    },
+    {
+        question: "¿Qué es un 'prototipo evolutivo'?",
+        options: [
+            "Un prototipo que cambia de lenguaje de programación constantemente",
+            "Un prototipo que no se descarta, sino que se refina y mejora iterativamente hasta convertirse en el producto final",
+            "Un sistema que solo funciona en entornos de desarrollo",
+            "Un modelo exclusivo para inteligencia artificial"
+        ],
+        answer: 1,
+        explanation: "Un prototipo evolutivo no se descarta, sino que se refina y mejora iterativamente hasta convertirse en el producto final. Cada iteración añade funcionalidad y robustez al prototipo inicial."
+    },
+    {
+        question: "¿Cuál es un riesgo del modelo de Prototipos?",
+        options: [
+            "Requiere demasiado tiempo para la planificación inicial",
+            "El cliente puede percibir el prototipo como casi terminado y presionar para su lanzamiento, sin comprender que carece de calidad, seguridad o escalabilidad",
+            "No permite la participación del cliente",
+            "Genera demasiada documentación técnica"
+        ],
+        answer: 1,
+        explanation: "Un riesgo crítico del modelo de Prototipos es que el cliente puede percibir el prototipo como una versión casi terminada y presionar para su lanzamiento, sin comprender que se construyó rápidamente sin considerar aspectos cruciales como calidad, seguridad o escalabilidad."
+    },
+    {
+        question: "¿Quién propuso el modelo en Espiral?",
+        options: [
+            "Steve Jobs",
+            "Barry Boehm",
+            "Linus Torvalds",
+            "Bill Gates"
+        ],
+        answer: 1,
+        explanation: "El modelo en Espiral fue propuesto por Barry Boehm. Es un sofisticado modelo evolutivo que integra la naturaleza iterativa del prototipado con los aspectos controlados del modelo en Cascada, añadiendo el análisis de riesgos como motor de cada iteración."
+    },
+    {
+        question: "En el modelo en Espiral, ¿cuál es el elemento fundamental que actúa como motor de cada iteración?",
+        options: [
+            "El presupuesto disponible",
+            "El análisis de riesgos",
+            "La cantidad de desarrolladores",
+            "El tiempo disponible hasta el lanzamiento"
+        ],
+        answer: 1,
+        explanation: "El análisis de riesgos es el elemento fundamental del modelo en Espiral. Cada iteración se conduce basándose en la evaluación y reducción de riesgos, lo que permite al equipo comprender y reaccionar ante las incertidumbres en cada nivel de evolución."
+    },
+    {
+        question: "¿Cuáles son los cuatro cuadrantes principales de cada iteración en el modelo en Espiral?",
+        options: [
+            "Codificación, Pruebas, Despliegue, Feedback",
+            "Definición de Objetivos, Evaluación y Reducción de Riesgos, Desarrollo y Validación, Planificación",
+            "Análisis, Diseño, Implementación, Mantenimiento",
+            "Scrum, Kanban, DevOps, Waterfall"
+        ],
+        answer: 1,
+        explanation: "Cada vuelta de la espiral se divide en cuatro cuadrantes: 1) Definición de Objetivos, 2) Evaluación y Reducción de Riesgos, 3) Desarrollo y Validación, y 4) Planificación de la siguiente iteración."
+    },
+    {
+        question: "¿Para qué tipo de proyectos es más adecuado el modelo en Espiral?",
+        options: [
+            "Proyectos pequeños con requisitos simples",
+            "Aplicaciones que se desarrollan en una semana",
+            "Sistemas grandes, complejos y de alto riesgo donde la mitigación de incertidumbres es crucial",
+            "Proyectos con presupuesto cero"
+        ],
+        answer: 2,
+        explanation: "El modelo en Espiral es un enfoque realista y potente para sistemas grandes, complejos y de alto riesgo. Su éxito depende de la experiencia del equipo en la identificación y gestión de riesgos en cada nivel de evolución."
+    },
+    {
+        question: "¿Qué representa la transición de modelos tradicionales a metodologías ágiles?",
+        options: [
+            "Un cambio menor en herramientas de software",
+            "Una revolución que prioriza adaptabilidad, colaboración con el cliente y entrega rápida sobre planificación exhaustiva",
+            "La eliminación total de la planificación",
+            "Un retroceso a métodos caóticos sin estructura"
+        ],
+        answer: 1,
+        explanation: "Las metodologías ágiles representan una revolución que cambió fundamentalmente la industria del software, priorizando la adaptabilidad, la colaboración con el cliente y la entrega rápida e incremental de software funcional por encima de la planificación exhaustiva y la documentación extensiva."
+    },
+    {
+        question: "En metodologías ágiles, ¿cómo se ve el cambio en los requisitos?",
+        options: [
+            "Como un error de planificación que debe evitarse",
+            "Como una desviación del plan que genera sobrecostos",
+            "Como una parte natural del proceso de descubrimiento que debe ser bienvenida y gestionada",
+            "Como evidencia de incompetencia del cliente"
+        ],
+        answer: 2,
+        explanation: "Las metodologías ágiles están diseñadas para aceptar y gestionar el cambio, considerándolo una parte natural del proceso de descubrimiento. En contraste, los métodos tradicionales son resistentes al cambio y lo ven como una desviación del plan."
+    },
+    {
+        question: "¿Cuál es el rol del cliente en las metodologías ágiles?",
+        options: [
+            "Define requisitos al inicio y desaparece hasta el final del proyecto",
+            "Es un miembro integral del equipo de desarrollo, proporcionando feedback constante y ayudando a priorizar",
+            "Solo aprueba el presupuesto y no participa en el desarrollo",
+            "Interactúa únicamente con el gerente de proyecto"
+        ],
+        answer: 1,
+        explanation: "En metodologías ágiles, el cliente es un miembro integral del equipo de desarrollo, proporcionando feedback constante y ayudando a priorizar el trabajo. En contraste, en modelos tradicionales el cliente interactúa solo en reuniones formales y puntos de control."
+    },
+    {
+        question: "¿Qué es Scrum?",
+        options: [
+            "Un lenguaje de programación orientado a objetos",
+            "Un framework para gestionar proyectos complejos basado en iteraciones de tiempo fijo llamadas Sprints",
+            "Una base de datos relacional",
+            "Un sistema operativo para servidores"
+        ],
+        answer: 1,
+        explanation: "Scrum no es una metodología prescriptiva, sino un framework para gestionar proyectos complejos, especialmente en entornos donde los requisitos son volátiles. Se basa en iteraciones de tiempo fijo llamadas Sprints y fomenta la colaboración, autoorganización y mejora continua."
+    },
+    {
+        question: "¿Cuáles son los tres roles clave definidos en Scrum?",
+        options: [
+            "Gerente de Proyecto, Programador, Tester",
+            "Product Owner, Scrum Master, Equipo de Desarrollo",
+            "Arquitecto, Diseñador, Implementador",
+            "CEO, CTO, CFO"
+        ],
+        answer: 1,
+        explanation: "Scrum define tres roles clave: Product Owner (responsable de maximizar el valor del producto), Scrum Master (facilitador que asegura el proceso Scrum), y Equipo de Desarrollo (grupo multifuncional y autoorganizado de 3-9 personas)."
+    },
+    {
+        question: "¿Cuál es la responsabilidad principal del Product Owner en Scrum?",
+        options: [
+            "Escribir todo el código del producto",
+            "Maximizar el valor del producto gestionando y priorizando el Product Backlog",
+            "Realizar todas las pruebas de calidad",
+            "Administrar el presupuesto de la empresa"
+        ],
+        answer: 1,
+        explanation: "El Product Owner es el único responsable de maximizar el valor del producto. Gestiona el Product Backlog, priorizando las tareas para alinear el trabajo del equipo con los objetivos del negocio. Actúa como la 'voz del cliente' dentro del equipo."
+    },
+    {
+        question: "¿Cuál es el rol del Scrum Master?",
+        options: [
+            "Jefe de proyecto tradicional que asigna tareas a cada desarrollador",
+            "Líder servicial que facilita el proceso Scrum, elimina impedimentos y protege al equipo de interrupciones",
+            "Desarrollador senior con más experiencia",
+            "Representante del cliente que define requisitos"
+        ],
+        answer: 1,
+        explanation: "El Scrum Master es un líder servicial que facilita el proceso Scrum. Su función es asegurar que el equipo siga las prácticas de Scrum, eliminar los impedimentos que bloquean al equipo y protegerlo de interrupciones externas. No es un jefe de proyecto tradicional."
+    },
+    {
+        question: "¿Qué es un Sprint en Scrum?",
+        options: [
+            "Una carrera de velocidad para desarrolladores",
+            "El corazón de Scrum: una iteración de duración fija (1-4 semanas) durante la cual se crea un incremento 'Terminado' y potencialmente desplegable",
+            "Una reunión semanal de seguimiento",
+            "Un documento de especificaciones técnicas"
+        ],
+        answer: 1,
+        explanation: "El Sprint es el corazón de Scrum, una iteración de duración fija (generalmente de 1 a 4 semanas) durante la cual se crea un incremento de producto 'Terminado', utilizable y potencialmente desplegable."
+    },
+    {
+        question: "¿Qué ocurre en la ceremonia de Sprint Planning?",
+        options: [
+            "Se celebra el fin del proyecto",
+            "Al inicio de cada Sprint, el equipo Scrum completo colabora para definir qué se puede entregar y cómo se logrará",
+            "Se asignan las vacaciones del equipo",
+            "Se revisan únicamente los errores del Sprint anterior"
+        ],
+        answer: 1,
+        explanation: "En el Sprint Planning, al inicio de cada Sprint, el equipo Scrum completo colabora para definir qué se puede entregar en el próximo incremento y cómo se logrará ese trabajo. Es una sesión de planificación colaborativa."
+    },
+    {
+        question: "¿Qué es el Daily Scrum?",
+        options: [
+            "Una reunión mensual de evaluación",
+            "Una reunión diaria de 15 minutos para que el Equipo de Desarrollo sincronice actividades y planifique las próximas 24 horas",
+            "Un reporte semanal escrito al cliente",
+            "Una sesión de capacitación técnica"
+        ],
+        answer: 1,
+        explanation: "El Daily Scrum es una reunión diaria de 15 minutos para que el Equipo de Desarrollo sincronice sus actividades y cree un plan para las próximas 24 horas. Es una ceremonia clave para la coordinación del equipo."
+    },
+    {
+        question: "¿Qué sucede en la Sprint Review?",
+        options: [
+            "El equipo sale a almorzar juntos",
+            "Al final del Sprint, se inspecciona el incremento y se adapta el Product Backlog si es necesario en una sesión colaborativa",
+            "Se programa el próximo Sprint sin participación del cliente",
+            "Solo el Scrum Master presenta resultados a la gerencia"
+        ],
+        answer: 1,
+        explanation: "La Sprint Review se celebra al final del Sprint para inspeccionar el incremento y adaptar el Product Backlog si es necesario. Es una sesión de trabajo colaborativa, no una simple demostración."
+    },
+    {
+        question: "¿Cuál es el propósito de la Sprint Retrospective?",
+        options: [
+            "Celebrar los éxitos del Sprint sin analizar mejoras",
+            "Una oportunidad para que el equipo Scrum se inspeccione a sí mismo y cree un plan de mejoras para el próximo Sprint",
+            "Eliminar miembros del equipo que no rindieron bien",
+            "Aumentar el presupuesto del proyecto"
+        ],
+        answer: 1,
+        explanation: "La Sprint Retrospective es una oportunidad para que el equipo Scrum se inspeccione a sí mismo y cree un plan de mejoras para el próximo Sprint. Es fundamental para la mejora continua del proceso."
+    },
+    {
+        question: "¿Qué es el Product Backlog en Scrum?",
+        options: [
+            "La lista de errores del sistema",
+            "Una lista ordenada y emergente de todo lo que se conoce que es necesario en el producto; la única fuente de requisitos",
+            "El historial de Sprints completados",
+            "La documentación técnica archivada"
+        ],
+        answer: 1,
+        explanation: "El Product Backlog es una lista ordenada y emergente de todo lo que se conoce que es necesario en el producto. Es la única fuente de requisitos para cualquier cambio a realizarse en el producto."
+    },
+    {
+        question: "¿Qué es el Sprint Backlog?",
+        options: [
+            "Los errores detectados durante el Sprint",
+            "El conjunto de ítems del Product Backlog seleccionados para el Sprint, más un plan para entregar el incremento",
+            "La lista de reuniones programadas",
+            "Los requisitos rechazados por el equipo"
+        ],
+        answer: 1,
+        explanation: "El Sprint Backlog es el conjunto de ítems del Product Backlog seleccionados para el Sprint, más un plan para entregar el incremento del producto y alcanzar el Objetivo del Sprint."
+    },
+    {
+        question: "¿Qué significa que un incremento esté 'Terminado' (Done) en Scrum?",
+        options: [
+            "El código está escrito pero no probado",
+            "El incremento está en condiciones de ser utilizado y cumple la Definición de 'Terminado' del equipo",
+            "La documentación está completa pero el código no funciona",
+            "El Product Owner aprobó el presupuesto"
+        ],
+        answer: 1,
+        explanation: "Al final de un Sprint, el nuevo incremento debe estar 'Terminado', lo que significa que está en condiciones de ser utilizado y cumple la Definición de 'Terminado' del equipo. Este concepto asegura calidad y transparencia."
+    },
+    {
+        question: "¿Qué es Kanban en el contexto de desarrollo de software?",
+        options: [
+            "Un lenguaje de programación japonés",
+            "Un método para gestionar el flujo de trabajo con enfoque en entrega continua y mejora incremental",
+            "Una base de datos NoSQL",
+            "Un framework de testing automatizado"
+        ],
+        answer: 1,
+        explanation: "Kanban es un método para gestionar el flujo de trabajo, con un fuerte enfoque en la entrega continua y la mejora incremental. Originado en los sistemas de producción de Toyota, se adapta muy bien al desarrollo de software."
+    },
+    {
+        question: "¿Cuál es el lema clave de Kanban?",
+        options: [
+            "Codificar rápido, romper cosas",
+            "Dejar de empezar, empezar a terminar",
+            "Documentar todo antes de programar",
+            "Trabajar sin descanso"
+        ],
+        answer: 1,
+        explanation: "El lema clave de Kanban es 'dejar de empezar, empezar a terminar', lo que significa priorizar la finalización del trabajo en curso sobre el inicio de nuevas tareas. Esto reduce la multitarea y mejora el flujo."
+    },
+    {
+        question: "¿Qué es el tablero Kanban?",
+        options: [
+            "Una herramienta que visualiza el flujo de trabajo a través de columnas que representan etapas del proceso",
+            "Un documento de especificaciones técnicas",
+            "Una hoja de cálculo de presupuestos",
+            "Un diagrama de arquitectura de sistemas"
+        ],
+        answer: 0,
+        explanation: "El tablero Kanban es la herramienta central que visualiza el flujo de trabajo a través de columnas que representan diferentes etapas del proceso (p. ej., 'Por hacer', 'En progreso', 'Hecho'). Cada tarea se representa con una tarjeta que se mueve a través del tablero."
+    },
+    {
+        question: "¿Qué es WIP (Work in Progress) en Kanban?",
+        options: [
+            "El presupuesto pendiente de aprobación",
+            "El trabajo en progreso; Kanban establece límites explícitos sobre el número máximo de tareas en cada columna 'en progreso'",
+            "Los errores que aún no se han corregido",
+            "La documentación sin revisar"
+        ],
+        answer: 1,
+        explanation: "WIP (Work in Progress) es el trabajo en progreso. La práctica fundamental de Kanban es limitar el WIP estableciendo límites explícitos sobre el número máximo de tareas que pueden estar en cada columna 'en progreso'. Esto reduce la multitarea y expone cuellos de botella."
+    },
+    {
+        question: "¿Qué métricas clave utiliza Kanban para optimizar el flujo?",
+        options: [
+            "Líneas de código escritas por día",
+            "Cycle Time (tiempo en progreso) y Lead Time (tiempo total desde solicitud hasta entrega)",
+            "Cantidad de reuniones realizadas",
+            "Número de empleados en el equipo"
+        ],
+        answer: 1,
+        explanation: "Kanban utiliza métricas como el Cycle Time (tiempo que una tarea está en progreso) y el Lead Time (tiempo total desde que se solicita hasta que se entrega) para medir y optimizar el flujo de trabajo."
+    },
+    {
+        question: "¿Qué representa DevOps en la evolución del desarrollo de software?",
+        options: [
+            "Un lenguaje de programación específico",
+            "Una filosofía cultural y conjunto de prácticas que unifican el desarrollo de software y las operaciones de TI",
+            "Un sistema operativo para servidores",
+            "Una base de datos distribuida"
+        ],
+        answer: 1,
+        explanation: "DevOps no es solo herramientas o un rol; es una filosofía cultural y un conjunto de prácticas que buscan unificar el desarrollo de software (Dev) y las operaciones de TI (Ops), rompiendo el último gran silo en la organización."
+    },
+    {
+        question: "¿Cuál era el principal conflicto histórico entre Desarrollo y Operaciones antes de DevOps?",
+        options: [
+            "Usaban lenguajes de programación diferentes",
+            "Desarrollo se medía por velocidad de entrega, Operaciones por estabilidad; objetivos contrapuestos generaban fricción",
+            "Trabajaban en edificios separados",
+            "Tenían presupuestos diferentes"
+        ],
+        answer: 1,
+        explanation: "Históricamente, Desarrollo se medía por la velocidad de entrega de nuevas funcionalidades, mientras que Operaciones se medían por la estabilidad y fiabilidad del entorno de producción. Estos objetivos contrapuestos generaban fricción, retrasos y una cultura de culpas."
+    },
+    {
+        question: "¿Cuál es el pilar fundamental de DevOps?",
+        options: [
+            "Comprar las herramientas más caras",
+            "El cambio cultural: responsabilidad compartida, colaboración y empatía entre equipos",
+            "Contratar más personal de operaciones",
+            "Aumentar el número de servidores"
+        ],
+        answer: 1,
+        explanation: "El pilar fundamental de DevOps es el cambio cultural que promueve la responsabilidad compartida, la colaboración y la empatía entre los equipos. Sin esta mentalidad, la adopción de herramientas y automatización por sí solas no son efectivas."
+    },
+    {
+        question: "¿Qué es CI/CD en el contexto de DevOps?",
+        options: [
+            "Un tipo de servidor web",
+            "El pipeline de Integración Continua y Entrega/Despliegue Continuo que automatiza llevar código desde el repositorio hasta producción",
+            "Un lenguaje de consultas de bases de datos",
+            "Un protocolo de comunicación de redes"
+        ],
+        answer: 1,
+        explanation: "CI/CD es el pipeline de Integración Continua y Entrega/Despliegue Continuo. Este pipeline automatiza los pasos necesarios para llevar el código desde el repositorio hasta la producción, permitiendo entregas rápidas, frecuentes y fiables."
+    },
+    {
+        question: "¿Qué es la Integración Continua (CI)?",
+        options: [
+            "Reuniones continuas entre equipos",
+            "La práctica donde los desarrolladores integran código en un repositorio central varias veces al día, desencadenando compilación y pruebas automáticas",
+            "Actualizar continuamente la documentación",
+            "Cambiar constantemente los requisitos"
+        ],
+        answer: 1,
+        explanation: "La Integración Continua (CI) es la práctica en la que los desarrolladores integran sus cambios de código en un repositorio central compartido varias veces al día. Cada integración desencadena una compilación y pruebas automatizadas para detectar problemas tempranamente."
+    },
+    {
+        question: "¿Qué es la Entrega Continua (Continuous Delivery)?",
+        options: [
+            "Enviar productos físicos a los clientes diariamente",
+            "Además de CI, el pipeline empaqueta y despliega automáticamente en un entorno similar a producción, quedando listo para despliegue con un botón",
+            "Publicar código sin probar directamente a producción",
+            "Entregar documentos continuamente al cliente"
+        ],
+        answer: 1,
+        explanation: "La Entrega Continua es el siguiente paso después de CI. El pipeline compila, prueba, empaqueta y despliega automáticamente la aplicación en un entorno similar a producción. La aplicación queda lista para ser desplegada en producción con solo pulsar un botón."
+    },
+    {
+        question: "¿Qué es el Despliegue Continuo (Continuous Deployment)?",
+        options: [
+            "Contratar personal de forma continua",
+            "La extensión final de CI/CD donde cada cambio que supera las pruebas se despliega automáticamente en producción sin intervención humana",
+            "Mover servidores físicamente de un lugar a otro",
+            "Publicar actualizaciones de documentación"
+        ],
+        answer: 1,
+        explanation: "El Despliegue Continuo es la extensión final del pipeline CI/CD, donde cada cambio que supera con éxito todas las pruebas automatizadas se despliega automáticamente en el entorno de producción, sin intervención humana, maximizando la velocidad de entrega."
+    },
+    {
+        question: "¿Cuál fue el principal motivador para la creación de modelos evolutivos como Incremental y Espiral?",
+        options: [
+            "La necesidad de reducir la cantidad de programadores",
+            "La rigidez del modelo en Cascada y su incapacidad para gestionar el cambio en requisitos",
+            "La falta de computadoras potentes",
+            "La ausencia de lenguajes de programación modernos"
+        ],
+        answer: 1,
+        explanation: "La rigidez del modelo en Cascada y su incapacidad para gestionar el cambio llevaron a la industria a buscar alternativas más flexibles. Los modelos evolutivos surgieron reconociendo que el software evoluciona con el tiempo."
+    },
+    {
+        question: "Según la evolución del SDLC, ¿cómo han cambiado las definiciones de 'valor' y 'riesgo'?",
+        options: [
+            "No han cambiado, siguen siendo las mismas definiciones",
+            "De 'entrega final de características predefinidas' a 'satisfacción continua del cliente y impacto medible en el negocio'",
+            "De 'calidad del software' a 'cantidad de código escrito'",
+            "De 'documentación completa' a 'ausencia total de documentación'"
+        ],
+        answer: 1,
+        explanation: "Los modelos fundacionales (Cascada) definían el valor como la entrega final de características predefinidas y el riesgo como desviación del plan. Los enfoques modernos (Agile, DevOps) redefinen el valor como satisfacción continua del cliente y el riesgo como construir un producto que nadie quiere o llega tarde al mercado."
+    },
+    {
+        question: "¿Qué caracteriza a la fase de Mantenimiento en el ciclo de vida del software?",
+        options: [
+            "Es la fase más corta y económica del ciclo",
+            "Es a menudo la fase más larga y costosa, incluyendo corrección de errores, adaptación a nuevos entornos y mejoras",
+            "Solo involucra eliminar código obsoleto",
+            "Ocurre únicamente antes del despliegue"
+        ],
+        answer: 1,
+        explanation: "La fase de Mantenimiento es, con frecuencia, la más larga y costosa de todo el ciclo de vida. Incluye la corrección de errores no descubiertos en las pruebas, la adaptación del software a nuevos entornos y la mejora del sistema para implementar nuevos requisitos."
+    },
+    {
+        question: "¿Qué diferencia fundamental existe entre Scrum y Kanban en cuanto a estructura temporal?",
+        options: [
+            "Ambos usan Sprints de igual duración",
+            "Scrum usa iteraciones de tiempo fijo (Sprints), Kanban no prescribe iteraciones sino flujo continuo",
+            "Kanban usa Sprints más largos que Scrum",
+            "Ninguno utiliza marcos temporales definidos"
+        ],
+        answer: 1,
+        explanation: "A diferencia de Scrum que usa iteraciones de tiempo fijo llamadas Sprints, Kanban no prescribe iteraciones de tiempo fijo ni roles específicos, sino que se enfoca en optimizar el flujo continuo de entrega de valor, lo que lo hace muy flexible."
+    },
+    {
+        question: "¿Qué significa que el proceso de desarrollo de software ha evolucionado de 'ejercicio de producción lineal' a 'proceso de aprendizaje social'?",
+        options: [
+            "Ahora se programa en grupos grandes en lugar de individualmente",
+            "El desarrollo pasó de seguir un plan fijo a ser un diálogo continuo entre usuarios, diseñadores y tecnología",
+            "Ahora se usa más redes sociales para programar",
+            "Se eliminó completamente la planificación técnica"
+        ],
+        answer: 1,
+        explanation: "El proceso de desarrollo de software ha evolucionado de ser un ejercicio de producción lineal (ejecutar un plan predefinido) a un proceso de aprendizaje social: un diálogo continuo entre usuarios, diseñadores y tecnología, donde el descubrimiento y la adaptación son centrales."
+    },
+    {
+        question: "En el modelo en Espiral, ¿qué determina qué modelo de desarrollo se usa en cada iteración?",
+        options: [
+            "El presupuesto disponible en ese momento",
+            "La evaluación de riesgos: se elige el modelo más apropiado para mitigar los riesgos identificados",
+            "La cantidad de desarrolladores disponibles",
+            "El lenguaje de programación seleccionado"
+        ],
+        answer: 1,
+        explanation: "En el modelo en Espiral, basándose en la evaluación de riesgos, se elige el modelo de desarrollo más apropiado para esa iteración. Por ejemplo, se usa prototipado si el riesgo está en la interfaz de usuario, o un enfoque más formal si el riesgo es de seguridad."
+    },
+    {
+        question: "¿Qué principio de mejora continua (Kaizen) implementa Kanban?",
+        options: [
+            "Realizar cambios radicales y transformaciones completas del proceso",
+            "Realizar pequeños cambios incrementales y evolutivos en el proceso existente, fomentando mejora continua",
+            "Mantener el proceso exactamente igual siempre",
+            "Cambiar completamente de metodología cada mes"
+        ],
+        answer: 1,
+        explanation: "Kanban se basa en realizar pequeños cambios incrementales y evolutivos en el proceso existente, en lugar de una transformación radical, fomentando una cultura de mejora continua (Kaizen). Este enfoque es menos disruptivo y más sostenible."
+    },
+    {
+        question: "¿Cuál es el tamaño recomendado para un Equipo de Desarrollo en Scrum?",
+        options: [
+            "1-2 personas para máxima eficiencia",
+            "3-9 personas: suficientemente pequeño para ser ágil, suficientemente grande para completar trabajo significativo",
+            "15-20 personas para maximizar productividad",
+            "Más de 30 personas para proyectos grandes"
+        ],
+        answer: 1,
+        explanation: "El Equipo de Desarrollo en Scrum debe ser de 3 a 9 personas. Es un grupo multifuncional y autoorganizado que tiene todas las habilidades necesarias para construir un incremento 'Terminado'. Este tamaño permite agilidad y capacidad de entrega."
+    },
+    {
+        question: "¿Qué desafío específico del modelo en Cascada busca resolver el modelo Incremental?",
+        options: [
+            "La falta de documentación técnica",
+            "La parálisis del enfoque 'todo o nada': esperar hasta el final para entregar un producto monolítico",
+            "La excesiva participación del cliente",
+            "El uso de lenguajes de programación obsoletos"
+        ],
+        answer: 1,
+        explanation: "El modelo Incremental fue concebido para superar la parálisis del enfoque 'todo o nada' del modelo en Cascada. En lugar de esperar a entregar un producto monolítico al final del proyecto, produce el software en una serie de 'incrementos' funcionales que entregan valor progresivamente."
+    },
+    {
+        question: "¿Qué artefacto de Scrum es la 'suma de todos los ítems completados durante un Sprint más el valor de Sprints anteriores'?",
+        options: [
+            "Product Backlog",
+            "Sprint Backlog",
+            "Incremento",
+            "Definición de Terminado"
+        ],
+        answer: 2,
+        explanation: "El Incremento es la suma de todos los ítems del Product Backlog completados durante un Sprint y el valor de los incrementos de todos los Sprints anteriores. Al final de un Sprint, el nuevo incremento debe estar 'Terminado' y listo para ser utilizado."
+    },
+    {
+        question: "¿Qué tipo de proyecto es el MENOS adecuado para el modelo en Cascada según el análisis moderno?",
+        options: [
+            "Proyectos con requisitos muy estables y perfectamente definidos",
+            "Sistemas embebidos con especificaciones técnicas rígidas",
+            "Proyectos con requisitos volátiles, desconocidos o que requieren rápida adaptación al mercado",
+            "Desarrollos donde la predictibilidad es crítica y los cambios son raros"
+        ],
+        answer: 2,
+        explanation: "El modelo en Cascada es el MENOS adecuado para proyectos con requisitos volátiles, desconocidos o que requieren rápida adaptación al mercado. Para estos contextos, las metodologías ágiles son mucho más apropiadas, ya que están diseñadas para gestionar el cambio continuo."
+    },
+    {
+        question: "En el contexto de DevOps, ¿por qué es importante la automatización del pipeline CI/CD?",
+        options: [
+            "Para reducir la cantidad de reuniones",
+            "Para permitir entregas rápidas, frecuentes y fiables, detectando problemas tempranamente y acelerando el time-to-market",
+            "Para eliminar completamente la necesidad de programadores",
+            "Para aumentar el tamaño del código base"
+        ],
+        answer: 1,
+        explanation: "La automatización del pipeline CI/CD es fundamental en DevOps porque permite entregas rápidas, frecuentes y fiables. Detecta problemas de integración tempranamente, reduce el tiempo y esfuerzo de fusionar cambios, y acelera significativamente el time-to-market de nuevas funcionalidades."
+    },
+    {
+        question: "¿Qué aspecto del desarrollo de software es central en TODOS los modelos evolutivos (Incremental, Prototipos, Espiral)?",
+        options: [
+            "La eliminación total de la documentación",
+            "El reconocimiento de que el software evoluciona con el tiempo y requiere ciclos de feedback y adaptación",
+            "El uso exclusivo de un único lenguaje de programación",
+            "La ausencia de planificación inicial"
+        ],
+        answer: 1,
+        explanation: "El aspecto central en todos los modelos evolutivos (Incremental, Prototipos, Espiral) es el reconocimiento de que el software, por su naturaleza, evoluciona con el tiempo. Estos modelos son iterativos y se caracterizan por desarrollar versiones cada vez más completas, permitiendo la incorporación de feedback en cada ciclo."
+    },
+    {
+        question: "¿Qué innovación fundamental introduce Scrum respecto a la gestión tradicional de proyectos?",
+        options: [
+            "Elimina completamente la necesidad de planificación",
+            "Crea un sistema de 'tensión productiva' entre roles que equilibra necesidades del negocio con realidades técnicas",
+            "Permite trabajar sin ningún tipo de reuniones",
+            "Requiere que todos sean programadores expertos"
+        ],
+        answer: 1,
+        explanation: "La innovación fundamental de Scrum reside en cómo sus roles y eventos crean un sistema de equilibrio de poder y responsabilidades. El Product Owner impulsa la maximización del valor, el Equipo defiende la calidad técnica y ritmo sostenible, y el Scrum Master actúa como mediador. Esta 'tensión productiva' fuerza conversaciones y compromisos necesarios para optimizar el resultado continuamente."
+    },
+    {
+        question: "¿Qué beneficio clave ofrece limitar el WIP (Work in Progress) en Kanban?",
+        options: [
+            "Permite trabajar en más tareas simultáneamente",
+            "Reduce la multitarea, expone cuellos de botella y obliga al equipo a colaborar para finalizar trabajo antes de comenzar algo nuevo",
+            "Aumenta la cantidad de reuniones necesarias",
+            "Elimina la necesidad de planificación"
+        ],
+        answer: 1,
+        explanation: "Limitar el WIP es la práctica fundamental de Kanban. Reduce la multitarea, expone los cuellos de botella en el flujo y obliga al equipo a colaborar para finalizar el trabajo antes de comenzar algo nuevo. Esto mejora significativamente la eficiencia y la calidad del flujo."
+    },
+    {
+        question: "¿Cómo se relaciona DevOps con las metodologías ágiles como Scrum?",
+        options: [
+            "DevOps reemplaza completamente a Agile",
+            "DevOps es una extensión natural de Agile, aplicando principios de iteración, feedback y mejora continua a todo el ciclo de vida",
+            "DevOps y Agile son incompatibles entre sí",
+            "DevOps es anterior a Agile históricamente"
+        ],
+        answer: 1,
+        explanation: "DevOps se considera una extensión natural de Agile, ya que aplica los principios de iteración, feedback rápido y mejora continua a todo el ciclo de vida del software, desde la concepción de la idea hasta su entrega y mantenimiento en producción, rompiendo el silo entre Desarrollo y Operaciones."
+    },
+    {
+        question: "¿Qué significa que en las metodologías ágiles los procesos son 'menos controlados' comparados con los tradicionales?",
+        options: [
+            "No hay ningún tipo de estructura ni disciplina",
+            "Tienen pocos principios, pocos roles y prefieren software funcional sobre documentación exhaustiva, confiando en la autoorganización",
+            "Se permite cualquier acción sin consecuencias",
+            "No se revisa la calidad del código"
+        ],
+        answer: 1,
+        explanation: "En metodologías ágiles, los procesos son 'menos controlados' significa que tienen pocos principios, pocos roles y una preferencia por el software funcional sobre la documentación detallada. Confían en la autoorganización del equipo en lugar de políticas y controles externos exhaustivos."
+    },
+    {
+        question: "En el contexto del SDLC moderno, ¿qué representa el mayor riesgo para un proyecto?",
+        options: [
+            "No tener suficiente documentación técnica",
+            "Construir un producto que nadie quiere o que llega demasiado tarde al mercado",
+            "Usar lenguajes de programación modernos",
+            "Tener demasiados desarrolladores en el equipo"
+        ],
+        answer: 1,
+        explanation: "En el contexto del SDLC moderno, los enfoques ágiles y DevOps consideran que el mayor riesgo es construir un producto que nadie quiere o que llega demasiado tarde al mercado. Esto contrasta con los modelos tradicionales que veían el riesgo como desviación del plan inicial."
+    }
+];
+        let currentQuiz;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeRemaining = 20 * 60; // 20 minutos en segundos
+        let timerInterval;
+
+        const quizSelectionScreen = document.getElementById('quiz-selection-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const currentQuestionNumberElement = document.getElementById('current-question-number');
+        const scoreElement = document.getElementById('score');
+        const nextButton = document.getElementById('next-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const finalScoreElement = document.getElementById('final-score');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateQuizzes() {
+            quizzes = [];
+            let tempQuestions = [...allQuestions]; // Copia para no alterar el original
+            shuffleArray(tempQuestions);
+            
+            const numQuizzes = Math.ceil(tempQuestions.length / 20);
+
+            for (let i = 0; i < numQuizzes; i++) {
+                const startIndex = i * 20;
+                const endIndex = startIndex + 20;
+                const selectedQuestions = tempQuestions.slice(startIndex, endIndex);
+                quizzes.push({
+                    title: `Examen de Práctica ${i + 1}`,
+                    questions: selectedQuestions
+                });
+            }
+            
+            // Generate quiz selection buttons
+            const quizButtonsContainer = document.querySelector('#quiz-selection-screen .grid');
+            quizButtonsContainer.innerHTML = '';
+            
+            quizzes.forEach((quiz, index) => {
+                const button = document.createElement('button');
+                button.onclick = () => startQuiz(index);
+                button.className = 'card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none';
+                button.textContent = quiz.title;
+                quizButtonsContainer.appendChild(button);
+            });
+        }
+
+        function startQuiz(quizIndex) {
+            currentQuiz = quizzes[quizIndex];
+            currentQuestionIndex = 0;
+            score = 0;
+            timeRemaining = 20 * 60; // 20 minutos por examen
+            
+            quizSelectionScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            startTimer();
+            showQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timer');
+            if (timeRemaining <= 300) {
+                timerElement.classList.add('text-red-600');
+                timerElement.classList.remove('text-blue-600');
+            } else {
+                timerElement.classList.remove('text-red-600');
+                timerElement.classList.add('text-blue-600');
+            }
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= currentQuiz.questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+
+            currentQuestionNumberElement.textContent = currentQuestionIndex + 1;
+            document.querySelector('#quiz-screen .text-lg.font-semibold.text-gray-700').innerHTML = `Pregunta <span id="current-question-number">${currentQuestionIndex + 1}</span> de ${currentQuiz.questions.length}`;
+            scoreElement.textContent = score;
+            questionElement.textContent = currentQuestionData.question;
+            optionsContainer.innerHTML = '';
+            feedbackMessage.classList.add('hidden');
+            feedbackMessage.innerHTML = '';
+            nextButton.disabled = true;
+
+            const options = [...currentQuestionData.options];
+            
+            options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('answer-button', 'block');
+                button.onclick = () => checkAnswer(button, index);
+                optionsContainer.appendChild(button);
+            });
+
+            const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+            document.querySelector('.progress-bar').style.width = `${progress}%`;
+        }
+
+        function checkAnswer(selectedButton, selectedIndex) {
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+            const correctIndex = currentQuestionData.answer;
+
+            Array.from(optionsContainer.children).forEach((button, index) => {
+                button.disabled = true;
+                if (index === correctIndex) {
+                    button.classList.add('correct');
+                }
+            });
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                feedbackMessage.textContent = '¡Respuesta Correcta!';
+                feedbackMessage.className = 'bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-r-lg';
+            } else {
+                selectedButton.classList.add('incorrect');
+                feedbackMessage.innerHTML = `
+                    <div class="font-bold mb-2">¡Respuesta Incorrecta!</div>
+                    <div class="explanation">
+                        <strong class="text-indigo-700">Explicación:</strong>
+                        <p class="text-sm mt-1 text-gray-700">${currentQuestionData.explanation}</p>
+                    </div>
+                `;
+                feedbackMessage.className = 'bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r-lg';
+            }
+
+            feedbackMessage.classList.remove('hidden');
+            scoreElement.textContent = score;
+            nextButton.disabled = false;
+            nextButton.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            finalScoreElement.textContent = `${score}/${currentQuiz.questions.length}`;
+        }
+
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            quizSelectionScreen.classList.remove('hidden');
+            generateQuizzes();
+        }
+
+        window.onload = function() {
+            generateQuizzes();
+            quizSelectionScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

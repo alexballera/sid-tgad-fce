@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Sesión 14 - SID</title>
+    <meta name="description" content="Cuestionario de práctica para la Sesión 14 de Fundamentos de Sistemas de Información Digitales, sobre Cloud Computing, Internet de las Cosas (IoT) y Virtualización.">
+    <meta name="keywords" content="SID, FCE, UBA, Cuestionario, Cloud Computing, IoT, Internet de las Cosas, IaaS, PaaS, SaaS, Virtualización, Hipervisor">
+    <meta name="author" content="Alexis Ballera - alexisballera@gmail.com">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .quiz-button {
+            transition: all 0.3s ease;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .answer-button {
+            width: 100%;
+            padding: 16px;
+            text-align: left;
+            background-color: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .answer-button:hover:not(:disabled) {
+            background-color: #f3f4f6;
+            border-color: #6366f1;
+            transform: translateX(4px);
+        }
+
+        .answer-button.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+            color: #166534;
+            animation: pulse-correct 0.8s ease-in-out;
+        }
+
+        .answer-button.incorrect {
+            background-color: #fecaca;
+            border-color: #ef4444;
+            color: #991b1b;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        @keyframes pulse-correct {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .progress-bar {
+            background: linear-gradient(to right, #10b981, #059669);
+            border-radius: 9999px;
+            height: 8px;
+            transition: width 0.3s ease;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .medal {
+            font-size: 4rem;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-10px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Quiz Selection Screen -->
+        <div id="quiz-selection-screen" class="hidden fade-in">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">Cuestionario Sesión 14</h1>
+                <p class="text-xl text-gray-600 mb-2">Cloud Computing e Internet de las Cosas (IoT)</p>
+                <p class="text-lg text-gray-500">Fundamentos de Sistemas de Información Digitales</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Los botones se generan dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number">1</span> de 20</span>
+                    <div class="timer text-blue-600" id="timer">20:00</div>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Puntuación: <span id="score">0</span></span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="progress-bar h-2 rounded-full" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <h2 id="question" class="text-xl font-semibold text-gray-800 mb-6 leading-relaxed">Pregunta...</h2>
+                <div id="options-container" class="space-y-3">
+                    <!-- Las opciones se generan dinámicamente -->
+                </div>
+            </div>
+
+            <div id="feedback-message" class="bg-blue-50 border-l-4 border-blue-400 p-6 mb-6 rounded-r-lg hidden">
+                <!-- El feedback se muestra aquí -->
+            </div>
+
+            <div class="text-center">
+                <button id="next-button" onclick="nextQuestion()" class="quiz-button bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none disabled:opacity-50" disabled>
+                    Siguiente Pregunta
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden fade-in">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="medal mb-4">🏆</div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Examen Completado!</h2>
+                    <div class="score-display text-indigo-600 mb-4"><span id="final-score">0</span>/20</div>
+                    <p class="text-lg text-gray-600 mb-6">Has completado el examen de práctica</p>
+                    
+                    <div class="space-y-4">
+                        <button onclick="restartQuiz()" class="quiz-button w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">
+                            Realizar Otro Examen
+                        </button>
+                        <button onclick="window.location.reload()" class="quiz-button w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-700 focus:outline-none">
+                            Volver al Inicio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const allQuestions = [
+    {
+        "question": "Según el NIST, ¿cuál es la definición de Cloud Computing?",
+        "options": [
+            "Un tipo específico de servidor físico ubicado en un centro de datos.",
+            "Un modelo que permite el acceso bajo demanda a un conjunto configurable de recursos de computación compartidos.",
+            "Exclusivamente el almacenamiento de archivos en servidores remotos.",
+            "Un protocolo de comunicación para redes inalámbricas."
+        ],
+        "answer": 1,
+        "explanation": "El NIST define Cloud Computing como un modelo que permite el acceso de red ubicuo, conveniente y bajo demanda a un conjunto compartido de recursos de computación configurables que pueden ser rápidamente aprovisionados y liberados con un mínimo esfuerzo de gestión."
+    },
+    {
+        "question": "¿Cuál de las siguientes NO es una de las cinco características esenciales de la nube según el NIST?",
+        "options": [
+            "Autoservicio bajo demanda",
+            "Agrupamiento de recursos",
+            "Propiedad de la infraestructura física",
+            "Elasticidad rápida"
+        ],
+        "answer": 2,
+        "explanation": "Las cinco características esenciales son: autoservicio bajo demanda, acceso amplio a la red, agrupamiento de recursos, elasticidad rápida y servicio medido. La propiedad física de la infraestructura no es una característica, ya que en la nube los recursos son compartidos y virtualizados."
+    },
+    {
+        "question": "El 'autoservicio bajo demanda' en Cloud Computing significa que:",
+        "options": [
+            "El proveedor debe aprobar manualmente cada solicitud de recursos.",
+            "El usuario puede aprovisionar unilateralmente capacidades de computación sin intervención humana del proveedor.",
+            "Los recursos solo están disponibles durante el horario laboral.",
+            "Se requiere contactar al soporte técnico para cualquier cambio."
+        ],
+        "answer": 1,
+        "explanation": "Esta característica empodera al usuario final permitiéndole aprovisionar recursos (servidores, almacenamiento) automáticamente a través de consolas web o APIs, sin requerir intervención humana del proveedor de servicios."
+    },
+    {
+        "question": "¿Qué significa 'IaaS' en el contexto de Cloud Computing?",
+        "options": [
+            "Internet as a Service",
+            "Infrastructure as a Service",
+            "Information as a Service",
+            "Integration as a Service"
+        ],
+        "answer": 1,
+        "explanation": "IaaS (Infraestructura como Servicio) es la capa inferior del cloud computing que ofrece recursos informáticos fundamentales como almacenamiento, procesamiento, memoria y capacidad de red bajo demanda."
+    },
+    {
+        "question": "¿Cuál es la principal diferencia entre IaaS, PaaS y SaaS?",
+        "options": [
+            "El costo del servicio.",
+            "El nivel de abstracción y gestión que ofrece el proveedor.",
+            "La ubicación geográfica de los servidores.",
+            "El tipo de conexión a Internet requerida."
+        ],
+        "answer": 1,
+        "explanation": "La diferencia radica en el nivel de abstracción: IaaS ofrece infraestructura básica, PaaS añade plataforma de desarrollo completa, y SaaS proporciona aplicaciones listas para usar. Cada nivel asume más responsabilidades de gestión por parte del proveedor."
+    },
+    {
+        "question": "¿Cuál de los siguientes es un ejemplo de SaaS (Software as a Service)?",
+        "options": [
+            "Amazon EC2 (máquinas virtuales)",
+            "Google App Engine (plataforma de desarrollo)",
+            "Spotify (streaming de música)",
+            "Linode (servidores virtuales)"
+        ],
+        "answer": 2,
+        "explanation": "Spotify es un ejemplo clásico de SaaS donde el usuario consume una aplicación completa (streaming de música) sin gestionar ningún aspecto de infraestructura o instalación. Otros ejemplos incluyen Google Docs, Oracle Sales Cloud y SAP Cloud Solutions."
+    },
+    {
+        "question": "¿Qué es la 'virtualización' en el contexto de Cloud Computing?",
+        "options": [
+            "El proceso de crear copias de seguridad de datos.",
+            "La simulación de una o más computadoras dentro de otras mediante software, creando máquinas virtuales.",
+            "Una técnica de encriptación de datos.",
+            "El acceso remoto a computadoras físicas."
+        ],
+        "answer": 1,
+        "explanation": "La virtualización es la tecnología clave que permite crear una capa de abstracción sobre el hardware físico, permitiendo que múltiples máquinas virtuales (VMs) independientes se ejecuten en un solo servidor físico."
+    },
+    {
+        "question": "¿Qué es un 'hipervisor' en virtualización?",
+        "options": [
+            "Un tipo de procesador de alta velocidad.",
+            "La herramienta de software que crea y gestiona las máquinas virtuales.",
+            "Un protocolo de red para comunicación entre servidores.",
+            "Un sistema operativo especializado para servidores web."
+        ],
+        "answer": 1,
+        "explanation": "El hipervisor es el software responsable de crear, ejecutar y gestionar las máquinas virtuales. Hay dos tipos principales: Tipo 1 (bare-metal, como VMware ESXi, Hyper-V, KVM) y Tipo 2 (sobre sistema operativo host)."
+    },
+    {
+        "question": "¿Cuál de estos NO es un proveedor principal de IaaS a nivel global?",
+        "options": [
+            "Amazon Web Services (AWS)",
+            "Microsoft Azure",
+            "Google Cloud Platform (GCP)",
+            "Microsoft Word"
+        ],
+        "answer": 3,
+        "explanation": "Microsoft Word es una aplicación de procesamiento de textos (SaaS), no un proveedor de infraestructura. Los tres grandes proveedores de IaaS son AWS, Microsoft Azure y Google Cloud Platform, que controlan la mayor parte del mercado global."
+    },
+    {
+        "question": "¿Qué ventaja principal ofrece Cloud Computing en términos de costos?",
+        "options": [
+            "Elimina completamente todos los costos de TI.",
+            "Transforma el gasto de capital (CAPEX) en gasto operativo (OPEX), pagando solo por lo que se usa.",
+            "Aumenta significativamente los costos pero mejora el rendimiento.",
+            "Requiere grandes inversiones iniciales en hardware."
+        ],
+        "answer": 1,
+        "explanation": "Una ventaja clave de la nube es la transformación de CAPEX a OPEX: en lugar de grandes inversiones iniciales en hardware, las empresas pagan solo por los recursos que consumen, reduciendo barreras de entrada y liberando capital."
+    },
+    {
+        "question": "¿Qué significa 'elasticidad rápida' en Cloud Computing?",
+        "options": [
+            "Los servidores físicos pueden estirarse para ser más largos.",
+            "Las capacidades pueden ser aprovisionadas y liberadas automáticamente para escalar según la demanda.",
+            "Los cables de red son muy flexibles.",
+            "Los costos son fijos y no cambian."
+        ],
+        "answer": 1,
+        "explanation": "La elasticidad rápida permite que los recursos se expandan automáticamente durante picos de demanda y se reduzcan cuando disminuye la carga, optimizando tanto el rendimiento como los costos. Es fundamental para manejar cargas variables."
+    },
+    {
+        "question": "¿Qué desventaja representa el 'vendor lock-in' en Cloud Computing?",
+        "options": [
+            "Los costos son demasiado bajos.",
+            "La dependencia de servicios propietarios de un proveedor dificulta la migración a otro.",
+            "Hay demasiada seguridad en los datos.",
+            "El acceso a Internet es innecesario."
+        ],
+        "answer": 1,
+        "explanation": "El vendor lock-in ocurre cuando una organización integra profundamente sus operaciones con servicios específicos de un proveedor, haciendo que la migración a otro proveedor sea técnica y económicamente prohibitiva. Es una preocupación estratégica importante."
+    },
+    {
+        "question": "¿Qué es el 'modelo de responsabilidad compartida' en seguridad de la nube?",
+        "options": [
+            "Todos los usuarios comparten las mismas contraseñas.",
+            "El proveedor es responsable de la seguridad 'de' la nube, y el cliente de la seguridad 'en' la nube.",
+            "La seguridad no es importante en la nube.",
+            "Solo el cliente es responsable de toda la seguridad."
+        ],
+        "answer": 1,
+        "explanation": "En el modelo de responsabilidad compartida, el proveedor asegura la infraestructura física, red e hipervisor (seguridad DE la nube), mientras el cliente es responsable de configuraciones, identidades, accesos y protección de datos (seguridad EN la nube)."
+    },
+    {
+        "question": "¿Qué porcentaje aproximado de las brechas de seguridad en la nube se deben a mala configuración del cliente según estudios recientes?",
+        "options": [
+            "5-10%",
+            "25-30%",
+            "45-50%",
+            "60-70%"
+        ],
+        "answer": 3,
+        "explanation": "Aproximadamente el 68% de los incidentes de seguridad en la nube se deben a errores de configuración por parte del cliente, no a fallas del proveedor. Esto resalta la importancia de la gobernanza y capacitación adecuada."
+    },
+    {
+        "question": "¿Qué es 'FinOps' (Cloud Financial Operations)?",
+        "options": [
+            "Un tipo de criptomoneda para pagar servicios de nube.",
+            "Una disciplina para gestionar y optimizar el gasto variable de la nube.",
+            "Un protocolo de red financiero.",
+            "Un servicio bancario en la nube."
+        ],
+        "answer": 1,
+        "explanation": "FinOps es una disciplina empresarial emergente enfocada en inculcar responsabilidad financiera en el modelo de gasto variable de la nube, ayudando a las organizaciones a controlar y optimizar costos que pueden fácilmente descontrolarse."
+    },
+    {
+        "question": "¿Qué característica de la nube permite que múltiples clientes compartan los mismos recursos físicos de manera transparente?",
+        "options": [
+            "Autoservicio bajo demanda",
+            "Agrupamiento de recursos (Resource pooling)",
+            "Elasticidad rápida",
+            "Acceso amplio a la red"
+        ],
+        "answer": 1,
+        "explanation": "El agrupamiento de recursos utiliza un modelo multi-inquilino (multi-tenant) donde diferentes recursos físicos y virtuales se asignan y reasignan dinámicamente según la demanda, con independencia de ubicación para el cliente."
+    },
+    {
+        "question": "¿Qué es PaaS (Platform as a Service)?",
+        "options": [
+            "Solo ofrece almacenamiento de archivos.",
+            "Proporciona una plataforma completa de desarrollo con hardware, sistemas operativos, bases de datos y servidores web.",
+            "Es un tipo de red social.",
+            "Requiere que el usuario gestione todos los servidores manualmente."
+        ],
+        "answer": 1,
+        "explanation": "PaaS ofrece un conjunto completo de hardware y software base (plataforma), incluyendo bases de datos, servidores web y herramientas de diseño, permitiendo que los desarrolladores se enfoquen en crear aplicaciones sin gestionar la infraestructura subyacente."
+    },
+    {
+        "question": "¿Cuál de estos es un ejemplo de PaaS?",
+        "options": [
+            "Gmail",
+            "Google App Engine",
+            "Dropbox",
+            "Netflix"
+        ],
+        "answer": 1,
+        "explanation": "Google App Engine es una plataforma como servicio que permite a los desarrolladores crear y alojar aplicaciones web sin preocuparse por la infraestructura subyacente. Otros ejemplos incluyen Heroku y Microsoft Azure App Service."
+    },
+    {
+        "question": "¿Qué tecnología de virtualización de código abierto está integrada en el kernel de Linux y sirve como base para muchas nubes públicas y privadas?",
+        "options": [
+            "VMware vSphere",
+            "Microsoft Hyper-V",
+            "KVM (Kernel-based Virtual Machine)",
+            "Oracle VirtualBox"
+        ],
+        "answer": 2,
+        "explanation": "KVM es una solución de virtualización de código abierto integrada en el kernel de Linux que ha ganado tracción masiva y sirve como base tecnológica para muchas nubes grandes, así como plataformas como Proxmox VE y OpenStack."
+    },
+    {
+        "question": "¿Qué ventaja tiene la 'contenedorización' (Docker, Kubernetes) sobre la virtualización tradicional con máquinas virtuales?",
+        "options": [
+            "Los contenedores son más lentos pero más seguros.",
+            "Los contenedores son más ligeros, portátiles y rápidos de iniciar porque comparten el kernel del sistema operativo.",
+            "Los contenedores requieren más recursos de hardware.",
+            "No hay diferencias significativas."
+        ],
+        "answer": 1,
+        "explanation": "A diferencia de las VMs que virtualizan hardware completo incluyendo el SO, los contenedores comparten el kernel del host y solo empaquetan la aplicación y sus dependencias, haciéndolos extremadamente ligeros, portátiles y rápidos con menor sobrecarga de recursos."
+    },
+    {
+        "question": "¿Qué es la 'computación sin servidor' (Serverless)?",
+        "options": [
+            "Computing sin ningún servidor físico involucrado.",
+            "Un modelo donde los desarrolladores ejecutan código sin aprovisionar ni gestionar servidores.",
+            "Una red sin ningún tipo de servidor.",
+            "Computación que solo funciona offline."
+        ],
+        "answer": 1,
+        "explanation": "Serverless (como AWS Lambda o Google Cloud Run) permite ejecutar código en respuesta a eventos sin aprovisionar servidores. El proveedor gestiona toda la infraestructura, permitiendo a los desarrolladores centrarse exclusivamente en la lógica de negocio."
+    },
+    {
+        "question": "¿Qué significa IoT (Internet of Things)?",
+        "options": [
+            "Un tipo especial de red empresarial.",
+            "La interconexión de objetos físicos cotidianos a través de Internet para intercambiar datos.",
+            "Una versión mejorada del protocolo TCP/IP.",
+            "Un sistema operativo para dispositivos móviles."
+        ],
+        "answer": 1,
+        "explanation": "IoT es un conjunto de tecnologías que permiten que los objetos físicos (cosas) se conecten a una red de comunicaciones, sean identificados y controlados remotamente, digitalizando el mundo físico."
+    },
+    {
+        "question": "¿Cuáles son las cuatro capas principales en la arquitectura general de un sistema IoT?",
+        "options": [
+            "Hardware, Software, Red, Usuario",
+            "Percepción (Things), Red (Connectivity), Procesamiento (Gateway & Cloud), Aplicación (Business Data Analysis)",
+            "Cliente, Servidor, Base de datos, Aplicación",
+            "Física, Enlace, Red, Transporte"
+        ],
+        "answer": 1,
+        "explanation": "La arquitectura IoT típica consta de: 1) Capa de Percepción (sensores/actuadores), 2) Capa de Red (conectividad), 3) Capa de Procesamiento (gateways y nube), y 4) Capa de Aplicación (análisis y valor de negocio)."
+    },
+    {
+        "question": "¿Qué son los 'sensores' en el contexto de IoT?",
+        "options": [
+            "Programas de software para análisis de datos.",
+            "Dispositivos que recopilan datos del entorno físico (temperatura, movimiento, luz, etc.).",
+            "Servidores que almacenan información.",
+            "Cables de red especiales."
+        ],
+        "answer": 1,
+        "explanation": "Los sensores son dispositivos en la capa de percepción que recopilan datos del mundo físico, como temperatura, humedad, movimiento, luz, presión, etc., y los convierten en señales digitales para su transmisión."
+    },
+    {
+        "question": "¿Qué son los 'actuadores' en IoT?",
+        "options": [
+            "Dispositivos que realizan acciones en el mundo físico basándose en comandos recibidos.",
+            "Programadores que escriben código para IoT.",
+            "Servidores que procesan datos.",
+            "Cables que conectan dispositivos."
+        ],
+        "answer": 0,
+        "explanation": "Los actuadores son componentes que reciben comandos del sistema IoT y ejecutan acciones físicas, como abrir una cerradura, ajustar un termostato, activar una alarma o controlar un motor."
+    },
+    {
+        "question": "¿Qué tecnología se utiliza para la identificación única de objetos en IoT?",
+        "options": [
+            "Códigos QR exclusivamente",
+            "RFID (Identificación por Radiofrecuencia)",
+            "Solo números de serie escritos a mano",
+            "Reconocimiento facial"
+        ],
+        "answer": 1,
+        "explanation": "RFID es una tecnología fundamental en IoT que permite la identificación única y automática de objetos mediante etiquetas que pueden ser leídas por radiofrecuencia, facilitando el seguimiento y la gestión de assets."
+    },
+    {
+        "question": "¿Cuál es el ciclo de vida típico de los datos en IoT?",
+        "options": [
+            "Solo recolección y almacenamiento.",
+            "Ocurrencia → Recolección → Agregación → Almacenamiento → Interpretación → Acción",
+            "Interpretación → Recolección → Acción",
+            "Almacenamiento → Borrado"
+        ],
+        "answer": 1,
+        "explanation": "El ciclo IoT completo incluye: un evento físico es detectado (Ocurrencia), los datos se transmiten (Recolección), se agrupan (Agregación), se guardan (Almacenamiento), se analizan (Interpretación) y finalmente se toman acciones en el mundo físico, cerrando el ciclo."
+    },
+    {
+        "question": "¿Cuál de los siguientes es un ejemplo de aplicación de IoT?",
+        "options": [
+            "Una hoja de cálculo de Excel",
+            "Un smartwatch que monitorea signos vitales",
+            "Un documento de Word",
+            "Un libro electrónico"
+        ],
+        "answer": 1,
+        "explanation": "Un smartwatch (reloj inteligente) es un ejemplo clásico de IoT que recopila datos de signos vitales, se conecta a otros dispositivos y permite interacción en tiempo real. Otros ejemplos incluyen smart bands, marcapasos con WiFi, y sistemas de domótica."
+    },
+    {
+        "question": "¿Qué es una 'Smart Factory' en el contexto de IoT?",
+        "options": [
+            "Una fábrica que solo emplea personas con doctorados.",
+            "Una fábrica con conexión de la línea de producción y almacenes mediante IoT para optimización.",
+            "Una fábrica ubicada en un edificio inteligente.",
+            "Una fábrica que produce dispositivos inteligentes."
+        ],
+        "answer": 1,
+        "explanation": "Una Smart Factory utiliza IoT para conectar máquinas, líneas de producción y sistemas de almacenamiento, permitiendo optimización en tiempo real, mantenimiento predictivo y gestión eficiente de la cadena de suministro, como en el caso de Zara."
+    },
+    {
+        "question": "¿Qué es una 'Smart City' en IoT?",
+        "options": [
+            "Una ciudad con muchas universidades.",
+            "Una ciudad que utiliza IoT para monitorear tráfico, contaminación, iluminación y servicios públicos.",
+            "Una ciudad exclusivamente digital sin habitantes físicos.",
+            "Una ciudad con internet de alta velocidad."
+        ],
+        "answer": 1,
+        "explanation": "Una Smart City implementa IoT para monitorear y gestionar variables urbanas como tráfico, calidad del aire, contaminación sonora, iluminación pública, y suministro de gas, agua y electricidad, mejorando la calidad de vida y eficiencia operativa."
+    },
+    {
+        "question": "¿Cuál es uno de los principales desafíos de seguridad en IoT?",
+        "options": [
+            "Los dispositivos son demasiado rápidos.",
+            "Garantizar la seguridad en todas las etapas del ciclo y en el camino de los datos.",
+            "Los dispositivos son demasiado caros.",
+            "No hay desafíos de seguridad en IoT."
+        ],
+        "answer": 1,
+        "explanation": "La seguridad es un desafío crítico en IoT debido a la multiplicidad de dispositivos, muchos con capacidad limitada de procesamiento, la transmisión de datos sensibles y la necesidad de proteger cada etapa del ciclo de vida de los datos."
+    },
+    {
+        "question": "¿Qué problema representa la 'propiedad de los datos' en IoT?",
+        "options": [
+            "Determinar quién es dueño de los datos generados: el usuario, el fabricante del dispositivo o los intermediarios.",
+            "El alto costo de almacenar datos.",
+            "La velocidad de transmisión de datos.",
+            "El color de los dispositivos."
+        ],
+        "answer": 0,
+        "explanation": "La propiedad de los datos es un desafío ético y legal en IoT: ¿quién tiene derechos sobre los datos generados por dispositivos IoT? ¿Cuáles son las responsabilidades de fabricantes e intermediarios? Estas preguntas aún están en debate."
+    },
+    {
+        "question": "¿Por qué son importantes los 'estándares' en IoT?",
+        "options": [
+            "Para que todos los dispositivos sean del mismo color.",
+            "Para desarrollar tecnologías estándar que permitan conectar distintos productos y servicios de diferentes fabricantes.",
+            "Para aumentar los precios de los dispositivos.",
+            "No son importantes en IoT."
+        ],
+        "answer": 1,
+        "explanation": "Los estándares son cruciales para la interoperabilidad en IoT, permitiendo que dispositivos de diferentes fabricantes se comuniquen entre sí. La falta de estándares universales es uno de los mayores obstáculos para el desarrollo del ecosistema IoT."
+    },
+    {
+        "question": "¿Qué desafío presenta la 'vigencia de los datos' en IoT?",
+        "options": [
+            "Determinar por cuánto tiempo los datos instantáneos son válidos y cuánto tiempo deben almacenarse.",
+            "El alto costo de los servidores.",
+            "La falta de dispositivos IoT.",
+            "La velocidad de Internet."
+        ],
+        "answer": 0,
+        "explanation": "Como IoT genera datos instantáneos en tiempo real, surge la pregunta: ¿por cuánto tiempo son relevantes estos datos? ¿Cuánto tiempo deben almacenarse? Esto impacta en estrategias de almacenamiento, análisis y cumplimiento normativo."
+    },
+    {
+        "question": "¿Qué tecnología de conectividad inalámbrica de corto alcance se usa comúnmente en IoT para redes de área personal (PAN)?",
+        "options": [
+            "Fibra óptica",
+            "Bluetooth y ZigBee",
+            "Satélite",
+            "Cable Ethernet"
+        ],
+        "answer": 1,
+        "explanation": "Bluetooth y ZigBee son tecnologías de comunicación de corto alcance y bajo consumo energético ideales para PANs en IoT, permitiendo la conexión de dispositivos personales como wearables, sensores de salud y domótica."
+    },
+    {
+        "question": "¿Qué papel juega el '5G' en el desarrollo de IoT?",
+        "options": [
+            "No tiene ninguna relación con IoT.",
+            "Proporciona mayor velocidad, menor latencia y capacidad para conectar masivamente dispositivos IoT.",
+            "Hace que IoT sea más lento.",
+            "Reemplaza completamente la necesidad de IoT."
+        ],
+        "answer": 1,
+        "explanation": "5G es fundamental para el futuro de IoT porque ofrece velocidades ultra-altas, latencia ultra-baja y capacidad para soportar un número masivo de dispositivos conectados simultáneamente, habilitando aplicaciones críticas como vehículos autónomos y telemedicina."
+    },
+    {
+        "question": "¿Qué es un 'gateway' (puerta de enlace) en la arquitectura IoT?",
+        "options": [
+            "Una puerta física en un edificio.",
+            "Un dispositivo que actúa como puente entre los sensores IoT y la nube, realizando pre-procesamiento de datos.",
+            "Un protocolo de red.",
+            "Un tipo de sensor."
+        ],
+        "answer": 1,
+        "explanation": "Un gateway en IoT es un dispositivo intermedio que recibe datos de múltiples sensores, puede realizar agregación o pre-procesamiento local, y luego transmite los datos a la nube o centro de datos, optimizando el ancho de banda y reduciendo latencia."
+    },
+    {
+        "question": "¿Cómo se relacionan Cloud Computing e IoT?",
+        "options": [
+            "No tienen ninguna relación.",
+            "La nube proporciona la infraestructura de almacenamiento y procesamiento masivo necesaria para manejar los datos de IoT.",
+            "IoT reemplaza completamente a Cloud Computing.",
+            "Solo pueden existir independientemente."
+        ],
+        "answer": 1,
+        "explanation": "Cloud Computing e IoT son tecnologías complementarias: IoT genera enormes volúmenes de datos que requieren la capacidad de almacenamiento y procesamiento escalable que ofrece la nube. La nube actúa como el 'cerebro' del ecosistema IoT."
+    },
+    {
+        "question": "¿Qué desafío de infraestructura presenta IoT?",
+        "options": [
+            "Requiere demasiado poco ancho de banda.",
+            "El volumen de datos y la velocidad de captura requieren una infraestructura de red y procesamiento acorde.",
+            "No requiere ninguna infraestructura especial.",
+            "Solo funciona con redes 2G."
+        ],
+        "answer": 1,
+        "explanation": "El volumen masivo de datos generados por billones de dispositivos IoT y la necesidad de procesamiento en tiempo real demandan una infraestructura robusta de red, almacenamiento y computación, lo cual es un desafío técnico y económico significativo."
+    },
+    {
+        "question": "¿Qué es el 'Edge Computing' en relación con IoT?",
+        "options": [
+            "Computación realizada solo en la nube central.",
+            "Procesamiento de datos cerca de donde se generan (en el 'borde' de la red) para reducir latencia.",
+            "Un tipo de servidor obsoleto.",
+            "Una técnica de programación."
+        ],
+        "answer": 1,
+        "explanation": "Edge Computing procesa datos en o cerca de los dispositivos IoT (el 'borde' de la red) en lugar de enviarlos a la nube central. Esto reduce latencia, ahorra ancho de banda y permite decisiones en tiempo real, crítico para aplicaciones como vehículos autónomos."
+    },
+    {
+        "question": "¿Cuál es un ejemplo de 'wearable' en IoT?",
+        "options": [
+            "Un servidor de datos.",
+            "Una smart band que monitorea actividad física y signos vitales.",
+            "Un router de red.",
+            "Un disco duro externo."
+        ],
+        "answer": 1,
+        "explanation": "Los wearables son dispositivos IoT portátiles como smart bands, smartwatches y ropa inteligente que recopilan datos del usuario (pasos, ritmo cardíaco, sueño) y se sincronizan con aplicaciones para análisis de salud y fitness."
+    },
+    {
+        "question": "¿Qué es MQTT en el contexto de IoT?",
+        "options": [
+            "Un tipo de sensor.",
+            "Un protocolo de mensajería ligero diseñado para dispositivos IoT con recursos limitados.",
+            "Un modelo de negocio para IoT.",
+            "Un sistema operativo para dispositivos IoT."
+        ],
+        "answer": 1,
+        "explanation": "MQTT (Message Queuing Telemetry Transport) es un protocolo de comunicación ligero, eficiente y de baja sobrecarga diseñado específicamente para dispositivos IoT con ancho de banda limitado o conexiones intermitentes."
+    },
+    {
+        "question": "¿Qué desafío representa el 'empoderamiento del usuario' en IoT?",
+        "options": [
+            "Dar a los usuarios mayor capacidad para decidir qué datos compartir y con quién.",
+            "Hacer que los dispositivos sean más caros.",
+            "Eliminar todas las funciones de privacidad.",
+            "Reducir la funcionalidad de los dispositivos."
+        ],
+        "answer": 0,
+        "explanation": "Es fundamental empoderar a los usuarios con control sobre sus datos IoT: qué información se recopila, cómo se usa y con quién se comparte. Esto implica transparencia, consentimiento informado y herramientas para gestionar la privacidad."
+    },
+    {
+        "question": "¿Qué es la 'interconexión máquina a máquina' (M2M) en IoT?",
+        "options": [
+            "Solo comunicación entre humanos.",
+            "Comunicación directa entre dispositivos sin intervención humana.",
+            "Un tipo de red social.",
+            "Exclusivamente comunicación por cable."
+        ],
+        "answer": 1,
+        "explanation": "M2M (Machine-to-Machine) es la comunicación directa entre dispositivos inteligentes sin intervención humana, permitiendo que los sistemas IoT tomen decisiones y ejecuten acciones automáticamente basándose en los datos intercambiados."
+    },
+    {
+        "question": "¿Cuál es la cuota de mercado aproximada de AWS en IaaS a nivel global en 2025?",
+        "options": [
+            "5-10%",
+            "15-20%",
+            "31-32%",
+            "75-80%"
+        ],
+        "answer": 2,
+        "explanation": "Amazon Web Services mantiene su liderazgo histórico en el mercado de IaaS con aproximadamente 31-32% de cuota de mercado a mediados de 2025, seguido por Microsoft Azure (20-23%) y Google Cloud Platform (11-13%)."
+    },
+    {
+        "question": "¿Qué característica distingue a Microsoft Azure en el mercado de Cloud Computing?",
+        "options": [
+            "Es el proveedor más económico.",
+            "Fuerte integración con el ecosistema empresarial de Microsoft (Office 365, Windows Server, Active Directory).",
+            "Solo ofrece servicios de almacenamiento.",
+            "No tiene competencia."
+        ],
+        "answer": 1,
+        "explanation": "La principal fortaleza de Azure es su integración profunda con el ecosistema de Microsoft, incluyendo Office 365, Windows Server y Active Directory, además de capacidades híbridas líderes con Azure Arc, lo que lo hace atractivo para empresas que ya usan tecnologías Microsoft."
+    },
+    {
+        "question": "¿En qué área destaca Google Cloud Platform (GCP) sobre sus competidores?",
+        "options": [
+            "Precios más altos.",
+            "Liderazgo en Kubernetes, análisis de Big Data (BigQuery) y Machine Learning (Vertex AI).",
+            "Solo ofrece servicios de correo electrónico.",
+            "No tiene ninguna ventaja competitiva."
+        ],
+        "answer": 1,
+        "explanation": "GCP destaca por su liderazgo en Kubernetes (GKE), herramientas de análisis de Big Data como BigQuery, capacidades de Machine Learning con Vertex AI, red global de alto rendimiento y enfoque en innovación de código abierto."
+    },
+    {
+        "question": "¿Qué es un hipervisor de 'Tipo 1' o 'bare-metal'?",
+        "options": [
+            "Un hipervisor que se ejecuta sobre otro sistema operativo.",
+            "Un hipervisor que se instala y ejecuta directamente sobre el hardware del servidor.",
+            "Un tipo de servidor físico.",
+            "Un protocolo de red."
+        ],
+        "answer": 1,
+        "explanation": "Un hipervisor Tipo 1 (bare-metal) se instala directamente sobre el hardware del servidor sin un sistema operativo host, actuando como un SO ligero optimizado para gestionar VMs. Proporciona mejor rendimiento y es el estándar en centros de datos. Ejemplos: VMware ESXi, Hyper-V, KVM."
+    },
+    {
+        "question": "¿Cuál es la principal diferencia entre máquinas virtuales (VMs) y contenedores?",
+        "options": [
+            "No hay diferencias.",
+            "Las VMs virtualizan hardware completo con SO propio; los contenedores comparten el kernel del host y solo empaquetan la aplicación.",
+            "Los contenedores son más pesados que las VMs.",
+            "Las VMs son más rápidas de iniciar que los contenedores."
+        ],
+        "answer": 1,
+        "explanation": "Las VMs virtualizan una máquina completa incluyendo su propio kernel de SO, proporcionando fuerte aislamiento. Los contenedores comparten el kernel del host y solo empaquetan la aplicación y dependencias, siendo más ligeros, rápidos y eficientes en recursos."
+    },
+    {
+        "question": "¿Qué es Kubernetes en el contexto de Cloud Computing?",
+        "options": [
+            "Un tipo de base de datos.",
+            "Una plataforma de orquestación de contenedores de código abierto.",
+            "Un lenguaje de programación.",
+            "Un sistema operativo."
+        ],
+        "answer": 1,
+        "explanation": "Kubernetes es una plataforma de orquestación de contenedores de código abierto que automatiza el despliegue, escalado y gestión de aplicaciones en contenedores. Es fundamental en arquitecturas modernas de microservicios y cloud-native."
+    },
+    {
+        "question": "¿Qué porcentaje aproximado de desperdicio se estima en los presupuestos de Cloud Computing debido a recursos mal gestionados?",
+        "options": [
+            "5%",
+            "15%",
+            "32%",
+            "60%"
+        ],
+        "answer": 2,
+        "explanation": "Se estima que más del 32% de los presupuestos de cloud se desperdicia debido a recursos aprovisionados pero no utilizados, instancias sobredimensionadas y falta de optimización, lo que ha impulsado el surgimiento de FinOps como disciplina."
+    },
+    {
+        "question": "¿Qué problema busca resolver el 'multicloud'?",
+        "options": [
+            "Usar solo un proveedor de nube.",
+            "Reducir la dependencia de un solo proveedor y aprovechar las mejores características de múltiples nubes.",
+            "Aumentar la complejidad innecesariamente.",
+            "Eliminar el uso de la nube."
+        ],
+        "answer": 1,
+        "explanation": "Una estrategia multicloud utiliza servicios de múltiples proveedores para evitar vendor lock-in, aprovechar las fortalezas específicas de cada plataforma y mejorar la resiliencia, aunque aumenta la complejidad de gestión."
+    },
+    {
+        "question": "¿Qué es Docker en Cloud Computing?",
+        "options": [
+            "Un tipo de servidor físico.",
+            "Una plataforma para desarrollar, enviar y ejecutar aplicaciones en contenedores.",
+            "Un protocolo de red.",
+            "Un lenguaje de programación."
+        ],
+        "answer": 1,
+        "explanation": "Docker es una plataforma de contenedorización que permite empaquetar aplicaciones y sus dependencias en contenedores ligeros y portátiles que pueden ejecutarse de manera consistente en cualquier entorno, facilitando el desarrollo y despliegue de aplicaciones."
+    },
+    {
+        "question": "¿Qué característica hace que el 'acceso amplio a la red' sea una ventaja de Cloud Computing?",
+        "options": [
+            "Solo se puede acceder desde una ubicación específica.",
+            "Los servicios están disponibles a través de la red mediante mecanismos estándar desde diversos dispositivos (móviles, tablets, laptops).",
+            "Requiere hardware especializado.",
+            "Solo funciona con conexiones por cable."
+        ],
+        "answer": 1,
+        "explanation": "El acceso amplio a la red permite que las capacidades de la nube estén disponibles a través de Internet usando mecanismos estándar, accesibles desde plataformas heterogéneas (smartphones, tablets, laptops), habilitando trabajo remoto y colaboración global."
+    },
+    {
+        "question": "¿Qué es el 'servicio medido' en las características de Cloud Computing?",
+        "options": [
+            "Los servicios se miden solo por el tamaño físico de los servidores.",
+            "Los sistemas de nube controlan y optimizan automáticamente el uso de recursos con capacidades de medición y reporte.",
+            "No se mide nada en la nube.",
+            "Solo se mide la satisfacción del cliente."
+        ],
+        "answer": 1,
+        "explanation": "El servicio medido significa que los sistemas de nube monitorizan, controlan y reportan automáticamente el uso de recursos (almacenamiento, procesamiento, ancho de banda) proporcionando transparencia tanto al proveedor como al consumidor, base del modelo pay-per-use."
+    },
+    {
+        "question": "¿Cuál es la principal preocupación de los responsables de decisiones de nube en 2025 según estudios recientes?",
+        "options": [
+            "La velocidad de Internet.",
+            "La gestión de costos (82% de los encuestados).",
+            "El color de los servidores.",
+            "La ubicación geográfica."
+        ],
+        "answer": 1,
+        "explanation": "El 82% de los responsables de decisiones en cloud citan la gestión de costos como su principal preocupación, debido a la facilidad de aprovisionamiento y complejidad de modelos de precios que pueden llevar a gastos descontrolados."
+    },
+    {
+        "question": "¿Qué porcentaje de empresas reporta mejoras en seguridad después de migrar a la nube según investigaciones recientes?",
+        "options": [
+            "10%",
+            "50%",
+            "94%",
+            "100%"
+        ],
+        "answer": 2,
+        "explanation": "El 94% de las empresas reporta mejoras en su postura de seguridad después de migrar a la nube, ya que los proveedores a hiperescala invierten miles de millones en seguridad y emplean a los mejores expertos, ofreciendo infraestructura más segura que la mayoría podría construir."
+    },
+    {
+        "question": "¿Qué es AWS Lambda?",
+        "options": [
+            "Un tipo de base de datos relacional.",
+            "Un servicio de computación serverless que ejecuta código en respuesta a eventos sin gestionar servidores.",
+            "Un lenguaje de programación.",
+            "Un sistema operativo."
+        ],
+        "answer": 1,
+        "explanation": "AWS Lambda es un servicio de computación serverless que permite ejecutar código en respuesta a eventos (cambios en S3, solicitudes HTTP, etc.) sin aprovisionar servidores. El proveedor gestiona toda la infraestructura, cobrando solo por el tiempo de ejecución."
+    },
+    {
+        "question": "¿Qué es una 'región' en Cloud Computing?",
+        "options": [
+            "Un tipo de servidor.",
+            "Una ubicación geográfica donde el proveedor tiene múltiples centros de datos (zonas de disponibilidad).",
+            "Un protocolo de red.",
+            "Un tipo de almacenamiento."
+        ],
+        "answer": 1,
+        "explanation": "Una región es una ubicación geográfica física donde un proveedor de nube tiene presencia con múltiples centros de datos (zonas de disponibilidad). Las regiones permiten baja latencia, cumplimiento regulatorio y redundancia geográfica."
+    },
+    {
+        "question": "¿Qué es la 'alta disponibilidad' (High Availability) en Cloud Computing?",
+        "options": [
+            "Servidores que están físicamente en lugares altos.",
+            "La capacidad de un sistema de permanecer operativo y accesible durante un porcentaje muy alto del tiempo.",
+            "El precio elevado de los servicios.",
+            "La velocidad de procesamiento."
+        ],
+        "answer": 1,
+        "explanation": "Alta disponibilidad se refiere a sistemas diseñados para minimizar el tiempo de inactividad mediante redundancia, distribución geográfica y failover automático, típicamente medido en porcentajes (99.9%, 99.99%, 99.999% de uptime)."
+    },
+    {
+        "question": "¿Qué es el 'almacenamiento de objetos' (Object Storage) en la nube?",
+        "options": [
+            "Almacenamiento solo para archivos pequeños.",
+            "Un método para almacenar datos no estructurados como objetos con metadatos en un espacio de nombres plano, ideal para Big Data.",
+            "Almacenamiento exclusivo para bases de datos.",
+            "Un tipo de memoria RAM."
+        ],
+        "answer": 1,
+        "explanation": "El almacenamiento de objetos (como AWS S3) almacena datos no estructurados como objetos con metadatos en un espacio plano y escalable, ideal para Big Data, backups, contenido multimedia y archivos estáticos. Es altamente escalable y económico."
+    },
+    {
+        "question": "¿Qué desafío presenta la latencia en aplicaciones IoT críticas?",
+        "options": [
+            "La latencia no es importante en IoT.",
+            "Aplicaciones como vehículos autónomos requieren latencia ultra-baja que solo el procesamiento en el edge puede proporcionar.",
+            "Mayor latencia mejora el rendimiento.",
+            "Solo afecta al costo."
+        ],
+        "answer": 1,
+        "explanation": "En aplicaciones IoT críticas como vehículos autónomos, telemedicina o control industrial, la latencia ultra-baja es vital para decisiones en tiempo real. Enviar datos a la nube introduce latencia inaceptable, haciendo necesario el Edge Computing."
+    },
+    {
+        "question": "¿Qué es un 'Digital Twin' (gemelo digital) en IoT?",
+        "options": [
+            "Una copia física idéntica de un dispositivo.",
+            "Una réplica virtual de un objeto o sistema físico que se actualiza en tiempo real con datos de sensores IoT.",
+            "Un tipo de base de datos.",
+            "Un protocolo de comunicación."
+        ],
+        "answer": 1,
+        "explanation": "Un Digital Twin es una representación virtual de un activo físico que se actualiza continuamente con datos reales de sensores IoT, permitiendo simulación, análisis predictivo y optimización sin intervenir en el objeto físico."
+    },
+    {
+        "question": "¿Qué es LoRaWAN en IoT?",
+        "options": [
+            "Un tipo de sensor.",
+            "Un protocolo de red de área amplia de bajo consumo (LPWAN) para comunicaciones IoT de largo alcance.",
+            "Un sistema operativo.",
+            "Un tipo de actuador."
+        ],
+        "answer": 1,
+        "explanation": "LoRaWAN es un protocolo de red de área amplia de bajo consumo (Low Power Wide Area Network) diseñado para dispositivos IoT que requieren comunicación de largo alcance (varios kilómetros) con batería de larga duración, ideal para aplicaciones como medidores inteligentes y agricultura."
+    },
+    {
+        "question": "¿Qué es NB-IoT (Narrowband IoT)?",
+        "options": [
+            "Un tipo de smartphone.",
+            "Una tecnología celular LPWAN diseñada para dispositivos IoT que requieren bajo consumo y comunicación de bajo ancho de banda.",
+            "Un navegador web.",
+            "Un sistema operativo para servidores."
+        ],
+        "answer": 1,
+        "explanation": "NB-IoT es una tecnología de red celular de bajo consumo (LPWAN) estandarizada por 3GPP, optimizada para dispositivos IoT que transmiten pequeñas cantidades de datos de manera intermitente, ofreciendo amplia cobertura, penetración profunda en edificios y larga duración de batería."
+    },
+    {
+        "question": "¿Qué problema de escalabilidad presenta IoT?",
+        "options": [
+            "Hay muy pocos dispositivos para conectar.",
+            "La necesidad de gestionar y conectar miles de millones de dispositivos simultáneamente.",
+            "Los dispositivos son demasiado grandes.",
+            "No hay problemas de escalabilidad."
+        ],
+        "answer": 1,
+        "explanation": "Se estima que habrá decenas de miles de millones de dispositivos IoT conectados en los próximos años, presentando desafíos masivos de escalabilidad en infraestructura de red, direccionamiento IP, gestión de dispositivos, procesamiento de datos y seguridad."
+    },
+    {
+        "question": "¿Qué es el 'mantenimiento predictivo' habilitado por IoT?",
+        "options": [
+            "Reparar equipos solo cuando fallan completamente.",
+            "Usar datos de sensores IoT para predecir cuándo un equipo necesitará mantenimiento antes de que falle.",
+            "Mantenimiento programado cada mes sin importar el estado.",
+            "Reemplazar todos los equipos anualmente."
+        ],
+        "answer": 1,
+        "explanation": "El mantenimiento predictivo analiza datos en tiempo real de sensores IoT (vibración, temperatura, ruido) para predecir fallos antes de que ocurran, permitiendo intervenciones planificadas que reducen costos y tiempo de inactividad en lugar de mantenimiento reactivo o preventivo."
+    },
+    {
+        "question": "¿Qué rol juega la Inteligencia Artificial en la convergencia de Cloud e IoT?",
+        "options": [
+            "No tiene ningún rol.",
+            "La IA en la nube analiza los datos masivos de IoT para generar insights, predicciones y automatización inteligente.",
+            "Solo complica las cosas.",
+            "Reemplaza completamente la necesidad de humanos."
+        ],
+        "answer": 1,
+        "explanation": "La IA y el Machine Learning en la nube son fundamentales para extraer valor de los datos masivos de IoT, permitiendo análisis predictivo, detección de anomalías, optimización automática y toma de decisiones inteligentes a escala imposible para análisis manual."
+    },
+    {
+        "question": "¿Qué es la 'nube híbrida' (Hybrid Cloud)?",
+        "options": [
+            "Una mezcla de diferentes colores de servidores.",
+            "Un entorno que combina infraestructura on-premise con servicios de nube pública.",
+            "Solo usar nube privada.",
+            "Solo usar nube pública."
+        ],
+        "answer": 1,
+        "explanation": "La nube híbrida combina infraestructura local (on-premise o nube privada) con servicios de nube pública, permitiendo a las organizaciones mantener ciertos datos/aplicaciones sensibles localmente mientras aprovechan la escalabilidad de la nube pública para otras cargas."
+    },
+    {
+        "question": "¿Qué es 'Infrastructure as Code' (IaC) en Cloud Computing?",
+        "options": [
+            "Escribir código solo para aplicaciones.",
+            "Gestionar y aprovisionar infraestructura mediante código declarativo en lugar de procesos manuales.",
+            "Programar únicamente en lenguaje C.",
+            "No usar código en absoluto."
+        ],
+        "answer": 1,
+        "explanation": "Infrastructure as Code (IaC) es la práctica de definir infraestructura (servidores, redes, almacenamiento) mediante código versionable y automatizable (Terraform, CloudFormation), permitiendo despliegues consistentes, repetibles y auditable, eliminando configuración manual propensa a errores."
+    },
+    {
+        "question": "¿Qué es un 'microservicio' en arquitecturas cloud-native?",
+        "options": [
+            "Un servicio muy pequeño y sin importancia.",
+            "Una aplicación dividida en servicios pequeños, independientes y desplegables de forma autónoma que se comunican vía APIs.",
+            "Un tipo de base de datos.",
+            "Un protocolo de red."
+        ],
+        "answer": 1,
+        "explanation": "Los microservicios son un estilo arquitectónico donde una aplicación se construye como conjunto de servicios pequeños, cada uno ejecutándose en su propio proceso y desplegable independientemente. Facilitan escalabilidad, flexibilidad y agilidad en desarrollo, ideales para contenedores y cloud."
+    }
+];
+        let currentQuiz;
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeRemaining = 20 * 60; // 20 minutos en segundos
+        let timerInterval;
+
+        const quizSelectionScreen = document.getElementById('quiz-selection-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const currentQuestionNumberElement = document.getElementById('current-question-number');
+        const scoreElement = document.getElementById('score');
+        const nextButton = document.getElementById('next-button');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const finalScoreElement = document.getElementById('final-score');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateQuizzes() {
+            quizzes = [];
+            let tempQuestions = [...allQuestions]; // Copia para no alterar el original
+            shuffleArray(tempQuestions);
+            
+            const numQuizzes = Math.ceil(tempQuestions.length / 20);
+
+            for (let i = 0; i < numQuizzes; i++) {
+                const startIndex = i * 20;
+                const endIndex = startIndex + 20;
+                const selectedQuestions = tempQuestions.slice(startIndex, endIndex);
+                quizzes.push({
+                    title: `Examen de Práctica ${i + 1}`,
+                    questions: selectedQuestions
+                });
+            }
+            
+            // Generate quiz selection buttons
+            const quizButtonsContainer = document.querySelector('#quiz-selection-screen .grid');
+            quizButtonsContainer.innerHTML = '';
+            
+            quizzes.forEach((quiz, index) => {
+                const button = document.createElement('button');
+                button.onclick = () => startQuiz(index);
+                button.className = 'card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none';
+                button.textContent = quiz.title;
+                quizButtonsContainer.appendChild(button);
+            });
+        }
+
+        function startQuiz(quizIndex) {
+            currentQuiz = quizzes[quizIndex];
+            currentQuestionIndex = 0;
+            score = 0;
+            timeRemaining = 20 * 60; // 20 minutos por examen
+            
+            quizSelectionScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            startTimer();
+            showQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timer');
+            if (timeRemaining <= 300) {
+                timerElement.classList.add('text-red-600');
+                timerElement.classList.remove('text-blue-600');
+            } else {
+                timerElement.classList.remove('text-red-600');
+                timerElement.classList.add('text-blue-600');
+            }
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= currentQuiz.questions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+
+            currentQuestionNumberElement.textContent = currentQuestionIndex + 1;
+            document.querySelector('#quiz-screen .text-lg.font-semibold.text-gray-700').innerHTML = `Pregunta <span id="current-question-number">${currentQuestionIndex + 1}</span> de ${currentQuiz.questions.length}`;
+            scoreElement.textContent = score;
+            questionElement.textContent = currentQuestionData.question;
+            optionsContainer.innerHTML = '';
+            feedbackMessage.classList.add('hidden');
+            feedbackMessage.innerHTML = '';
+            nextButton.disabled = true;
+
+            const options = [...currentQuestionData.options];
+            
+            options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('answer-button', 'block');
+                button.onclick = () => checkAnswer(button, index);
+                optionsContainer.appendChild(button);
+            });
+
+            const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+            document.querySelector('.progress-bar').style.width = `${progress}%`;
+        }
+
+        function checkAnswer(selectedButton, selectedIndex) {
+            const currentQuestionData = currentQuiz.questions[currentQuestionIndex];
+            const correctIndex = currentQuestionData.answer;
+
+            Array.from(optionsContainer.children).forEach((button, index) => {
+                button.disabled = true;
+                if (index === correctIndex) {
+                    button.classList.add('correct');
+                }
+            });
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                feedbackMessage.textContent = '¡Respuesta Correcta!';
+                feedbackMessage.className = 'bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-r-lg';
+            } else {
+                selectedButton.classList.add('incorrect');
+                feedbackMessage.innerHTML = `
+                    <div class="font-bold mb-2">¡Respuesta Incorrecta!</div>
+                    <div class="explanation">
+                        <strong class="text-indigo-700">Explicación:</strong>
+                        <p class="text-sm mt-1 text-gray-700">${currentQuestionData.explanation}</p>
+                    </div>
+                `;
+                feedbackMessage.className = 'bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r-lg';
+            }
+
+            feedbackMessage.classList.remove('hidden');
+            scoreElement.textContent = score;
+            nextButton.disabled = false;
+            nextButton.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            finalScoreElement.textContent = `${score}/${currentQuiz.questions.length}`;
+        }
+
+        function restartQuiz() {
+            resultsScreen.classList.add('hidden');
+            quizSelectionScreen.classList.remove('hidden');
+            generateQuizzes();
+        }
+
+        window.onload = function() {
+            generateQuizzes();
+            quizSelectionScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

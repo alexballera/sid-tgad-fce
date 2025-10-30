@@ -94,7 +94,7 @@
         <!-- Pantalla de selección de cuestionarios -->
         <div id="quiz-selection-screen">
             <h1 class="text-3xl font-bold text-center mb-4 text-indigo-700">Selecciona un Examen de Práctica - Sesión 8</h1>
-            <p class="text-center text-gray-600 mb-8">Cada examen contiene 15 preguntas aleatorias sobre los fundamentos de las bases de datos y los SGBD. ¡Mucha suerte!</p>
+            <p class="text-center text-gray-600 mb-8">Cada examen contiene 20 preguntas aleatorias sobre los fundamentos de las bases de datos, SGBD, modelos de datos y SQL. ¡Mucha suerte!</p>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                 <button onclick="startQuiz(0)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 1</button>
                 <button onclick="startQuiz(1)" class="card p-6 text-center gradient-bg text-white font-bold text-xl rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none">Examen de Práctica 2</button>
@@ -112,7 +112,7 @@
         <!-- Pantalla del cuestionario -->
         <div id="quiz-screen" class="hidden">
             <div class="flex justify-between items-center mb-6">
-                <div class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number"></span> de 15</div>
+                <div class="text-lg font-semibold text-gray-700">Pregunta <span id="current-question-number"></span> de 20</div>
                 <div class="text-lg font-semibold text-gray-700">Puntaje: <span id="score">0</span></div>
             </div>
             <div class="card p-6 mb-6">
@@ -129,7 +129,7 @@
             <p class="text-xl text-gray-700 mb-6">Tu puntaje final es:</p>
             <div class="text-5xl font-extrabold text-white gradient-bg p-8 rounded-full inline-block shadow-lg mb-8">
                 <span id="final-score"></span>
-                <span class="block text-2xl font-normal mt-2">de 15</span>
+                <span class="block text-2xl font-normal mt-2">de 20</span>
             </div>
             <p class="text-lg text-gray-600 mb-4">¡Sigue practicando para dominar los fundamentos de las bases de datos!</p>
             <button class="quiz-button py-4 px-8 mt-4 bg-indigo-600 text-white font-bold text-lg rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none" onclick="restartQuiz()">Volver a la selección</button>
@@ -297,10 +297,570 @@
                     "El proceso de eliminar datos innecesarios de la base de datos.",
                     "La característica que permite ocultar los detalles de cómo se almacenan y mantienen los datos.",
                     "La creación de resúmenes y agregaciones de datos.",
+            {
+                question: "¿Qué es la 'abstracción de datos' en el contexto de los SGBD?",
+                options: [
+                    "El proceso de eliminar datos innecesarios de la base de datos.",
+                    "La característica que permite ocultar los detalles de cómo se almacenan y mantienen los datos.",
+                    "La creación de resúmenes y agregaciones de datos.",
                     "La encriptación de todos los datos almacenados."
                 ],
                 answer: 1,
                 explanation: "La abstracción de datos permite a los usuarios interactuar con un modelo de datos conceptual sin preocuparse por los detalles de bajo nivel del almacenamiento físico, simplificando la interacción."
+            },
+            // NIVELES DE ABSTRACCIÓN Y ARQUITECTURA
+            {
+                question: "¿Qué nivel de abstracción describe cómo se almacenan realmente los datos con estructuras de bajo nivel?",
+                options: [
+                    "Nivel lógico",
+                    "Nivel de vistas",
+                    "Nivel físico",
+                    "Nivel conceptual"
+                ],
+                answer: 2,
+                explanation: "El nivel físico es el más bajo de abstracción y describe los detalles de cómo se almacenan realmente los datos, incluyendo estructuras complejas de bajo nivel como bloques y punteros."
+            },
+            {
+                question: "¿Cuál es el propósito principal del nivel de vistas en la abstracción de datos?",
+                options: [
+                    "Optimizar el rendimiento de las consultas",
+                    "Simplificar la interacción del usuario y proporcionar seguridad mostrando solo parte de la base de datos",
+                    "Definir cómo se almacenan físicamente los datos",
+                    "Crear copias de seguridad de los datos"
+                ],
+                answer: 1,
+                explanation: "El nivel de vistas describe solo una parte de la base de datos para simplificar la interacción de usuarios específicos y actúa como mecanismo de seguridad para evitar el acceso a ciertas partes de la base de datos."
+            },
+            {
+                question: "¿Qué es un 'esquema' en el contexto de bases de datos?",
+                options: [
+                    "Los datos almacenados en un momento específico",
+                    "El diseño general de la base de datos que raramente cambia",
+                    "Un tipo de consulta SQL",
+                    "Un programa de aplicación"
+                ],
+                answer: 1,
+                explanation: "El esquema de la base de datos es el diseño general que describe su estructura. Es análogo a la declaración de tipos y variables en un programa, y se modifica rara vez una vez establecido."
+            },
+            {
+                question: "¿Qué es una 'instancia' o 'ejemplar' de la base de datos?",
+                options: [
+                    "El diseño general de la base de datos",
+                    "La colección de información almacenada en la base de datos en un momento dado",
+                    "Un tipo específico de SGBD",
+                    "El código fuente del sistema"
+                ],
+                answer: 1,
+                explanation: "La instancia de la base de datos es la colección de información almacenada en un momento específico. Es análoga a los valores de las variables en un programa y cambia constantemente con las operaciones."
+            },
+            // MODELO RELACIONAL Y SQL
+            {
+                question: "En el modelo relacional, ¿qué representa una tabla?",
+                options: [
+                    "Un programa de aplicación",
+                    "Una colección de registros de formato fijo con columnas como atributos",
+                    "Un tipo de consulta",
+                    "Una estructura de almacenamiento físico"
+                ],
+                answer: 1,
+                explanation: "En el modelo relacional, las tablas representan datos y sus relaciones mediante una colección de registros. Cada tabla tiene columnas que representan atributos y filas que representan registros individuales."
+            },
+            {
+                question: "¿Qué característica hace que SQL sea un lenguaje declarativo?",
+                options: [
+                    "Requiere especificar paso a paso cómo obtener los datos",
+                    "El usuario especifica qué datos necesita sin detallar cómo obtenerlos",
+                    "Solo funciona con bases de datos relacionales antiguas",
+                    "Necesita compilación antes de ejecutarse"
+                ],
+                answer: 1,
+                explanation: "SQL es un lenguaje declarativo (no procedimental) porque el usuario solo especifica qué datos necesita mediante consultas, sin tener que detallar los procedimientos internos de cómo obtenerlos. El sistema determina automáticamente la forma eficiente de acceso."
+            },
+            {
+                question: "¿Qué interfaces permiten integrar SQL en lenguajes de programación como Java o C?",
+                options: [
+                    "HTTP y FTP",
+                    "ODBC (Open Database Connectivity) y JDBC (Java Database Connectivity)",
+                    "SSH y Telnet",
+                    "HTML y CSS"
+                ],
+                answer: 1,
+                explanation: "ODBC y JDBC son interfaces estándar que permiten a los programas de aplicación escritos en lenguajes anfitriones (como C, Java) ejecutar instrucciones SQL y acceder a bases de datos relacionales."
+            },
+            // DISEÑO DE BASES DE DATOS
+            {
+                question: "¿Cuál es el objetivo principal de la 'normalización' en el diseño de bases de datos?",
+                options: [
+                    "Aumentar la redundancia de datos para mayor seguridad",
+                    "Generar esquemas de relaciones sin redundancias innecesarias y facilitar la recuperación de información",
+                    "Crear más tablas para mejorar el rendimiento",
+                    "Encriptar todos los datos"
+                ],
+                answer: 1,
+                explanation: "La normalización es un proceso de diseño que busca generar esquemas de relaciones que minimicen la redundancia innecesaria de información, eviten problemas como la repetición de datos y la imposibilidad de representar cierta información, y faciliten la recuperación eficiente de datos."
+            },
+            {
+                question: "En el Modelo Entidad-Relación (E-R), ¿qué representan los rectángulos en los diagramas?",
+                options: [
+                    "Atributos",
+                    "Relaciones",
+                    "Entidades",
+                    "Restricciones"
+                ],
+                answer: 2,
+                explanation: "En los diagramas E-R, los rectángulos representan entidades (objetos del mundo real distinguibles como personas, cuentas, productos). Las elipses representan atributos y los rombos representan relaciones."
+            },
+            {
+                question: "¿Qué es una 'cardinalidad' en las relaciones del modelo E-R?",
+                options: [
+                    "El número de tablas en la base de datos",
+                    "Las restricciones sobre el número de entidades que se pueden asociar entre sí (1:1, 1:N, N:M)",
+                    "El tamaño de los atributos",
+                    "La cantidad de usuarios concurrentes"
+                ],
+                answer: 1,
+                explanation: "La correspondencia de cardinalidades define las restricciones sobre el número de entidades que pueden estar asociadas a través de una relación. Los tipos principales son uno a uno (1:1), uno a muchos (1:N) y muchos a muchos (N:M)."
+            },
+            {
+                question: "¿Cuál es la secuencia correcta en el proceso de diseño de bases de datos?",
+                options: [
+                    "Diseño físico → Diseño lógico → Diseño conceptual → Requisitos",
+                    "Requisitos de usuarios → Diseño conceptual → Diseño lógico → Diseño físico",
+                    "Diseño lógico → Requisitos → Diseño conceptual → Diseño físico",
+                    "Implementación → Diseño → Requisitos → Pruebas"
+                ],
+                answer: 1,
+                explanation: "El proceso correcto es: 1) Caracterizar requisitos de usuarios, 2) Diseño conceptual usando modelo E-R, 3) Diseño lógico mapeando al modelo del SGBD, 4) Diseño físico especificando características de almacenamiento."
+            },
+            // GESTIÓN DE TRANSACCIONES
+            {
+                question: "¿Qué significa 'Atomicidad' en las propiedades ACID de las transacciones?",
+                options: [
+                    "Los datos deben ser lo más pequeños posible",
+                    "Todas las operaciones de la transacción se completan o ninguna lo hace (todo o nada)",
+                    "Las transacciones deben ejecutarse rápidamente",
+                    "Los datos deben estar encriptados"
+                ],
+                answer: 1,
+                explanation: "La atomicidad es una propiedad fundamental de las transacciones que garantiza que todas las operaciones dentro de una unidad de trabajo se completen exitosamente o que ninguna se realice. No puede haber estados intermedios."
+            },
+            {
+                question: "¿Qué garantiza la propiedad de 'Durabilidad' en una transacción?",
+                options: [
+                    "Que la transacción se ejecute rápidamente",
+                    "Que los cambios de una transacción exitosa persistan permanentemente, incluso ante fallos del sistema",
+                    "Que múltiples usuarios puedan acceder simultáneamente",
+                    "Que la base de datos ocupe menos espacio"
+                ],
+                answer: 1,
+                explanation: "La durabilidad garantiza que una vez que una transacción ha sido confirmada exitosamente, los cambios realizados persisten de manera permanente en la base de datos, incluso si ocurren fallos del sistema inmediatamente después."
+            },
+            {
+                question: "¿Qué componente del SGBD es responsable de garantizar las propiedades ACID de las transacciones?",
+                options: [
+                    "El compilador SQL",
+                    "El gestor de transacciones",
+                    "El intérprete del LDD",
+                    "El motor de búsqueda"
+                ],
+                answer: 1,
+                explanation: "El gestor de transacciones es el componente del gestor de almacenamiento responsable de garantizar que la base de datos permanezca en un estado consistente, asegurando las propiedades de atomicidad, consistencia y durabilidad de las transacciones."
+            },
+            {
+                question: "¿Qué problema resuelve el 'control de concurrencia' en los SGBD?",
+                options: [
+                    "La velocidad de las consultas",
+                    "Las anomalías que surgen cuando múltiples usuarios actualizan datos simultáneamente",
+                    "El tamaño de la base de datos",
+                    "La seguridad de las contraseñas"
+                ],
+                answer: 1,
+                explanation: "El control de concurrencia gestiona la interacción entre transacciones concurrentes para evitar que las actualizaciones simultáneas de múltiples usuarios generen inconsistencias en la base de datos, garantizando que cada transacción preserve la consistencia."
+            },
+            // ARQUITECTURA Y COMPONENTES
+            {
+                question: "¿Cuál es la función principal del 'gestor de almacenamiento' en un SGBD?",
+                options: [
+                    "Compilar consultas SQL",
+                    "Proporcionar la interfaz entre los datos de bajo nivel y los programas de aplicación, responsable del almacenamiento, recuperación y actualización",
+                    "Diseñar el esquema de la base de datos",
+                    "Crear reportes para usuarios"
+                ],
+                answer: 1,
+                explanation: "El gestor de almacenamiento es el módulo que proporciona la interfaz entre los datos de bajo nivel almacenados en la base de datos y los programas de aplicación y consultas enviadas al sistema. Es responsable del almacenamiento, recuperación y actualización de datos."
+            },
+            {
+                question: "¿Qué hace el 'compilador del LMD' en el procesador de consultas?",
+                options: [
+                    "Ejecuta directamente las consultas",
+                    "Traduce las instrucciones LMD a un plan de evaluación de bajo nivel y realiza optimización de consultas",
+                    "Almacena los datos en disco",
+                    "Crea copias de seguridad"
+                ],
+                answer: 1,
+                explanation: "El compilador del LMD traduce las instrucciones del lenguaje de manipulación de datos a un plan de evaluación de bajo nivel, incluyendo la optimización de consultas para determinar la forma más eficiente de ejecutar cada consulta."
+            },
+            {
+                question: "¿Qué almacena el 'diccionario de datos' en un SGBD?",
+                options: [
+                    "Los datos de los usuarios finales",
+                    "Metadatos: información sobre la estructura de la base de datos, esquemas y definiciones del LDD",
+                    "Contraseñas encriptadas",
+                    "Programas de aplicación"
+                ],
+                answer: 1,
+                explanation: "El diccionario de datos contiene metadatos (datos sobre datos), como los esquemas de las tablas, las definiciones del LDD y otra información estructural. Es consultado por el SGBD antes de leer o modificar datos reales."
+            },
+            {
+                question: "¿Cuál es la diferencia principal entre una arquitectura de dos capas y una de tres capas?",
+                options: [
+                    "El número de usuarios que pueden conectarse",
+                    "En dos capas el cliente se comunica directamente con la BD; en tres capas hay un servidor de aplicaciones intermedio que contiene la lógica de negocio",
+                    "El tipo de base de datos que se puede usar",
+                    "La velocidad de procesamiento"
+                ],
+                answer: 1,
+                explanation: "En la arquitectura de dos capas, el cliente se comunica directamente con el sistema de bases de datos. En la arquitectura de tres capas, el cliente se comunica con un servidor de aplicaciones intermedio que contiene la lógica de negocio, y este a su vez se comunica con el servidor de bases de datos."
+            },
+            // USUARIOS Y ROLES
+            {
+                question: "¿Quiénes son los 'usuarios sofisticados' en el contexto de bases de datos?",
+                options: [
+                    "Usuarios que solo usan formularios preescritos",
+                    "Usuarios que interactúan directamente con el sistema formulando consultas en un lenguaje de bases de datos, como analistas o investigadores",
+                    "Usuarios que administran el servidor",
+                    "Usuarios que solo leen datos"
+                ],
+                answer: 1,
+                explanation: "Los usuarios sofisticados son aquellos que conocen las funcionalidades del SGBD e interactúan directamente con el sistema formulando consultas complejas en lenguajes como SQL, sin usar programas de aplicación preescritos. Incluyen analistas, investigadores y especialistas en business intelligence."
+            },
+            {
+                question: "¿Cuál es una función clave del Administrador de Bases de Datos (DBA)?",
+                options: [
+                    "Escribir programas de aplicación para usuarios finales",
+                    "Definir el esquema, conceder autorizaciones de acceso y realizar mantenimiento rutinario como copias de seguridad",
+                    "Diseñar la interfaz gráfica de usuario",
+                    "Solo instalar el software del SGBD"
+                ],
+                answer: 1,
+                explanation: "El DBA tiene control centralizado de la base de datos y sus responsabilidades incluyen la definición del esquema, concesión de autorizaciones para el acceso a los datos, mantenimiento rutinario (copias de seguridad, gestión de espacio), y supervisión del rendimiento del sistema."
+            },
+            {
+                question: "¿Qué son los 'programadores de aplicaciones' en el contexto de bases de datos?",
+                options: [
+                    "Usuarios finales que usan formularios",
+                    "Profesionales informáticos que escriben programas para interactuar con la base de datos, a menudo usando herramientas DRA",
+                    "Administradores del sistema operativo",
+                    "Diseñadores gráficos"
+                ],
+                answer: 1,
+                explanation: "Los programadores de aplicaciones son profesionales informáticos que escriben programas de aplicación que interactúan con la base de datos, usando lenguajes anfitriones y herramientas de Desarrollo Rápido de Aplicaciones (DRA) para crear interfaces y funcionalidades para usuarios finales."
+            },
+            // MODELOS DE DATOS AVANZADOS
+            {
+                question: "¿Qué caracteriza a los 'modelos de datos semiestructurados' como XML?",
+                options: [
+                    "Todos los elementos tienen exactamente los mismos atributos",
+                    "Permiten que elementos del mismo tipo tengan diferentes conjuntos de atributos",
+                    "Solo se usan para datos numéricos",
+                    "No permiten relaciones entre datos"
+                ],
+                answer: 1,
+                explanation: "Los modelos de datos semiestructurados permiten flexibilidad donde los elementos de datos del mismo tipo pueden tener diferentes conjuntos de atributos, a diferencia de los modelos tradicionales. XML es un ejemplo ampliamente usado para representar y intercambiar este tipo de datos."
+            },
+            {
+                question: "¿Qué concepto de las bases de datos orientadas a objetos garantiza que cada objeto tenga una identidad única?",
+                options: [
+                    "Encapsulación",
+                    "Identidad de objetos",
+                    "Herencia",
+                    "Polimorfismo"
+                ],
+                answer: 1,
+                explanation: "La identidad de objetos es un concepto fundamental en bases de datos orientadas a objetos que garantiza que cada objeto tenga una identidad única, independiente de sus valores de atributos, permitiendo distinguir objetos incluso si tienen los mismos datos."
+            },
+            {
+                question: "¿Qué combina el modelo 'relacional orientado a objetos'?",
+                options: [
+                    "Solo características del modelo de red",
+                    "La simplicidad del modelo relacional con características de la orientación a objetos como tipos estructurados y herencia",
+                    "Únicamente modelos jerárquicos",
+                    "Solo XML y HTML"
+                ],
+                answer: 1,
+                explanation: "El modelo de datos relacional orientado a objetos es una extensión del modelo relacional tradicional que incorpora características de la orientación a objetos como encapsulación, tipos estructurados, identidad de objetos y herencia, combinando lo mejor de ambos paradigmas."
+            },
+            // MINERÍA Y ANÁLISIS DE DATOS
+            {
+                question: "¿Qué es la 'minería de datos' en el contexto de bases de datos?",
+                options: [
+                    "El proceso de eliminar datos antiguos",
+                    "El análisis semiautomático de grandes bases de datos para descubrir patrones útiles y conocimiento oculto",
+                    "La encriptación de información sensible",
+                    "La compresión de archivos de datos"
+                ],
+                answer: 1,
+                explanation: "La minería de datos es el proceso de análisis semiautomático de grandes bases de datos para descubrir patrones útiles, reglas de asociación, ecuaciones predictivas y clasificaciones que pueden proporcionar conocimiento valioso para la toma de decisiones."
+            },
+            {
+                question: "¿Qué diferencia principal existe entre minería de datos y estadística tradicional?",
+                options: [
+                    "No hay ninguna diferencia",
+                    "La minería de datos maneja grandes volúmenes almacenados en disco mientras que la estadística trabaja con muestras pequeñas en memoria",
+                    "La estadística es más moderna",
+                    "La minería de datos solo funciona con números"
+                ],
+                answer: 1,
+                explanation: "La minería de datos se diferencia de la estadística tradicional principalmente en el volumen de datos: la minería trabaja con grandes bases de datos almacenadas en disco, mientras que la estadística típicamente analiza muestras más pequeñas que caben en memoria."
+            },
+            // RESTRICCIONES E INTEGRIDAD
+            {
+                question: "¿Qué son las 'restricciones de dominio' en una base de datos?",
+                options: [
+                    "Límites en el número de usuarios",
+                    "Restricciones que asocian un conjunto de valores posibles a cada atributo, como tipos de datos",
+                    "Reglas para nombres de archivos",
+                    "Políticas de seguridad de red"
+                ],
+                answer: 1,
+                explanation: "Las restricciones de dominio son reglas de integridad que asocian un conjunto de valores posibles a cada atributo, especificando el tipo de dato (entero, carácter, fecha, etc.) y otros límites sobre los valores válidos que puede tomar ese atributo."
+            },
+            {
+                question: "¿Qué es la 'integridad referencial' en bases de datos relacionales?",
+                options: [
+                    "La velocidad de las referencias entre tablas",
+                    "Una restricción que asegura que un valor en una relación debe existir en otra relación específica",
+                    "El tamaño de las claves primarias",
+                    "La encriptación de referencias"
+                ],
+                answer: 1,
+                explanation: "La integridad referencial es una restricción que garantiza que un valor que aparece en una relación para un atributo dado también debe aparecer en otra relación específica, manteniendo la coherencia entre tablas relacionadas (por ejemplo, un ID de cliente debe existir en la tabla de clientes)."
+            },
+            {
+                question: "¿Qué son los 'asertos' en el contexto de restricciones de bases de datos?",
+                options: [
+                    "Consultas SQL complejas",
+                    "Condiciones arbitrarias que la base de datos debe satisfacer siempre, como reglas de negocio",
+                    "Tipos de índices",
+                    "Procedimientos almacenados"
+                ],
+                answer: 1,
+                explanation: "Los asertos son restricciones de integridad que expresan cualquier condición general que la base de datos debe satisfacer en todo momento, permitiendo implementar reglas de negocio complejas (por ejemplo, 'el saldo de una cuenta nunca puede ser negativo')."
+            },
+            // HISTORIA Y EVOLUCIÓN
+            {
+                question: "¿Qué limitación tenían los sistemas de almacenamiento en cintas magnéticas de los años 50-60?",
+                options: [
+                    "Eran demasiado rápidos",
+                    "Solo permitían procesamiento secuencial sin acceso directo a registros específicos",
+                    "Eran muy pequeñas",
+                    "No podían almacenar texto"
+                ],
+                answer: 1,
+                explanation: "Los sistemas basados en cintas magnéticas de los años 50-60 solo permitían el procesamiento secuencial, lo que significaba que para acceder a un dato específico había que leer toda la cinta desde el principio, una limitación conocida como 'la tiranía de la secuencialidad'."
+            },
+            {
+                question: "¿Qué innovación de finales de los 60s revolucionó el acceso a datos en bases de datos?",
+                options: [
+                    "Las cintas magnéticas más rápidas",
+                    "Los discos duros que permiten acceso directo a datos",
+                    "Las memorias USB",
+                    "El almacenamiento en la nube"
+                ],
+                answer: 1,
+                explanation: "Los discos duros, introducidos a finales de los años 60, revolucionaron el acceso a datos al permitir el acceso directo (random access) a cualquier registro, liberando a los sistemas de la limitación secuencial de las cintas magnéticas."
+            },
+            {
+                question: "¿Quién definió el modelo relacional en 1970 y qué impacto tuvo?",
+                options: [
+                    "Bill Gates, creó Microsoft",
+                    "E.F. Codd, estableció las bases conceptuales para los SGBD relacionales modernos",
+                    "Steve Jobs, fundó Apple",
+                    "Linus Torvalds, creó Linux"
+                ],
+                answer: 1,
+                explanation: "E.F. Codd definió el modelo relacional en 1970, estableciendo las bases conceptuales para los sistemas de bases de datos relacionales modernos. Aunque inicialmente se consideraba lento, su simplicidad conceptual y automatización de tareas de bajo nivel llevaron a su adopción masiva."
+            },
+            {
+                question: "¿Qué proyecto de IBM en los años 80 demostró la viabilidad de los SGBD relacionales eficientes?",
+                options: [
+                    "Project Apollo",
+                    "System R",
+                    "Project Windows",
+                    "System Linux"
+                ],
+                answer: 1,
+                explanation: "El proyecto System R de IBM demostró que era posible construir sistemas de bases de datos relacionales con rendimiento comparable a los sistemas existentes (de red y jerárquicos), lo que aceleró la adopción comercial del modelo relacional en los años 80."
+            },
+            {
+                question: "¿Qué tendencia emergió a finales de los años 90 con el crecimiento de la World Wide Web?",
+                options: [
+                    "Menor uso de bases de datos",
+                    "Necesidad de SGBD con altas tasas de transacciones, fiabilidad y disponibilidad 24/7",
+                    "Vuelta a sistemas de archivos tradicionales",
+                    "Abandono de SQL"
+                ],
+                answer: 1,
+                explanation: "El crecimiento explosivo de la World Wide Web a finales de los 90 creó la necesidad de SGBD capaces de soportar tasas muy elevadas de procesamiento de transacciones, alta fiabilidad y disponibilidad continua (24x7) para aplicaciones web críticas."
+            },
+            // CONCEPTOS AVANZADOS Y OPERACIONES
+            {
+                question: "¿Qué son los 'índices' en una base de datos y cuál es su función?",
+                options: [
+                    "Listas de usuarios autorizados",
+                    "Estructuras de datos que proporcionan acceso rápido a elementos específicos, similar al índice de un libro",
+                    "Copias de seguridad automáticas",
+                    "Programas de mantenimiento"
+                ],
+                answer: 1,
+                explanation: "Los índices son estructuras de datos implementadas por el gestor de almacenamiento que permiten el acceso rápido a registros específicos sin tener que examinar todos los datos, funcionando de manera similar al índice de un libro que permite encontrar temas rápidamente."
+            },
+            {
+                question: "¿Qué función cumple el 'gestor de memoria intermedia' (buffer manager) en un SGBD?",
+                options: [
+                    "Compilar consultas",
+                    "Transferir datos entre el disco y la memoria principal para optimizar el acceso",
+                    "Crear usuarios",
+                    "Encriptar contraseñas"
+                ],
+                answer: 1,
+                explanation: "El gestor de memoria intermedia es responsable de la transferencia eficiente de datos entre el disco y la memoria principal, gestionando buffers de memoria para minimizar las operaciones de E/S y mejorar significativamente el rendimiento del sistema."
+            },
+            {
+                question: "¿Qué hace el 'motor de evaluación de consultas' en el procesador de consultas?",
+                options: [
+                    "Diseña nuevas consultas automáticamente",
+                    "Ejecuta las instrucciones de bajo nivel generadas por el compilador del LMD",
+                    "Almacena resultados permanentemente",
+                    "Crea copias de seguridad"
+                ],
+                answer: 1,
+                explanation: "El motor de evaluación de consultas es el componente que ejecuta las instrucciones de bajo nivel generadas por el compilador del LMD, realizando las operaciones físicas necesarias para recuperar o modificar los datos solicitados."
+            },
+            {
+                question: "¿Qué es la 'recuperación de fallos' en un SGBD?",
+                options: [
+                    "Recuperar archivos borrados del sistema operativo",
+                    "El proceso de detectar fallos y restaurar la base de datos a un estado consistente previo al fallo",
+                    "Recuperar contraseñas olvidadas",
+                    "Reinstalar el software"
+                ],
+                answer: 1,
+                explanation: "La recuperación de fallos es el proceso mediante el cual el sistema detecta automáticamente fallos (hardware, software, energía) y restaura la base de datos a un estado consistente anterior, garantizando que no se pierda información de transacciones confirmadas."
+            },
+            // SEGURIDAD Y AUTORIZACIÓN
+            {
+                question: "¿Cuáles son los tipos principales de autorización que se pueden otorgar a los usuarios?",
+                options: [
+                    "Solo lectura o escritura",
+                    "Lectura, inserción, actualización y eliminación",
+                    "Administrador o usuario normal únicamente",
+                    "Local o remoto"
+                ],
+                answer: 1,
+                explanation: "Los tipos principales de autorización incluyen: lectura (consultar datos), inserción (agregar nuevos datos), actualización (modificar datos existentes) y eliminación (borrar datos). Estas autorizaciones pueden otorgarse de manera granular para diferentes partes de la base de datos."
+            },
+            {
+                question: "¿Por qué los problemas de seguridad eran difíciles de resolver en sistemas de procesamiento de archivos?",
+                options: [
+                    "No existían computadoras seguras",
+                    "Porque los programas de aplicación se añadían de forma ad hoc, dificultando aplicar restricciones de acceso específicas",
+                    "Las contraseñas no existían",
+                    "No había internet"
+                ],
+                answer: 1,
+                explanation: "En los sistemas de procesamiento de archivos, como los programas de aplicación se añadían de manera ad hoc a lo largo del tiempo, resultaba muy difícil hacer cumplir restricciones de seguridad específicas para controlar qué usuarios podían acceder a qué partes de los datos."
+            },
+            // TENDENCIAS Y FUTURO
+            {
+                question: "¿Qué caracteriza a las 'técnicas de informática autónoma' en SGBD modernos?",
+                options: [
+                    "Requieren más intervención manual",
+                    "Buscan minimizar el esfuerzo de administración mediante auto-gestión y auto-optimización",
+                    "Solo funcionan sin conexión a internet",
+                    "Necesitan más administradores"
+                ],
+                answer: 1,
+                explanation: "Las técnicas de informática autónoma o auto-administración buscan que los sistemas de bases de datos sean capaces de auto-configurarse, auto-optimizarse, auto-repararse y auto-protegerse, minimizando el esfuerzo humano requerido para la administración."
+            },
+            {
+                question: "¿Qué aplicación principal tienen las bases de datos distribuidas?",
+                options: [
+                    "Solo almacenamiento local",
+                    "Extender datos en máquinas geográficamente separadas para alta disponibilidad y rendimiento",
+                    "Reducir costos de hardware",
+                    "Simplificar el diseño"
+                ],
+                answer: 1,
+                explanation: "Las bases de datos distribuidas extienden los datos en varias máquinas geográficamente separadas, proporcionando beneficios como alta disponibilidad (si un sitio falla, otros continúan), mejor rendimiento (datos cercanos a usuarios) y tolerancia a fallos."
+            },
+            {
+                question: "¿Por qué el modelo relacional superó a los modelos jerárquico y de red en los años 80?",
+                options: [
+                    "Era más barato de implementar",
+                    "Por su simplicidad conceptual y capacidad de ocultar detalles de implementación, automatizando tareas de bajo nivel",
+                    "Requería menos memoria",
+                    "Era más antiguo y probado"
+                ],
+                answer: 1,
+                explanation: "El modelo relacional superó a los modelos anteriores principalmente por su simplicidad conceptual y su capacidad de ocultar los detalles de implementación de bajo nivel a los programadores, automatizando tareas complejas y facilitando el desarrollo de aplicaciones."
+            },
+            // GESTIÓN Y MANTENIMIENTO
+            {
+                question: "¿Qué actividad de mantenimiento rutinario es responsabilidad del DBA?",
+                options: [
+                    "Escribir programas de aplicación",
+                    "Realizar copias de seguridad periódicas, gestionar espacio en disco y monitorear el rendimiento",
+                    "Diseñar interfaces de usuario",
+                    "Programar en lenguajes de alto nivel"
+                ],
+                answer: 1,
+                explanation: "Entre las responsabilidades de mantenimiento rutinario del DBA están: realizar copias de seguridad periódicas de los datos, asegurar que haya espacio libre suficiente en disco para operaciones normales y monitorear el rendimiento del sistema para optimizarlo."
+            },
+            {
+                question: "¿Qué significa 'modificación del esquema' en las funciones del DBA?",
+                options: [
+                    "Cambiar los datos almacenados",
+                    "Adaptar la estructura de la base de datos a nuevos requisitos empresariales",
+                    "Actualizar el sistema operativo",
+                    "Cambiar contraseñas de usuarios"
+                ],
+                answer: 1,
+                explanation: "La modificación del esquema implica adaptar el diseño y estructura de la base de datos (tablas, relaciones, atributos) para reflejar nuevos requisitos empresariales, manteniéndola relevante a medida que evolucionan las necesidades de la organización."
+            },
+            // PROCESAMIENTO Y OPTIMIZACIÓN
+            {
+                question: "¿Qué es la 'optimización de consultas' y quién la realiza?",
+                options: [
+                    "Un proceso manual que hace el usuario",
+                    "Un proceso automático del compilador del LMD que elige la forma más eficiente de ejecutar una consulta",
+                    "Una configuración del sistema operativo",
+                    "Un tipo de índice"
+                ],
+                answer: 1,
+                explanation: "La optimización de consultas es un proceso automático realizado por el compilador del LMD que analiza diferentes formas de ejecutar una consulta y elige el plan de evaluación más eficiente, considerando factores como índices disponibles, tamaño de tablas y estadísticas."
+            },
+            {
+                question: "¿Qué ventaja proporciona tener múltiples 'vistas' de la misma base de datos?",
+                options: [
+                    "Aumenta el tamaño de la base de datos",
+                    "Permite que diferentes usuarios vean solo los datos relevantes para ellos, simplificando el acceso y mejorando la seguridad",
+                    "Ralentiza el sistema",
+                    "Duplica los datos"
+                ],
+                answer: 1,
+                explanation: "Las múltiples vistas permiten que diferentes usuarios o grupos de usuarios vean solo la porción de datos relevante para sus funciones, simplificando su interacción con el sistema y proporcionando un mecanismo adicional de seguridad al ocultar datos que no deberían ver."
+            },
+            {
+                question: "¿Por qué es importante la 'consistencia' en las transacciones de base de datos?",
+                options: [
+                    "Para que las transacciones se ejecuten rápido",
+                    "Para garantizar que la base de datos pase de un estado válido a otro estado válido, manteniendo todas las restricciones de integridad",
+                    "Para reducir el tamaño de los datos",
+                    "Para simplificar las consultas"
+                ],
+                answer: 1,
+                explanation: "La consistencia es fundamental porque garantiza que, sin importar qué transacciones se ejecuten, la base de datos siempre pase de un estado consistente (que cumple todas las restricciones) a otro estado consistente, preservando la validez e integridad de los datos."
             }
         ];
 
@@ -328,12 +888,12 @@
             }
         }
         
-        // Función para generar los 10 exámenes, cada uno con 15 preguntas aleatorias
+        // Función para generar los 10 exámenes, cada uno con 20 preguntas aleatorias
         function generateQuizzes() {
             quizzes = [];
             for (let i = 0; i < 10; i++) {
                 shuffleArray(allQuestions);
-                const selectedQuestions = allQuestions.slice(0, 15);
+                const selectedQuestions = allQuestions.slice(0, 20);
                 quizzes.push({
                     title: `Examen de Práctica ${i + 1}`,
                     questions: selectedQuestions
