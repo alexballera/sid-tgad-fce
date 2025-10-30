@@ -1004,6 +1004,105 @@
         ],
         "answer": 1,
         "explanation": "El metadato es crucial para un almacén de datos, ya que proporciona el contexto necesario para entender los datos. Actúa como un diccionario o un mapa de los datos, indicando qué son, de dónde vienen y cómo se relacionan."
+    },
+    {
+        "question": "¿Qué es NoSQL y por qué es relevante para Big Data?",
+        "options": [
+            "Un lenguaje de programación para análisis estadístico.",
+            "Un conjunto de bases de datos diseñadas para manejar grandes volúmenes de datos no estructurados o semi-estructurados, con escalabilidad horizontal.",
+            "Una versión obsoleta de SQL que ya no se utiliza.",
+            "Un protocolo de red para transmisión de datos."
+        ],
+        "answer": 1,
+        "explanation": "NoSQL ('Not Only SQL') es una familia de sistemas de bases de datos que no utilizan el modelo relacional tradicional. Son especialmente útiles para Big Data porque pueden escalar horizontalmente, manejar datos no estructurados y ofrecer alta disponibilidad, adaptándose a las necesidades de volumen, velocidad y variedad."
+    },
+    {
+        "question": "¿Qué es MapReduce en el contexto de Big Data?",
+        "options": [
+            "Un tipo de visualización de datos geográficos.",
+            "Un modelo de programación para procesar grandes conjuntos de datos de manera paralela y distribuida.",
+            "Una técnica de normalización de bases de datos relacionales.",
+            "Un algoritmo de clasificación de datos."
+        ],
+        "answer": 1,
+        "explanation": "MapReduce es un modelo de programación desarrollado por Google que permite procesar enormes cantidades de datos de manera distribuida. Divide el procesamiento en dos fases: Map (mapeo de datos a pares clave-valor) y Reduce (agregación de resultados). Es fundamental en frameworks como Hadoop."
+    },
+    {
+        "question": "¿Qué es un cubo OLAP (OLAP Cube)?",
+        "options": [
+            "Un dispositivo físico de almacenamiento de datos.",
+            "Una estructura de datos multidimensional que permite análisis rápidos desde diferentes perspectivas (dimensiones).",
+            "Un tipo de diagrama entidad-relación.",
+            "Una herramienta de visualización en 3D."
+        ],
+        "answer": 1,
+        "explanation": "Un cubo OLAP es una estructura multidimensional que organiza los datos en dimensiones (tiempo, producto, ubicación, etc.) y medidas (ventas, costos). Permite a los usuarios analizar datos rápidamente mediante operaciones como drill-down, roll-up, slice y dice."
+    },
+    {
+        "question": "¿Qué es el concepto de 'Data Lake' y en qué se diferencia de un Data Warehouse tradicional?",
+        "options": [
+            "No hay diferencia, son términos sinónimos.",
+            "Un Data Lake almacena datos en su formato nativo (estructurados y no estructurados) sin procesamiento previo, mientras que un Data Warehouse almacena datos procesados y estructurados.",
+            "Un Data Lake solo almacena datos históricos, mientras que un Data Warehouse almacena datos actuales.",
+            "Un Data Lake es más pequeño que un Data Warehouse."
+        ],
+        "answer": 1,
+        "explanation": "Un Data Lake almacena grandes cantidades de datos en su formato original (raw data), tanto estructurados como no estructurados, permitiendo flexibilidad en el análisis posterior. Un Data Warehouse, en cambio, almacena datos que han sido procesados, limpios y estructurados según un esquema predefinido (schema-on-write vs schema-on-read)."
+    },
+    {
+        "question": "¿Qué es el 'Data Scientist' y cuál es su rol en el análisis de Big Data?",
+        "options": [
+            "Un programador especializado en desarrollo web.",
+            "Un profesional que combina habilidades en estadística, programación y conocimiento del negocio para extraer conocimiento de grandes volúmenes de datos.",
+            "Un administrador de bases de datos relacionales.",
+            "Un diseñador gráfico especializado en infografías."
+        ],
+        "answer": 1,
+        "explanation": "Un Data Scientist es un profesional multidisciplinario que utiliza técnicas estadísticas, matemáticas, machine learning y programación para analizar datos complejos, descubrir patrones y generar insights que apoyen la toma de decisiones estratégicas. Es un rol clave en proyectos de Big Data y BI avanzado."
+    },
+    {
+        "question": "¿Qué es la 'granularidad' en el diseño de un almacén de datos?",
+        "options": [
+            "La calidad visual de los gráficos de BI.",
+            "El nivel de detalle de los datos almacenados; granularidad alta significa mayor detalle (datos más desagregados).",
+            "El tamaño físico del servidor de almacenamiento.",
+            "La velocidad de consulta de los datos."
+        ],
+        "answer": 1,
+        "explanation": "La granularidad se refiere al nivel de detalle de los datos. Alta granularidad significa datos muy detallados (por ejemplo, cada transacción individual), mientras que baja granularidad implica datos más agregados (por ejemplo, totales mensuales). El nivel de granularidad adecuado debe balancear las necesidades de análisis con el espacio de almacenamiento y rendimiento."
+    },
+    {
+        "question": "¿Qué es un 'Schema Star' (Esquema en Estrella) en el diseño de almacenes de datos?",
+        "options": [
+            "Un tipo de diagrama entidad-relación para bases de datos OLTP.",
+            "Una estructura de datos donde una tabla de hechos central está rodeada de tablas de dimensiones, formando una estrella.",
+            "Un algoritmo de clasificación de datos.",
+            "Una técnica de normalización de bases de datos."
+        ],
+        "answer": 1,
+        "explanation": "El esquema en estrella es un diseño común en almacenes de datos donde hay una tabla de hechos central (con métricas cuantitativas) conectada directamente a múltiples tablas de dimensiones (con atributos descriptivos). Este diseño desnormalizado optimiza las consultas OLAP y simplifica el análisis multidimensional."
+    },
+    {
+        "question": "¿Qué es la 'dimensión de tiempo' en un almacén de datos y por qué es crítica?",
+        "options": [
+            "Una medida del tiempo de respuesta de las consultas.",
+            "Una dimensión fundamental que permite analizar cómo cambian los datos a lo largo del tiempo, esencial para análisis de tendencias y comparaciones temporales.",
+            "El horario de actualización del almacén de datos.",
+            "Una función de programación para medir tiempos de ejecución."
+        ],
+        "answer": 1,
+        "explanation": "La dimensión de tiempo es una de las dimensiones más importantes en cualquier almacén de datos. Permite análisis históricos, identificación de tendencias, comparaciones período a período y es fundamental para la mayoría de los análisis de BI. Típicamente incluye jerarquías como año, trimestre, mes, semana, día."
+    },
+    {
+        "question": "¿Qué es el 'Machine Learning' y cómo se relaciona con la minería de datos?",
+        "options": [
+            "Es sinónimo de minería de datos, no hay diferencia.",
+            "Es un conjunto de técnicas de inteligencia artificial que permiten a los sistemas aprender automáticamente de los datos; muchas técnicas de minería de datos utilizan algoritmos de machine learning.",
+            "Es exclusivamente para análisis de imágenes y video.",
+            "Es una tecnología obsoleta reemplazada por Big Data."
+        ],
+        "answer": 1,
+        "explanation": "Machine Learning es un campo de la inteligencia artificial que desarrolla algoritmos capaces de aprender patrones de los datos sin ser explícitamente programados. Se relaciona estrechamente con la minería de datos, ya que muchas técnicas de minería (clasificación, clustering, regresión) utilizan algoritmos de ML. La diferencia principal es que ML enfatiza el aprendizaje automático y la predicción, mientras que minería de datos se centra en descubrir patrones en grandes conjuntos de datos."
     }
 ]
 ;
